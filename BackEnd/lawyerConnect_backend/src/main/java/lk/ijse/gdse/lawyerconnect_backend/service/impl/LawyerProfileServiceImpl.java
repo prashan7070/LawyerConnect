@@ -1,0 +1,111 @@
+package lk.ijse.gdse.lawyerconnect_backend.service.impl;
+
+import lk.ijse.gdse.lawyerconnect_backend.dto.LawyerProfileDTO;
+import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerProfile;
+import lk.ijse.gdse.lawyerconnect_backend.entity.User;
+import lk.ijse.gdse.lawyerconnect_backend.repository.LawyerProfileRepository;
+import lk.ijse.gdse.lawyerconnect_backend.service.LawyerProfileService;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class LawyerProfileServiceImpl implements LawyerProfileService {
+
+    private final LawyerProfileRepository lawyerProfileRepository;
+    private final ModelMapper modelMapper;
+    private final String UPLOAD_DIR = "uploads/profile-images";
+
+
+    @Override
+    public void saveProfile(User user, LawyerProfileDTO dto, MultipartFile profilePicture) {
+
+        lawyerProfileRepository.findByUser(user)
+                .ifPresent(profile -> {
+                    throw new RuntimeException("Profile already exists for this user");
+                });
+
+        LawyerProfile profile = modelMapper.map(dto , LawyerProfile.class);
+
+        profile.setUser(user);
+
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            String fileUrl = saveFile(profilePicture);
+            profile.setProfilePictureUrl(fileUrl);
+        }
+
+        lawyerProfileRepository.save(profile);
+    }
+
+
+
+    @Override
+    public void updateProfile(User user , LawyerProfileDTO dto, MultipartFile profilePicture) {
+        LawyerProfile profile = lawyerProfileRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Profile not found"));
+
+        modelMapper.map(dto , profile);
+
+//        profile.setUser(user);
+
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            String fileUrl = saveFile(profilePicture);
+            profile.setProfilePictureUrl(fileUrl);
+        }
+
+        lawyerProfileRepository.save(profile);
+
+    }
+
+
+
+    @Override
+    public LawyerProfileDTO getProfile(User user) {
+
+        LawyerProfile lawyerProfile = lawyerProfileRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Profile not found"));
+
+        return modelMapper.map(lawyerProfile , LawyerProfileDTO.class);
+
+    }
+
+
+
+    private String saveFile(MultipartFile file) {
+        try {
+            String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+            String fileExtension = "";
+
+            int dotIndex = originalFilename.lastIndexOf('.');
+            if (dotIndex >= 0) {
+                fileExtension = originalFilename.substring(dotIndex);
+            }
+
+            String newFileName = UUID.randomUUID().toString() + fileExtension;
+            Path uploadPath = Paths.get(UPLOAD_DIR);
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            Path filePath = uploadPath.resolve(newFileName);
+            Files.copy(file.getInputStream(), filePath);
+
+            return "/uploads/profile-images/" + newFileName;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to store file", e);
+        }
+    }
+
+
+
+}
