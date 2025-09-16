@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login page</title>
+    <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <link href='https://cdn.boxicons.com/fonts/brands/boxicons-brands.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../css/loginAndSignUp.css">
+
+
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Login -->
+
+        <div class="form-box login">
+            <form action="">
+                <h1>Login</h1>
+                <div class="input-box">
+                    <input type="text" id="username" placeholder="username" required>
+                    <i class='bx  bxs-user'  ></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" id="password" placeholder="password" required>
+                    <i class='bx  bxs-lock'  ></i>
+                </div>
+                <div class="forgot-link">
+                    <a href="#">Forgot password?</a>
+                </div>
+                <button type="button" class="btn" id="signInBtn">Login</button>
+                <p>or login with social platforms</p>
+                <div class="social-icons">
+                    <a href="#"><i class="bxl bx-google"></i></a>
+                    <a href="#"><i class='bxl bx-facebook'></i></a>
+<!--                    <a href="#"><i class="bxl bx-github"></i></a>-->
+<!--                    <a href="#"><i class="bxl bx-linkedin"></i></a>-->
+                </div>
+            </form>
+        </div>
+
+
+        <!-- register -->
+
+
+        <div class="form-box register">
+            <form action="">
+                <h1>Registration</h1>
+                <div class="input-box">
+                    <input type="text" placeholder="Full Name" id="fullName" required>
+                    <i class='bx  bxs-user'  ></i>
+                </div>
+                <div class="input-box">
+                    <input type="text" placeholder="username" id="usernameSignUp" required>
+                    <i class='bx  bxs-user'  ></i>
+                </div>
+                <div class="input-box">
+                    <input type="email" placeholder="Email" id="emailSignUp" required>
+                    <i class='bx  bxs-envelope'  ></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="password" id="passwordSignUp" required>
+                    <i class='bx  bxs-lock'  ></i>
+                </div>
+                <button type="button" class="btn" id="signUpBtn">Register</button>
+                <p>or register with social platforms</p>
+                <div class="social-icons">
+                    <a href="#"><i class="bxl bx-google"></i></a>
+                    <a href="#"><i class='bxl bx-facebook'></i></a>
+<!--                    <a href="#"><i class="bxl bx-github"></i></a>-->
+                    <a href="#"><i class="bxl bx-linkedin"></i></a>
+                </div>
+            </form>
+        </div>
+
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>Hello, welcome!</h1>
+                <p>Don't have an account?</p>
+                <button class="btn register-btn">Register</button>
+            </div>
+
+            <div class="toggle-panel toggle-right">
+                <h1>Welcome Back!</h1>
+                <p>Already have an account?</p>
+                <button class="btn login-btn">Login</button>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="../js/loginAndSignUp.js"></script>
+
+</body>
+</html>

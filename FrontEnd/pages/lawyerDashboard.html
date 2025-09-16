@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lawyer Dashboard - Lawyer Booking</title>
+
+        <link rel="stylesheet" href="../css/lawyerDashboard.css">
+
+</head>
+<body>
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="logo">LawyerConnect</div>
+        <div class="profile-section">
+            <img src="https://via.placeholder.com/80/007BFF/FFFFFF?text=JD" alt="Lawyer Avatar" class="profile-avatar">
+            <div class="profile-name">John Doe</div>
+            <div class="profile-email">john.doe@example.com</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active" data-page="home"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="#" data-page="appointments"><i class="fas fa-calendar-alt"></i> Appointments</a></li>
+                <li><a href="#" data-page="clients"><i class="fas fa-users"></i> My Clients</a></li>
+                <li><a href="#" data-page="messages"><i class="fas fa-envelope"></i> Messages</a></li>
+                <li><a href="#" data-page="profile"><i class="fas fa-user-circle"></i> Profile</a></li>
+                <li><a href="#" data-page="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="#" data-page="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div id="home-page">
+            <div class="header">
+                <h1>Lawyer Dashboard</h1>
+            </div>
+
+            <section class="stats-cards-section">
+                <h2 class="section-title">Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-check icon"></i>
+                        <div class="details">
+                            <h3>12</h3>
+                            <p>Upcoming Appointments</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users icon" style="color: var(--secondary-color);"></i>
+                        <div class="details">
+                            <h3>85</h3>
+                            <p>Total Clients</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-star icon" style="color: #FFC107;"></i>
+                        <div class="details">
+                            <h3>4.8</h3>
+                            <p>Average Rating</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-dollar-sign icon" style="color: #6c757d;"></i>
+                        <div class="details">
+                            <h3>$5,200</h3>
+                            <p>Monthly Earnings</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="appointments-section">
+                <h2 class="section-title">Upcoming Appointments</h2>
+                <div class="appointment-list">
+                    <div class="appointment-item">
+                        <img src="" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">Alice Smith</div>
+                            <div class="time-topic">Tomorrow, 10:00 AM - Family Law Consultation</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Details</button>
+                            <button class="btn-reschedule">Reschedule</button>
+                        </div>
+                    </div>
+                    <div class="appointment-item">
+                        <img src="" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">Bob Johnson</div>
+                            <div class="time-topic">Wednesday, 2:30 PM - Criminal Defense Strategy</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Details</button>
+                            <button class="btn-reschedule">Reschedule</button>
+                        </div>
+                    </div>
+                    <div class="appointment-item">
+                        <img src="" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">Carol White</div>
+                            <div class="time-topic">Friday, 11:00 AM - Corporate Merger Discussion</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Details</button>
+                            <button class="btn-reschedule">Reschedule</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="appointments-page" style="display:none;">
+            <div class="header">
+                <h1>All Appointments</h1>
+            </div>
+            <section class="appointments-section">
+                <h2 class="section-title">Upcoming Appointments</h2>
+                <div class="appointment-list">
+                    <div class="appointment-item">
+                        <img src="https://via.placeholder.com/50/4CAF50/FFFFFF?text=AS" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">Alice Smith</div>
+                            <div class="time-topic">2024-07-25, 10:00 AM - Family Law Consultation</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Details</button>
+                            <button class="btn-reschedule">Reschedule</button>
+                        </div>
+                    </div>
+                    <div class="appointment-item">
+                        <img src="https://via.placeholder.com/50/2196F3/FFFFFF?text=BR" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">Bob Johnson</div>
+                            <div class="time-topic">2024-07-27, 2:30 PM - Criminal Defense Strategy</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Details</button>
+                            <button class="btn-reschedule">Reschedule</button>
+                        </div>
+                    </div>
+                    <div class="appointment-item">
+                        <img src="https://via.placeholder.com/50/FFC107/FFFFFF?text=CC" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">Carol White</div>
+                            <div class="time-topic">2024-07-29, 11:00 AM - Corporate Merger Discussion</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Details</button>
+                            <button class="btn-reschedule">Reschedule</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="appointments-section">
+                <h2 class="section-title">Past Appointments</h2>
+                <div class="appointment-list">
+                    <div class="appointment-item">
+                        <img src="" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">David Green</div>
+                            <div class="time-topic">2024-07-15, 09:00 AM - Real Estate Advice</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Details</button>
+                        </div>
+                    </div>
+                    <div class="appointment-item">
+                        <img src="" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">Emily Four</div>
+                            <div class="time-topic">2024-07-10, 03:00 PM - Environmental Regulation</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="clients-page" style="display:none;">
+            <div class="header">
+                <h1>My Clients</h1>
+            </div>
+            <section class="clients-section">
+                <h2 class="section-title">All Clients</h2>
+                <div class="client-list">
+                    <div class="client-item">
+                        <img src="https://via.placeholder.com/50/4CAF50/FFFFFF?text=AS" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">Alice Smith</div>
+                            <div class="client-email">alice.smith@example.com</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Profile</button>
+                            <button class="btn-message">Message</button>
+                        </div>
+                    </div>
+                    <div class="client-item">
+                        <img src="https://via.placeholder.com/50/2196F3/FFFFFF?text=BR" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">Bob Johnson</div>
+                            <div class="client-email">bob.johnson@example.com</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Profile</button>
+                            <button class="btn-message">Message</button>
+                        </div>
+                    </div>
+                    <div class="client-item">
+                        <img src="https://via.placeholder.com/50/FFC107/FFFFFF?text=CC" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">Carol White</div>
+                            <div class="client-email">carol.white@example.com</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Profile</button>
+                            <button class="btn-message">Message</button>
+                        </div>
+                    </div>
+                    <div class="client-item">
+                        <img src="https://via.placeholder.com/50/E91E63/FFFFFF?text=DD" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">David Green</div>
+                            <div class="client-email">david.green@example.com</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Profile</button>
+                            <button class="btn-message">Message</button>
+                        </div>
+                    </div>
+                    <div class="client-item">
+                        <img src="https://via.placeholder.com/50/9C27B0/FFFFFF?text=EF" alt="Client Avatar" class="avatar">
+                        <div class="details">
+                            <div class="client-name">Emily Four</div>
+                            <div class="client-email">emily.four@example.com</div>
+                        </div>
+                        <div class="actions">
+                            <button>View Profile</button>
+                            <button class="btn-message">Message</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="messages-page" style="display:none;">
+            <h2 class="section-title">Messages</h2>
+            <p>Communicate with your clients and colleagues.</p>
+        </div>
+
+        <div id="profile-page">
+            <h2>My Profile</h2>
+            <div class="profile-header">
+                <img id="profileAvatar" src="../assets/images/pexels-linkedin-2182970.jpg" alt="Lawyer Avatar" class="avatar-large">
+                <div class="profile-image-upload" id="profileImageUploadSection" style="display: none;">
+                    <input type="file" id="profileImageInput" accept="image/*">
+                    <label for="profileImageInput">Change Image</label>
+                </div>
+                <div class="name">John Doe</div>
+                <div class="specialty">Criminal Law, Civil Litigation</div>
+                <div class="email">john.doe@example.com</div>
+            </div>
+            <div class="profile-info">
+                <div class="info-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" value="" readonly>
+                </div>
+                <div class="info-group">
+                    <label for="email">Contact Email</label>
+                    <input type="email" id="email" value="" readonly>
+                </div>
+                <div class="info-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" value="" readonly>
+                </div>
+                <div class="info-group">
+                    <label for="barId">Bar ID</label>
+                    <input type="text" id="barId" value="" placeholder="BA-657-CFA" readonly>
+                </div>
+                <div class="info-group">
+                    <label for="specialties">Specialties</label>
+                    <input type="text" id="specialties" value="" placeholder="Criminal Law, Civil Litigation" readonly>
+                </div>
+                <div class="info-group">
+                    <label for="yearsExperience">Years of Experience</label>
+                    <input type="text" id="yearsExperience" value="" readonly>
+                </div>
+                <div class="info-group" style="grid-column: 1 / -1;">
+                    <label for="bio">Biography</label>
+                    <textarea id="bio" readonly></textarea>
+                </div>
+                <div class="info-group" style="grid-column: 1 / -1;">
+                    <label for="address">Office Address</label>
+                    <input type="text" id="address" value="456 Legal Ave, Suite 101, Lawton, CA 90210" readonly>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button id="editProfileBtn">Edit Profile</button>
+                <button id="saveProfileBtn" style="display: none;">Save Changes</button>
+                <button id="cancelEditBtn" class="btn-cancel" style="display: none;">Cancel</button>
+            </div>
+        </div>
+
+        <div id="settings-page" style="display:none;">
+            <h2 class="section-title">Settings</h2>
+            <p>Manage your account and notification settings.</p>
+        </div>
+    </main>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="../js/lawyerDashboard.js"></script>
+
+
+</body>
+</html>

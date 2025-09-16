@@ -1,0 +1,408 @@
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap'); /* New font for input data */
+
+
+:root {
+    --primary-color: #007BFF;
+    --secondary-color: #28A745;
+    --background-light: #F8F9FA;
+    --card-background: #FFFFFF;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --border-color: #E0E0E0;
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.12);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: var(--card-background);
+    padding: 20px;
+    box-shadow: 2px 0 10px var(--shadow-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid var(--border-color);
+}
+
+.sidebar .logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.sidebar .profile-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar .profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 0 2px var(--card-background);
+}
+
+.sidebar .profile-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.sidebar .profile-email {
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar nav ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar nav ul li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: var(--text-dark);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar nav ul li a i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.sidebar nav ul li a:hover,
+.sidebar nav ul li a.active {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+/* Stats Cards Section */
+.stats-cards-section {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: var(--text-dark);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.stat-card {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--shadow-medium);
+}
+
+.stat-card .icon {
+    font-size: 40px;
+    color: var(--primary-color);
+    margin-right: 20px;
+}
+
+.stat-card .details h3 {
+    font-size: 28px;
+    margin: 0 0 5px 0;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.stat-card .details p {
+    font-size: 15px;
+    margin: 0;
+    color: var(--text-light);
+}
+
+/* Upcoming Appointments Section */
+.appointments-section {
+    margin-bottom: 40px;
+}
+
+.appointment-list, .client-list {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    padding: 25px;
+}
+
+.appointment-item, .client-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.appointment-item:last-child, .client-item:last-child {
+    border-bottom: none;
+}
+
+.appointment-item .avatar, .client-item .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+    border: 2px solid var(--secondary-color);
+}
+
+.appointment-item .details, .client-item .details {
+    flex-grow: 1;
+}
+
+.appointment-item .details .client-name, .client-item .details .client-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.appointment-item .details .time-topic, .client-item .details .client-email {
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.appointment-item .actions button, .client-item .actions button {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+
+.appointment-item .actions button:hover, .client-item .actions button:hover {
+    background-color: #0056b3;
+}
+
+.appointment-item .actions .btn-reschedule, .client-item .actions .btn-message {
+    background-color: var(--secondary-color);
+}
+.appointment-item .actions .btn-reschedule:hover, .client-item .actions .btn-message:hover {
+    background-color: #218838;
+}
+
+/* Profile Page Styles */
+#profile-page {
+    display: none;
+    background-color: var(--card-background);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#profile-page h2 {
+    font-size: 28px;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.profile-header .avatar-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 4px solid var(--primary-color);
+    box-shadow: 0 0 0 4px var(--card-background);
+}
+
+.profile-header .name {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.profile-header .specialty {
+    font-size: 18px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.profile-header .email {
+    font-size: 16px;
+    color: var(--text-light);
+}
+
+.profile-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px; /* Increased gap */
+    margin-bottom: 30px;
+}
+
+.profile-info .info-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-info label {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-bottom: 5px;
+}
+
+.profile-info input[type="text"],
+.profile-info input[type="email"],
+.profile-info textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    font-family: 'Roboto Mono', monospace; /* New font applied */
+}
+
+.profile-info input:focus,
+.profile-info textarea:focus {
+    border-color: var(--primary-color);
+}
+
+.profile-info textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.profile-actions {
+    text-align: center;
+}
+
+.profile-actions button {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+}
+
+.profile-actions button:hover {
+    background-color: #0056b3;
+}
+
+.profile-actions .btn-cancel {
+    background-color: var(--text-light);
+}
+
+.profile-actions .btn-cancel:hover {
+    background-color: #5A5A5A;
+}
+
+/* New styles for image upload button */
+.profile-image-upload {
+    position: relative;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.profile-image-upload label {
+    background-color: var(--secondary-color);
+    color: var(--card-background);
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+.profile-image-upload label:hover {
+    background-color: #218838;
+}
+
+.profile-image-upload input[type="file"] {
+    display: none;
+}
+
+

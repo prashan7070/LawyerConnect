@@ -1,0 +1,773 @@
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --background-light: #F8F9FA;
+    --card-background: #FFFFFF;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --border-color: #E0E0E0;
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.12);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: var(--card-background);
+    padding: 20px;
+    box-shadow: 2px 0 10px var(--shadow-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid var(--border-color);
+}
+
+.sidebar .logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.sidebar .profile-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar .profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 0 2px var(--card-background);
+}
+
+.sidebar .profile-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.sidebar .profile-email {
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar nav ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar nav ul li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: var(--text-dark);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar nav ul li a i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.sidebar nav ul li a:hover,
+.sidebar nav ul li a.active {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    width: 400px;
+    position: relative;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px 15px;
+    padding-left: 40px; /* Space for icon */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.search-bar input:focus {
+    border-color: var(--primary-color);
+}
+
+.search-bar i {
+    position: absolute;
+    left: 15px;
+    color: var(--text-light);
+}
+
+/* Lawyer Cards Section */
+.lawyer-cards-section {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: var(--text-dark);
+}
+
+.lawyer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.lawyer-card {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lawyer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--shadow-medium);
+}
+
+.lawyer-card .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 2px solid var(--secondary-color);
+    box-shadow: 0 0 0 3px var(--card-background);
+}
+
+.lawyer-card .name {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-dark);
+}
+
+.lawyer-card .specialty {
+    font-size: 15px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.lawyer-card .rating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #FFC107; /* Star color */
+}
+
+.lawyer-card .rating i {
+    font-size: 18px;
+    margin-right: 3px;
+}
+
+.lawyer-card .rating span {
+    font-size: 16px;
+    color: var(--text-light);
+    margin-left: 5px;
+}
+
+.lawyer-card .description {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 20px;
+    max-height: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lawyer-card .btn-book {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.lawyer-card .btn-book:hover {
+    background-color: #43A047;
+}
+
+
+#profile-page, #bookings-page, #messages-page, #settings-page, #lawyer-profile-page, #booking-flow-page {
+    display: none;
+    background-color: var(--card-background);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+#profile-page h2, #bookings-page h2, #messages-page h2, #settings-page h2, #lawyer-profile-page h2, #booking-flow-page h2 {
+    font-size: 28px;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Lawyer Profile Page Specific Styles */
+#lawyer-profile-page .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#lawyer-profile-page .profile-header img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--primary-color);
+    box-shadow: 0 0 0 5px var(--card-background);
+}
+
+#lawyer-profile-page .profile-details {
+    text-align: left;
+}
+
+#lawyer-profile-page .profile-details .name {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+#lawyer-profile-page .profile-details .specialty {
+    font-size: 18px;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+#lawyer-profile-page .profile-details .rating {
+    display: flex;
+    align-items: center;
+    color: #FFC107;
+    margin-bottom: 15px;
+}
+#lawyer-profile-page .profile-details .rating i {
+    font-size: 20px;
+    margin-right: 5px;
+}
+#lawyer-profile-page .profile-details .rating span {
+    font-size: 18px;
+    color: var(--text-light);
+    margin-left: 5px;
+}
+
+#lawyer-profile-page .profile-description {
+    font-size: 16px;
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+#lawyer-profile-page .profile-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+#lawyer-profile-page .profile-section-card {
+    background-color: var(--background-light);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px var(--shadow-light);
+}
+
+#lawyer-profile-page .profile-section-card h3 {
+    font-size: 22px;
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+#lawyer-profile-page .profile-section-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+#lawyer-profile-page .profile-section-card ul li {
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: var(--text-dark);
+}
+
+#lawyer-profile-page .profile-actions {
+    text-align: center;
+}
+
+#lawyer-profile-page .btn-continue-booking {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+#lawyer-profile-page .btn-continue-booking:hover {
+    background-color: #43A047;
+}
+
+/* Multi-step Booking Flow Styles */
+.booking-flow-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: var(--card-background);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+}
+
+.booking-flow-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.booking-flow-header h2 {
+    font-size: 26px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.booking-flow-header p {
+    color: var(--text-light);
+    font-size: 15px;
+}
+
+.booking-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.booking-steps::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--border-color);
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.booking-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+}
+
+.booking-step .circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--border-color);
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.booking-step.active .circle {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+}
+
+.booking-step.completed .circle {
+    background-color: var(--secondary-color);
+    color: var(--card-background);
+}
+
+.booking-step .label {
+    font-size: 14px;
+    text-align: center;
+    color: var(--text-light);
+}
+
+.booking-step.active .label,
+.booking-step.completed .label {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.booking-form-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.booking-form-section h3 {
+    font-size: 20px;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group select,
+.form-group textarea {
+    width: calc(100% - 24px);
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary-color);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.booking-flow-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.booking-flow-navigation .btn-secondary,
+.booking-flow-navigation .btn-primary {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.booking-flow-navigation .btn-secondary {
+    background-color: var(--text-light);
+    color: var(--card-background);
+}
+
+.booking-flow-navigation .btn-secondary:hover {
+    background-color: #5A5A5A;
+}
+
+.booking-flow-navigation .btn-primary {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+}
+
+.booking-flow-navigation .btn-primary:hover {
+    background-color: #43A047;
+}
+
+
+.profile-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.profile-info .info-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-info label {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-bottom: 5px;
+}
+
+.profile-info input[type="text"],
+.profile-info input[type="email"],
+.profile-info textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.profile-info input:focus,
+.profile-info textarea:focus {
+    border-color: var(--primary-color);
+}
+
+.profile-info textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.profile-actions {
+    text-align: center;
+}
+
+.profile-actions button {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+}
+
+.profile-actions button:hover {
+    background-color: #43A047;
+}
+
+.profile-actions .btn-cancel {
+    background-color: var(--text-light);
+}
+
+.profile-actions .btn-cancel:hover {
+    background-color: #5A5A5A;
+}
+
+/* My Bookings Styles */
+.booking-section {
+    margin-bottom: 30px;
+}
+
+.booking-section h3 {
+    font-size: 20px;
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.booking-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.booking-card {
+    background-color: var(--background-light);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px var(--shadow-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 5px solid var(--primary-color);
+}
+
+.booking-card.past {
+    border-left-color: var(--text-light);
+    opacity: 0.8;
+}
+
+.booking-card .booking-details {
+    text-align: left;
+}
+
+.booking-card .lawyer-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.booking-card .lawyer-specialty {
+    font-size: 14px;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.booking-card .booking-date-time {
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.booking-card .booking-status {
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: var(--card-background);
+    font-size: 13px;
+}
+
+.booking-card .booking-status.confirmed {
+    background-color: var(--primary-color);
+}
+.booking-card .booking-status.completed {
+    background-color: var(--secondary-color);
+}
+.booking-card .booking-status.cancelled {
+    background-color: #F44336; /* Red */
+}
+
+/* Settings Page Styles */
+.settings-group {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.settings-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.settings-group h3 {
+    font-size: 20px;
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+}
+
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.settings-item label {
+    font-size: 16px;
+    color: var(--text-dark);
+}
+
+.settings-item .action-button {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.settings-item .action-button:hover {
+    background-color: #43A047;
+}
+
+.settings-item input[type="checkbox"] {
+    transform: scale(1.2);
+    accent-color: var(--primary-color);
+}
+
+
+

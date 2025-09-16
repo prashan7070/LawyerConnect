@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard - Lawyer Booking</title>
+    <link rel="stylesheet" href="../css/clientDashboard.css">
+
+</head>
+<body>
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="logo">LawyerConnect</div>
+        <div class="profile-section">
+            <img src="https://via.placeholder.com/80/4CAF50/FFFFFF?text=JP" alt="Client Avatar" class="profile-avatar">
+            <div class="profile-name">Jane P.</div>
+            <div class="profile-email">jane.doe@example.com</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active" data-page="home"><i class="fas fa-search"></i> Find a Lawyer</a></li>
+                <li><a href="#" data-page="bookings"><i class="fas fa-calendar-check"></i> My Bookings</a></li>
+                <li><a href="#" data-page="messages"><i class="fas fa-envelope"></i> Messages</a></li>
+                <li><a href="#" data-page="profile"><i class="fas fa-user-circle"></i> Profile</a></li>
+                <li><a href="#" data-page="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="#" data-page="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div id="home-page">
+            <div class="header">
+                <h1>Explore Lawyers</h1>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search by name, specialty, or location...">
+                </div>
+            </div>
+
+            <section class="lawyer-cards-section">
+                <h2 class="section-title">Top Rated Lawyers</h2>
+                <div class="lawyer-grid">
+                    <!-- Lawyer Card 1 -->
+                    <div class="lawyer-card"
+                         data-lawyer-id="1"
+                         data-lawyer-name="John Doe"
+                         data-lawyer-specialty="Criminal Law"
+                         data-lawyer-rating="4.5"
+                         data-lawyer-reviews="120"
+                         data-lawyer-description="Experienced criminal defense lawyer with a strong track record of success. Dedicated to protecting your rights. John has successfully handled numerous high-profile cases, demonstrating exceptional legal acumen and a deep commitment to his clients' welfare. He's known for his meticulous preparation and persuasive courtroom presence."
+                         data-lawyer-avatar="https://via.placeholder.com/150/2196F3/FFFFFF?text=JD">
+                        <img src="https://via.placeholder.com/100/2196F3/FFFFFF?text=JD" alt="Lawyer Avatar" class="avatar">
+                        <div class="name">John Doe</div>
+                        <div class="specialty">Criminal Law</div>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i> <span>4.5 (120)</span>
+                        </div>
+                        <p class="description">Experienced criminal defense lawyer with a strong track record of success. Dedicated to protecting your rights.</p>
+                        <a href="#" class="btn-book" data-lawyer-id="1">Book Now</a>
+                    </div>
+                    <!-- Lawyer Card 2 -->
+                    <div class="lawyer-card"
+                         data-lawyer-id="2"
+                         data-lawyer-name="Anna Smith"
+                         data-lawyer-specialty="Family Law"
+                         data-lawyer-rating="4.0"
+                         data-lawyer-reviews="90"
+                         data-lawyer-description="Compassionate family lawyer specializing in divorce, child custody, and adoption cases. Anna provides empathetic and clear legal guidance through often difficult personal situations. Her approach is client-centered, ensuring the best possible outcome for families."
+                         data-lawyer-avatar="https://via.placeholder.com/150/4CAF50/FFFFFF?text=AS">
+                        <img src="https://via.placeholder.com/100/4CAF50/FFFFFF?text=AS" alt="Lawyer Avatar" class="avatar">
+                        <div class="name">Anna Smith</div>
+                        <div class="specialty">Family Law</div>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i> <span>4.0 (90)</span>
+                        </div>
+                        <p class="description">Compassionate family lawyer specializing in divorce, child custody, and adoption cases.</p>
+                        <a href="#" class="btn-book" data-lawyer-id="2">Book Now</a>
+                    </div>
+                    <!-- Lawyer Card 3 -->
+                    <div class="lawyer-card"
+                         data-lawyer-id="3"
+                         data-lawyer-name="Michael Kim"
+                         data-lawyer-specialty="Corporate Law"
+                         data-lawyer-rating="5.0"
+                         data-lawyer-reviews="210"
+                         data-lawyer-description="Leading corporate attorney advising on mergers, acquisitions, and business legal strategies. Michael has an in-depth understanding of corporate governance and helps businesses navigate complex regulatory landscapes with ease, ensuring robust growth and compliance."
+                         data-lawyer-avatar="https://via.placeholder.com/150/FFC107/FFFFFF?text=MK">
+                        <img src="https://via.placeholder.com/100/FFC107/FFFFFF?text=MK" alt="Lawyer Avatar" class="avatar">
+                        <div class="name">Michael Kim</div>
+                        <div class="specialty">Corporate Law</div>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> <span>5.0 (210)</span>
+                        </div>
+                        <p class="description">Leading corporate attorney advising on mergers, acquisitions, and business legal strategies.</p>
+                        <a href="#" class="btn-book" data-lawyer-id="3">Book Now</a>
+                    </div>
+                    <!-- Lawyer Card 4 -->
+                    <div class="lawyer-card"
+                         data-lawyer-id="4"
+                         data-lawyer-name="Laura P."
+                         data-lawyer-specialty="Real Estate Law"
+                         data-lawyer-rating="3.5"
+                         data-lawyer-reviews="55"
+                         data-lawyer-description="Expert in real estate transactions, property disputes, and land use regulations. Laura assists clients with residential and commercial real estate needs, from purchase agreements to zoning issues, providing solid legal foundations for their investments."
+                         data-lawyer-avatar="https://via.placeholder.com/150/E91E63/FFFFFF?text=LP">
+                        <img src="https://via.placeholder.com/100/E91E63/FFFFFF?text=LP" alt="Lawyer Avatar" class="avatar">
+                        <div class="name">Laura P.</div>
+                        <div class="specialty">Real Estate Law</div>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i> <span>3.5 (55)</span>
+                        </div>
+                        <p class="description">Expert in real estate transactions, property disputes, and land use regulations.</p>
+                        <a href="#" class="btn-book" data-lawyer-id="4">Book Now</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="lawyer-cards-section">
+                <h2 class="section-title">New Lawyers</h2>
+                <div class="lawyer-grid">
+                    <!-- Lawyer Card 5 -->
+                    <div class="lawyer-card"
+                         data-lawyer-id="5"
+                         data-lawyer-name="Robert W."
+                         data-lawyer-specialty="Environmental Law"
+                         data-lawyer-rating="3.0"
+                         data-lawyer-reviews="15"
+                         data-lawyer-description="Passionate about environmental protection and regulatory compliance. Robert helps individuals and corporations navigate complex environmental laws, advocating for sustainable practices and defending against violations. His expertise spans conservation, pollution control, and land use."
+                         data-lawyer-avatar="https://via.placeholder.com/150/9C27B0/FFFFFF?text=RW">
+                        <img src="https://via.placeholder.com/100/9C27B0/FFFFFF?text=RW" alt="Lawyer Avatar" class="avatar">
+                        <div class="name">Robert W.</div>
+                        <div class="specialty">Environmental Law</div>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> <span>3.0 (15)</span>
+                        </div>
+                        <p class="description">Passionate about environmental protection and regulatory compliance.</p>
+                        <a href="#" class="btn-book" data-lawyer-id="5">Book Now</a>
+                    </div>
+                    <!-- Lawyer Card 6 -->
+                    <div class="lawyer-card"
+                         data-lawyer-id="6"
+                         data-lawyer-name="Sarah M."
+                         data-lawyer-specialty="Intellectual Property"
+                         data-lawyer-rating="4.0"
+                         data-lawyer-reviews="30"
+                         data-lawyer-description="Specializes in patent, trademark, and copyright law for creators and innovators. Sarah guides clients through the intricacies of protecting their intellectual assets, from initial registration to enforcement, ensuring their ideas and creations are secure."
+                         data-lawyer-avatar="https://via.placeholder.com/150/00BCD4/FFFFFF?text=SM">
+                        <img src="https://via.placeholder.com/100/00BCD4/FFFFFF?text=SM" alt="Lawyer Avatar" class="avatar">
+                        <div class="name">Sarah M.</div>
+                        <div class="specialty">Intellectual Property</div>
+                        <div class="rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i> <span>4.0 (30)</span>
+                        </div>
+                        <p class="description">Specializes in patent, trademark, and copyright law for creators and innovators.</p>
+                        <a href="#" class="btn-book" data-lawyer-id="6">Book Now</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- LAWYER PROFILE PAGE -->
+        <div id="lawyer-profile-page">
+            <div class="profile-header">
+                <img src="" alt="Lawyer Avatar" id="lawyerProfileAvatar">
+                <div class="profile-details">
+                    <div class="name" id="lawyerProfileName"></div>
+                    <div class="specialty" id="lawyerProfileSpecialty"></div>
+                    <div class="rating">
+                        <span id="lawyerProfileStars"></span> <span id="lawyerProfileRating"></span> (<span id="lawyerProfileReviews"></span>)
+                    </div>
+                    <p class="profile-description" id="lawyerProfileDescription"></p>
+                </div>
+            </div>
+
+            <div class="profile-sections">
+                <div class="profile-section-card">
+                    <h3>About Me</h3>
+                    <p id="lawyerProfileAbout">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+                <div class="profile-section-card">
+                    <h3>Experience</h3>
+                    <ul id="lawyerProfileExperience">
+                        <li>5+ years in current specialty.</li>
+                        <li>Handled over 200 cases successfully.</li>
+                        <li>Published author on legal topics.</li>
+                        <li>Awarded 'Top Lawyer' by City Bar Association.</li>
+                    </ul>
+                </div>
+                <div class="profile-section-card" style="grid-column: 1 / -1;">
+                    <h3>Client Reviews (Placeholder)</h3>
+                    <p>This section would display client testimonials and detailed reviews.</p>
+                    <ul>
+                        <li>"John Doe was incredibly helpful and professional." - A Happy Client</li>
+                        <li>"Anna Smith provided excellent guidance during a tough time." - Client B</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn-continue-booking" id="startBookingBtn">Book <span id="bookLawyerName"></span> Now</button>
+            </div>
+        </div>
+
+        <!-- BOOKING FLOW PAGE -->
+        <div id="booking-flow-page">
+            <div class="booking-flow-container">
+                <div class="booking-flow-header">
+                    <h2 id="bookingFlowLawyerName">Book Appointment with [Lawyer Name]</h2>
+                    <p>Step-by-step process to secure your consultation.</p>
+                </div>
+
+                <div class="booking-steps">
+                    <div class="booking-step active" data-step="1">
+                        <div class="circle">1</div>
+                        <div class="label">Select Service</div>
+                    </div>
+                    <div class="booking-step" data-step="2">
+                        <div class="circle">2</div>
+                        <div class="label">Payment</div>
+                    </div>
+                    <div class="booking-step" data-step="3">
+                        <div class="circle">3</div>
+                        <div class="label">Confirm</div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Select Service/Date & Time -->
+                <div id="booking-step-1" class="booking-form-section">
+                    <h3>Select Service & Schedule</h3>
+                    <form id="serviceScheduleForm">
+                        <div class="form-group">
+                            <label for="serviceType">Service Type</label>
+                            <select id="serviceType" required>
+                                <option value="">Select a service</option>
+                                <option value="initialConsultation">Initial Consultation (30 min)</option>
+                                <option value="caseReview">Case Review (60 min)</option>
+                                <option value="documentDrafting">Document Drafting (Custom)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookingDate">Preferred Date</label>
+                            <input type="date" id="bookingDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookingTime">Preferred Time</label>
+                            <input type="time" id="bookingTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="caseDescription">Briefly describe your case</label>
+                            <textarea id="caseDescription" placeholder="e.g., Need advice on a property dispute..." required></textarea>
+                        </div>
+                        <div class="booking-flow-navigation">
+                            <button type="button" class="btn-secondary" id="backToProfileBtn">Back to Profile</button>
+                            <button type="submit" class="btn-primary">Next: Payment</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Step 2: Payment Details (Placeholder) -->
+                <div id="booking-step-2" class="booking-form-section" style="display: none;">
+                    <h3>Payment Details</h3>
+                    <p>Payment integration goes here. (e.g., Credit Card fields, PayPal, etc.)</p>
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="**** **** **** ****">
+                    </div>
+                    <div class="form-group">
+                        <label for="expiryDate">Expiry Date</label>
+                        <input type="text" id="expiryDate" placeholder="MM/YY">
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" placeholder="***">
+                    </div>
+                    <div class="booking-flow-navigation">
+                        <button type="button" class="btn-secondary" id="backToStep1Btn">Previous</button>
+                        <button type="button" class="btn-primary" id="goToStep3Btn">Next: Confirm</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Confirmation (Placeholder) -->
+                <div id="booking-step-3" class="booking-form-section" style="display: none;">
+                    <h3>Confirm Your Booking</h3>
+                    <p>Review all details before confirming.</p>
+                    <div class="form-group">
+                        <label>Lawyer:</label>
+                        <p id="confirmLawyerName">N/A</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Service:</label>
+                        <p id="confirmServiceType">N/A</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Date & Time:</label>
+                        <p id="confirmDateTime">N/A</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Case Description:</label>
+                        <p id="confirmCaseDescription">N/A</p>
+                    </div>
+                    <div class="booking-flow-navigation">
+                        <button type="button" class="btn-secondary" id="backToStep2Btn">Previous</button>
+                        <button type="button" class="btn-primary" id="finalConfirmBookingBtn">Confirm Booking</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="profile-page">
+            <h2>My Profile</h2>
+            <div class="profile-header">
+                <img src="https://via.placeholder.com/120/4CAF50/FFFFFF?text=JP" alt="Client Avatar" class="avatar-large">
+                <div class="name">Jane P.</div>
+                <div class="email">jane.doe@example.com</div>
+            </div>
+            <div class="profile-info">
+                <div class="info-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" value="Jane P." readonly>
+                </div>
+                <div class="info-group">
+                    <label for="contactEmail">Contact Email</label>
+                    <input type="email" id="contactEmail" value="jane.doe@example.com" readonly>
+                </div>
+                <div class="info-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" id="phoneNumber" value="+1 (555) 123-4567" readonly>
+                </div>
+                <div class="info-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" value="123 Client St, City, State, ZIP" readonly>
+                </div>
+                <div class="info-group">
+                    <label for="membershipTier">Membership Tier</label>
+                    <input type="text" id="membershipTier" value="Standard" readonly>
+                </div>
+                <div class="info-group">
+                    <label for="registeredDate">Registered Since</label>
+                    <input type="text" id="registeredDate" value="January 1, 2023" readonly>
+                </div>
+                <div class="info-group" style="grid-column: 1 / -1;">
+                    <label for="bio">Bio / About Me</label>
+                    <textarea id="bio" readonly>Passionate about finding the right legal counsel for various needs. Always looking for reliable and expert advice.</textarea>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button id="editProfileBtn">Edit Profile</button>
+                <button id="saveProfileBtn" style="display: none;">Save Changes</button>
+                <button id="cancelEditBtn" class="btn-cancel" style="display: none;">Cancel</button>
+            </div>
+        </div>
+
+        <div id="bookings-page">
+            <h2 class="section-title">My Bookings</h2>
+            <div class="booking-section">
+                <h3>Upcoming Bookings</h3>
+                <div class="booking-list" id="upcoming-bookings-list">
+                    <!-- Example Upcoming Booking -->
+                    <div class="booking-card">
+                        <div class="booking-details">
+                            <div class="lawyer-name">John Doe</div>
+                            <div class="lawyer-specialty">Criminal Law</div>
+                            <div class="booking-date-time">July 25, 2024 at 10:00 AM</div>
+                        </div>
+                        <span class="booking-status confirmed">Confirmed</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="booking-section">
+                <h3>Past Bookings</h3>
+                <div class="booking-list" id="past-bookings-list">
+                    <!-- Example Past Booking -->
+                    <div class="booking-card past">
+                        <div class="booking-details">
+                            <div class="lawyer-name">Anna Smith</div>
+                            <div class="lawyer-specialty">Family Law</div>
+                            <div class="booking-date-time">June 10, 2024 at 2:30 PM</div>
+                        </div>
+                        <span class="booking-status completed">Completed</span>
+                    </div>
+                    <div class="booking-card past">
+                        <div class="booking-details">
+                            <div class="lawyer-name">Michael Kim</div>
+                            <div class="lawyer-specialty">Corporate Law</div>
+                            <div class="booking-date-time">April 1, 2024 at 11:00 AM</div>
+                        </div>
+                        <span class="booking-status cancelled">Cancelled</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="messages-page">
+            <h2 class="section-title">My Messages</h2>
+            <p>You have no new messages.</p>
+        </div>
+
+        <div id="settings-page">
+            <h2 class="section-title">Settings</h2>
+            <div class="settings-group">
+                <h3>Account Settings</h3>
+                <div class="settings-item">
+                    <label>Change Password</label>
+                    <button class="action-button">Update</button>
+                </div>
+                <div class="settings-item">
+                    <label>Email Preferences</label>
+                    <button class="action-button">Manage</button>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <h3>Notification Preferences</h3>
+                <div class="settings-item">
+                    <label for="emailNotifications">Email Notifications</label>
+                    <input type="checkbox" id="emailNotifications" checked>
+                </div>
+                <div class="settings-item">
+                    <label for="smsNotifications">SMS Notifications</label>
+                    <input type="checkbox" id="smsNotifications">
+                </div>
+                <div class="settings-item">
+                    <label for="pushNotifications">Push Notifications</label>
+                    <input type="checkbox" id="pushNotifications" checked>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <h3>Privacy</h3>
+                <div class="settings-item">
+                    <label>Data Export</label>
+                    <button class="action-button">Request Data</button>
+                </div>
+                <div class="settings-item">
+                    <label>Delete Account</label>
+                    <button class="action-button" style="background-color: #F44336;">Delete</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="../js/clientDashboard.js"></script>
+
+
+</body>
+</html>
