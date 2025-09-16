@@ -32,7 +32,46 @@ public class LawyerProfileController {
     private final LawyerProfileService lawyerProfileService;
     private final UserService userService;
 
-    
+
+    @PostMapping("/saveProfile")
+    public ResponseEntity<ApiResponse> saveLawyerProfile(@ModelAttribute LawyerProfileDTO lawyerProfileDTO , @RequestParam(value = "profilePicture" , required = false) MultipartFile profilePicture){
+
+        System.out.println("Save profile controller called");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userService.getUserByUsername(username);
+        lawyerProfileService.saveProfile(user , lawyerProfileDTO , profilePicture);
+
+        return new ResponseEntity(new ApiResponse(200,"Profile Created Successfully",null), HttpStatus.CREATED);
+
+    }
+
+
+    @PutMapping("/updateProfile")
+    public ResponseEntity<ApiResponse> updateLawyerProfile(@ModelAttribute LawyerProfileDTO lawyerProfileDTO , @RequestParam(value = "profilePicture" , required = false) MultipartFile profilePicture){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.getUserByUsername(username);
+
+        lawyerProfileService.updateProfile(user , lawyerProfileDTO , profilePicture);
+        return new ResponseEntity(new ApiResponse(200,"Profile Created Successfully",null), HttpStatus.OK);
+
+
+    }
+
+    @GetMapping("/getProfile")
+    public ResponseEntity<ApiResponse> getLawyerProfile(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.getUserByUsername(username);
+        LawyerProfileDTO lawyerProfileDTO = lawyerProfileService.getProfile(user);
+        return new ResponseEntity(new ApiResponse(200,"Profile fetched Successfully",lawyerProfileDTO), HttpStatus.OK);
+    }
+
+
 
 
 }
