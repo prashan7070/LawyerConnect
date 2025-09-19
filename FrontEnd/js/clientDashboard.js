@@ -1,277 +1,362 @@
 
     document.addEventListener('DOMContentLoaded', () => {
-    const sidebarLinks = document.querySelectorAll('.sidebar nav ul li a');
-    const pages = document.querySelectorAll('.main-content > div');
+        const sidebarLinks = document.querySelectorAll('.sidebar nav ul li a');
+        const pages = document.querySelectorAll('.main-content > div');
 
-    const profilePage = document.getElementById('profile-page');
-    const editProfileBtn = document.getElementById('editProfileBtn');
-    const saveProfileBtn = document.getElementById('saveProfileBtn');
-    const cancelEditBtn = document.getElementById('cancelEditBtn');
-    const profileInputs = profilePage.querySelectorAll('input, textarea');
+        const profilePage = document.getElementById('profile-page');
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const profileInputs = profilePage.querySelectorAll('input, textarea');
 
-    // Lawyer Profile Page Elements
-    const lawyerProfilePage = document.getElementById('lawyer-profile-page');
-    const lawyerProfileAvatar = document.getElementById('lawyerProfileAvatar');
-    const lawyerProfileName = document.getElementById('lawyerProfileName');
-    const lawyerProfileSpecialty = document.getElementById('lawyerProfileSpecialty');
-    const lawyerProfileStars = document.getElementById('lawyerProfileStars');
-    const lawyerProfileRating = document.getElementById('lawyerProfileRating');
-    const lawyerProfileReviews = document.getElementById('lawyerProfileReviews');
-    const lawyerProfileDescription = document.getElementById('lawyerProfileDescription');
-    const lawyerProfileAbout = document.getElementById('lawyerProfileAbout'); // Added About Me
-    const lawyerProfileExperience = document.getElementById('lawyerProfileExperience'); // Added Experience List
-    const startBookingBtn = document.getElementById('startBookingBtn');
-    const bookLawyerName = document.getElementById('bookLawyerName');
+        // Lawyer Profile Page Elements
+        const lawyerProfilePage = document.getElementById('lawyer-profile-page');
+        const lawyerProfileAvatar = document.getElementById('lawyerProfileAvatar');
+        const lawyerProfileName = document.getElementById('lawyerProfileName');
+        const lawyerProfileSpecialty = document.getElementById('lawyerProfileSpecialty');
+        const lawyerProfileStars = document.getElementById('lawyerProfileStars');
+        const lawyerProfileRating = document.getElementById('lawyerProfileRating');
+        const lawyerProfileReviews = document.getElementById('lawyerProfileReviews');
+        const lawyerProfileDescription = document.getElementById('lawyerProfileDescription');
+        const lawyerProfileAbout = document.getElementById('lawyerProfileAbout'); // Added About Me
+        const lawyerProfileExperience = document.getElementById('lawyerProfileExperience'); // Added Experience List
+        const startBookingBtn = document.getElementById('startBookingBtn');
+        const bookLawyerName = document.getElementById('bookLawyerName');
 
-    // Booking Flow Page Elements
-    const bookingFlowPage = document.getElementById('booking-flow-page');
-    const bookingFlowLawyerName = document.getElementById('bookingFlowLawyerName');
-    const bookingSteps = document.querySelectorAll('.booking-step');
-    const bookingStep1 = document.getElementById('booking-step-1');
-    const bookingStep2 = document.getElementById('booking-step-2');
-    const bookingStep3 = document.getElementById('booking-step-3');
-    const serviceScheduleForm = document.getElementById('serviceScheduleForm');
-    const serviceTypeInput = document.getElementById('serviceType');
-    const bookingDateInput = document.getElementById('bookingDate');
-    const bookingTimeInput = document.getElementById('bookingTime');
-    const caseDescriptionInput = document.getElementById('caseDescription');
-    const backToProfileBtn = document.getElementById('backToProfileBtn');
-    const backToStep1Btn = document.getElementById('backToStep1Btn');
-    const goToStep3Btn = document.getElementById('goToStep3Btn');
-    const backToStep2Btn = document.getElementById('backToStep2Btn');
-    const finalConfirmBookingBtn = document.getElementById('finalConfirmBookingBtn');
+        // Booking Flow Page Elements
+        const bookingFlowPage = document.getElementById('booking-flow-page');
+        const bookingFlowLawyerName = document.getElementById('bookingFlowLawyerName');
+        const bookingSteps = document.querySelectorAll('.booking-step');
+        const bookingStep1 = document.getElementById('booking-step-1');
+        const bookingStep2 = document.getElementById('booking-step-2');
+        const bookingStep3 = document.getElementById('booking-step-3');
+        const serviceScheduleForm = document.getElementById('serviceScheduleForm');
+        const serviceTypeInput = document.getElementById('serviceType');
+        const bookingDateInput = document.getElementById('bookingDate');
+        const bookingTimeInput = document.getElementById('bookingTime');
+        const caseDescriptionInput = document.getElementById('caseDescription');
+        const backToProfileBtn = document.getElementById('backToProfileBtn');
+        const backToStep1Btn = document.getElementById('backToStep1Btn');
+        const goToStep3Btn = document.getElementById('goToStep3Btn');
+        const backToStep2Btn = document.getElementById('backToStep2Btn');
+        const finalConfirmBookingBtn = document.getElementById('finalConfirmBookingBtn');
 
-    // Confirmation Details
-    const confirmLawyerName = document.getElementById('confirmLawyerName');
-    const confirmServiceType = document.getElementById('confirmServiceType');
-    const confirmDateTime = document.getElementById('confirmDateTime');
-    const confirmCaseDescription = document.getElementById('confirmCaseDescription');
+        // Confirmation Details
+        const confirmLawyerName = document.getElementById('confirmLawyerName');
+        const confirmServiceType = document.getElementById('confirmServiceType');
+        const confirmDateTime = document.getElementById('confirmDateTime');
+        const confirmCaseDescription = document.getElementById('confirmCaseDescription');
 
 
-    const bookButtons = document.querySelectorAll('.btn-book');
+        // JWT token check
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Please login first!");
+            window.location.href = "../pages/loginAndSignUp.html";
+            return;
+        }
 
-    // Booking lists
-    const upcomingBookingsList = document.getElementById('upcoming-bookings-list');
-    const pastBookingsList = document.getElementById('past-bookings-list');
+        // Decode JWT to get lawyer info if needed
+        const decoded = parseJwt(token);
 
-    let currentLawyer = null; // To store the selected lawyer's data
-    let currentBookingStep = 1;
+        const bookButtons = document.querySelectorAll('.btn-book');
 
-    function showPage(pageId) {
-    pages.forEach(page => {
-    page.style.display = 'none';
-});
-    document.getElementById(pageId).style.display = 'block';
+        // Booking lists
+        const upcomingBookingsList = document.getElementById('upcoming-bookings-list');
+        const pastBookingsList = document.getElementById('past-bookings-list');
 
-    sidebarLinks.forEach(link => {
-    if (link.dataset.page + '-page' === pageId ||
-    (pageId === 'lawyer-profile-page' && link.dataset.page === 'home') ||
-    (pageId === 'booking-flow-page' && link.dataset.page === 'home')) {
-    link.classList.add('active');
-} else {
-    link.classList.remove('active');
-}
-});
-}
+        let currentLawyer = null; // To store the selected lawyer's data
+        let currentBookingStep = 1;
 
-    function updateBookingSteps(step) {
-    bookingSteps.forEach(s => {
-    const stepNum = parseInt(s.dataset.step);
-    s.classList.remove('active', 'completed');
-    if (stepNum < step) {
-    s.classList.add('completed');
-} else if (stepNum === step) {
-    s.classList.add('active');
-}
-});
+        function showPage(pageId) {
+            pages.forEach(page => {
+                page.style.display = 'none';
+            });
+            document.getElementById(pageId).style.display = 'block';
 
-    // Hide all step sections and show the current one
-    bookingStep1.style.display = 'none';
-    bookingStep2.style.display = 'none';
-    bookingStep3.style.display = 'none';
+            sidebarLinks.forEach(link => {
+                if (link.dataset.page + '-page' === pageId ||
+                    (pageId === 'lawyer-profile-page' && link.dataset.page === 'home') ||
+                    (pageId === 'booking-flow-page' && link.dataset.page === 'home')) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
 
-    if (step === 1) {
-    bookingStep1.style.display = 'block';
-} else if (step === 2) {
-    bookingStep2.style.display = 'block';
-} else if (step === 3) {
-    bookingStep3.style.display = 'block';
-    populateConfirmationDetails();
-}
-}
+        function updateBookingSteps(step) {
+            bookingSteps.forEach(s => {
+                const stepNum = parseInt(s.dataset.step);
+                s.classList.remove('active', 'completed');
+                if (stepNum < step) {
+                    s.classList.add('completed');
+                } else if (stepNum === step) {
+                    s.classList.add('active');
+                }
+            });
 
-    function populateConfirmationDetails() {
-    if (currentLawyer) {
-    confirmLawyerName.textContent = currentLawyer.name;
-}
-    confirmServiceType.textContent = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
-    confirmDateTime.textContent = `${bookingDateInput.value} at ${bookingTimeInput.value}`;
-    confirmCaseDescription.textContent = caseDescriptionInput.value;
-}
+            // Hide all step sections and show the current one
+            bookingStep1.style.display = 'none';
+            bookingStep2.style.display = 'none';
+            bookingStep3.style.display = 'none';
 
-    // Initial page load
-    showPage('home-page');
+            if (step === 1) {
+                bookingStep1.style.display = 'block';
+            } else if (step === 2) {
+                bookingStep2.style.display = 'block';
+            } else if (step === 3) {
+                bookingStep3.style.display = 'block';
+                populateConfirmationDetails();
+            }
+        }
 
-    sidebarLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const pageId = link.dataset.page + '-page';
-    showPage(pageId);
-    // Reset profile edit mode if switching pages
-    if (pageId !== 'profile-page') {
-    cancelEdit();
-}
-});
-});
+        function populateConfirmationDetails() {
+            if (currentLawyer) {
+                confirmLawyerName.textContent = currentLawyer.name;
+            }
+            confirmServiceType.textContent = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
+            confirmDateTime.textContent = `${bookingDateInput.value} at ${bookingTimeInput.value}`;
+            confirmCaseDescription.textContent = caseDescriptionInput.value;
+        }
 
-    // Profile Edit functionality
-    editProfileBtn.addEventListener('click', () => {
-    profileInputs.forEach(input => {
-    input.readOnly = false;
-    input.style.borderColor = 'var(--primary-color)';
-});
-    editProfileBtn.style.display = 'none';
-    saveProfileBtn.style.display = 'inline-block';
-    cancelEditBtn.style.display = 'inline-block';
-});
+        // Initial page load
+        showPage('home-page');
 
-    saveProfileBtn.addEventListener('click', () => {
-    // In a real application, you would send this data to a server
-    alert('Profile saved! (This is a demo, no actual data saved)');
-    profileInputs.forEach(input => {
-    input.readOnly = true;
-    input.style.borderColor = 'var(--border-color)';
-});
-    editProfileBtn.style.display = 'inline-block';
-    saveProfileBtn.style.display = 'none';
-    cancelEditBtn.style.display = 'none';
-});
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.dataset.page + '-page';
+                showPage(pageId);
+                // Reset profile edit mode if switching pages
+                if (pageId !== 'profile-page') {
+                    cancelEdit();
+                }
+            });
+        });
 
-    cancelEditBtn.addEventListener('click', cancelEdit);
+        // Profile Edit functionality
+        editProfileBtn.addEventListener('click', () => {
+            profileInputs.forEach(input => {
+                input.readOnly = false;
+                input.style.borderColor = 'var(--primary-color)';
+            });
+            editProfileBtn.style.display = 'none';
+            saveProfileBtn.style.display = 'inline-block';
+            cancelEditBtn.style.display = 'inline-block';
+        });
 
-    function cancelEdit() {
-    profileInputs.forEach(input => {
-    input.readOnly = true;
-    input.style.borderColor = 'var(--border-color)';
+        saveProfileBtn.addEventListener('click', () => {
+            // In a real application, you would send this data to a server
+            alert('Profile saved! (This is a demo, no actual data saved)');
+            profileInputs.forEach(input => {
+                input.readOnly = true;
+                input.style.borderColor = 'var(--border-color)';
+            });
+            editProfileBtn.style.display = 'inline-block';
+            saveProfileBtn.style.display = 'none';
+            cancelEditBtn.style.display = 'none';
+        });
 
-});
-    editProfileBtn.style.display = 'inline-block';
-    saveProfileBtn.style.display = 'none';
-    cancelEditBtn.style.display = 'none';
-}
+        cancelEditBtn.addEventListener('click', cancelEdit);
 
-    // "Book Now" buttons on home page -> Lawyer Profile Page
-    bookButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-    e.preventDefault();
-    const lawyerCard = e.target.closest('.lawyer-card');
-    currentLawyer = {
-    id: lawyerCard.dataset.lawyerId,
-    name: lawyerCard.dataset.lawyerName,
-    specialty: lawyerCard.dataset.lawyerSpecialty,
-    rating: lawyerCard.dataset.lawyerRating,
-    reviews: lawyerCard.dataset.lawyerReviews,
-    description: lawyerCard.dataset.lawyerDescription,
-    avatar: lawyerCard.dataset.lawyerAvatar
-};
+        function cancelEdit() {
+            profileInputs.forEach(input => {
+                input.readOnly = true;
+                input.style.borderColor = 'var(--border-color)';
 
-    // Populate Lawyer Profile Page
-    lawyerProfileAvatar.src = currentLawyer.avatar;
-    lawyerProfileName.textContent = currentLawyer.name;
-    lawyerProfileSpecialty.textContent = currentLawyer.specialty;
-    lawyerProfileDescription.textContent = currentLawyer.description;
-    bookLawyerName.textContent = currentLawyer.name; // For the button text
+            });
+            editProfileBtn.style.display = 'inline-block';
+            saveProfileBtn.style.display = 'none';
+            cancelEditBtn.style.display = 'none';
+        }
 
-    // Generate stars for rating
-    lawyerProfileStars.innerHTML = '';
-    const fullStars = Math.floor(parseFloat(currentLawyer.rating));
-    const hasHalfStar = parseFloat(currentLawyer.rating) % 1 !== 0;
-    for (let i = 0; i < fullStars; i++) {
-    lawyerProfileStars.innerHTML += '<i class="fas fa-star"></i>';
-}
-    if (hasHalfStar) {
-    lawyerProfileStars.innerHTML += '<i class="fas fa-star-half-alt"></i>';
-}
-    for (let i = 0; i < (5 - fullStars - (hasHalfStar ? 1 : 0)); i++) {
-    lawyerProfileStars.innerHTML += '<i class="far fa-star"></i>';
-}
-    lawyerProfileRating.textContent = currentLawyer.rating;
-    lawyerProfileReviews.textContent = currentLawyer.reviews;
+        // "Book Now" buttons on home page -> Lawyer Profile Page
+        // bookButtons.forEach(button => {
+        //     button.addEventListener('click', (e) => {
+        //         e.preventDefault();
+        //         const lawyerCard = e.target.closest('.lawyer-card');
+        //         currentLawyer = {
+        //             id: lawyerCard.dataset.lawyerId,
+        //             name: lawyerCard.dataset.lawyerName,
+        //             specialty: lawyerCard.dataset.lawyerSpecialty,
+        //             rating: lawyerCard.dataset.lawyerRating,
+        //             reviews: lawyerCard.dataset.lawyerReviews,
+        //             description: lawyerCard.dataset.lawyerDescription,
+        //             avatar: lawyerCard.dataset.lawyerAvatar
+        //         };
+        //
+        //         // Populate Lawyer Profile Page
+        //         lawyerProfileAvatar.src = currentLawyer.avatar;
+        //         lawyerProfileName.textContent = currentLawyer.name;
+        //         lawyerProfileSpecialty.textContent = currentLawyer.specialty;
+        //         lawyerProfileDescription.textContent = currentLawyer.description;
+        //         bookLawyerName.textContent = currentLawyer.name; // For the button text
+        //
+        //         // Generate stars for rating
+        //         lawyerProfileStars.innerHTML = '';
+        //         const fullStars = Math.floor(parseFloat(currentLawyer.rating));
+        //         const hasHalfStar = parseFloat(currentLawyer.rating) % 1 !== 0;
+        //         for (let i = 0; i < fullStars; i++) {
+        //             lawyerProfileStars.innerHTML += '<i class="fas fa-star"></i>';
+        //         }
+        //         if (hasHalfStar) {
+        //             lawyerProfileStars.innerHTML += '<i class="fas fa-star-half-alt"></i>';
+        //         }
+        //         for (let i = 0; i < (5 - fullStars - (hasHalfStar ? 1 : 0)); i++) {
+        //             lawyerProfileStars.innerHTML += '<i class="far fa-star"></i>';
+        //         }
+        //         lawyerProfileRating.textContent = currentLawyer.rating;
+        //         lawyerProfileReviews.textContent = currentLawyer.reviews;
+        //
+        //         showPage('lawyer-profile-page');
+        //     });
+        // });
 
-    showPage('lawyer-profile-page');
-});
-});
 
-    // Start Booking button on Lawyer Profile Page -> Booking Flow Step 1
-    startBookingBtn.addEventListener('click', () => {
-    if (currentLawyer) {
-    bookingFlowLawyerName.textContent = `Book Appointment with ${currentLawyer.name}`;
-    currentBookingStep = 1;
-    updateBookingSteps(currentBookingStep);
-    showPage('booking-flow-page');
-} else {
-    alert("No lawyer selected. Please go back to find a lawyer.");
-    showPage('home-page');
-}
-});
+        // NEW ✅ Delegated Book Now event
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('btn-book')) {
+                e.preventDefault();
 
-    // Navigation within Booking Flow
-    backToProfileBtn.addEventListener('click', () => {
-    showPage('lawyer-profile-page'); // Go back to the lawyer's profile
-});
+                const lawyerCard = e.target.closest('.lawyer-card');
+                currentLawyer = {
+                    id: lawyerCard.dataset.lawyerId,
+                    name: lawyerCard.querySelector('.name')?.textContent || '',
+                    specialty: lawyerCard.querySelector('.specialty')?.textContent || '',
+                    description: lawyerCard.querySelector('.description')?.textContent || '',
+                    avatar: lawyerCard.querySelector('img')?.src || '',
+                    rating: lawyerCard.dataset.lawyerRating || 0,
+                    reviews: lawyerCard.dataset.lawyerReviews || 0
+                };
 
-    serviceScheduleForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    currentBookingStep = 2;
-    updateBookingSteps(currentBookingStep);
-});
+                lawyerProfileAvatar.src = currentLawyer.avatar;
+                lawyerProfileName.textContent = currentLawyer.name;
+                lawyerProfileSpecialty.textContent = currentLawyer.specialty;
+                lawyerProfileDescription.textContent = currentLawyer.description;
+                bookLawyerName.textContent = currentLawyer.name;
 
-    backToStep1Btn.addEventListener('click', () => {
-    currentBookingStep = 1;
-    updateBookingSteps(currentBookingStep);
-});
+                lawyerProfileStars.innerHTML = generateStars(parseFloat(currentLawyer.rating));
+                lawyerProfileRating.textContent = currentLawyer.rating;
+                lawyerProfileReviews.textContent = currentLawyer.reviews;
 
-    goToStep3Btn.addEventListener('click', () => {
-    // Here you would typically validate payment details
-    alert("Proceeding to confirmation! (Payment details would be processed here)");
-    currentBookingStep = 3;
-    updateBookingSteps(currentBookingStep);
-});
+                showPage('lawyer-profile-page');
+            }
+        });
 
-    backToStep2Btn.addEventListener('click', () => {
-    currentBookingStep = 2;
-    updateBookingSteps(currentBookingStep);
-});
 
-    finalConfirmBookingBtn.addEventListener('click', () => {
-    // Final booking logic here
-    if (!currentLawyer) {
-    alert("Error: No lawyer selected.");
-    showPage('home-page');
-    return;
-}
 
-    const selectedServiceText = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
-    const bookingDate = bookingDateInput.value;
-    const bookingTime = bookingTimeInput.value;
-    const caseDescription = caseDescriptionInput.value;
 
-    if (!selectedServiceText || !bookingDate || !bookingTime || !caseDescription) {
-    alert('Please ensure all booking details are filled before confirming.');
-    return;
-}
+        function loadLawyerProfile(lawyerId) {
+            $.ajax({
+                url: `http://localhost:8080/api/client/explore/lawyers/${lawyerId}`, // adjust endpoint
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                success: function (lawyer) {
+                    console.log("Fetched lawyer profile:", lawyer);
 
-    const bookingDateTime = new Date(`${bookingDate}T${bookingTime}`);
-    const formattedDateTime = bookingDateTime.toLocaleString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-});
+                    currentLawyer = lawyer; // store full lawyer object
 
-    const newBookingHtml = `
+                    // Fill profile page
+                    const BASE_URL = "http://localhost:8080";
+                    lawyerProfileAvatar.src = lawyer.profilePictureUrl ? BASE_URL + lawyer.profilePictureUrl : "https://via.placeholder.com/100";
+                    lawyerProfileName.textContent = lawyer.fullName || "";
+                    lawyerProfileSpecialty.textContent = lawyer.specialties || "";
+                    lawyerProfileDescription.textContent = lawyer.bio || "";
+                    lawyerProfileAbout.textContent = lawyer.aboutMe || ""; // if available
+                    lawyerProfileExperience.innerHTML = (lawyer.experiences || [])
+                        .map(exp => `<li>${exp}</li>`)
+                        .join("");
+
+                    // Stars + rating
+                    lawyerProfileStars.innerHTML = generateStars(lawyer.rating || 0);
+                    lawyerProfileRating.textContent = lawyer.rating || 0;
+                    lawyerProfileReviews.textContent = lawyer.reviews || 0;
+
+                    bookLawyerName.textContent = lawyer.fullName;
+
+                    showPage("lawyer-profile-page");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching lawyer profile:", error);
+                }
+            });
+        }
+
+
+
+        // Start Booking button on Lawyer Profile Page -> Booking Flow Step 1
+        startBookingBtn.addEventListener('click', () => {
+            if (currentLawyer) {
+                bookingFlowLawyerName.textContent = `Book Appointment with ${currentLawyer.name}`;
+                currentBookingStep = 1;
+                updateBookingSteps(currentBookingStep);
+                showPage('booking-flow-page');
+            } else {
+                alert("No lawyer selected. Please go back to find a lawyer.");
+                showPage('home-page');
+            }
+        });
+
+        // Navigation within Booking Flow
+        backToProfileBtn.addEventListener('click', () => {
+            showPage('lawyer-profile-page'); // Go back to the lawyer's profile
+        });
+
+        serviceScheduleForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            currentBookingStep = 2;
+            updateBookingSteps(currentBookingStep);
+        });
+
+        backToStep1Btn.addEventListener('click', () => {
+            currentBookingStep = 1;
+            updateBookingSteps(currentBookingStep);
+        });
+
+        goToStep3Btn.addEventListener('click', () => {
+            // Here you would typically validate payment details
+            alert("Proceeding to confirmation! (Payment details would be processed here)");
+            currentBookingStep = 3;
+            updateBookingSteps(currentBookingStep);
+        });
+
+        backToStep2Btn.addEventListener('click', () => {
+            currentBookingStep = 2;
+            updateBookingSteps(currentBookingStep);
+        });
+
+        finalConfirmBookingBtn.addEventListener('click', () => {
+            // Final booking logic here
+            if (!currentLawyer) {
+                alert("Error: No lawyer selected.");
+                showPage('home-page');
+                return;
+            }
+
+            const selectedServiceText = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
+            const bookingDate = bookingDateInput.value;
+            const bookingTime = bookingTimeInput.value;
+            const caseDescription = caseDescriptionInput.value;
+
+            if (!selectedServiceText || !bookingDate || !bookingTime || !caseDescription) {
+                alert('Please ensure all booking details are filled before confirming.');
+                return;
+            }
+
+            const bookingDateTime = new Date(`${bookingDate}T${bookingTime}`);
+            const formattedDateTime = bookingDateTime.toLocaleString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            const newBookingHtml = `
             <div class="booking-card">
                 <div class="booking-details">
                     <div class="lawyer-name">${currentLawyer.name}</div>
@@ -282,71 +367,100 @@
             </div>
         `;
 
-    upcomingBookingsList.insertAdjacentHTML('afterbegin', newBookingHtml); // Add to top of upcoming list
+            upcomingBookingsList.insertAdjacentHTML('afterbegin', newBookingHtml); // Add to top of upcoming list
 
-    alert(`Booking Confirmed with ${currentLawyer.name} for ${formattedDateTime} (${selectedServiceText})!`);
+            alert(`Booking Confirmed with ${currentLawyer.name} for ${formattedDateTime} (${selectedServiceText})!`);
 
-    // Reset booking flow
-    currentLawyer = null;
-    serviceScheduleForm.reset();
-    currentBookingStep = 1;
+            // Reset booking flow
+            currentLawyer = null;
+            serviceScheduleForm.reset();
+            currentBookingStep = 1;
 
-    showPage('bookings-page'); // Navigate to bookings page
-});
-});
+            showPage('bookings-page'); // Navigate to bookings page
+        });
 
-    // document.addEventListener("DOMContentLoaded", function () {
-    //
-    //     const token = localStorage.getItem("token");
-    //
-    //     if (!token) {
-    //         alert("Please login first!");
-    //         window.location.href = "../pages/signIn.pages";
-    //         return;
-    //     }
-    //
-    //     const decoded = parseJwt(token);
-    //
-    //     if (!decoded || decoded.role !== "CLIENT") {
-    //         alert("Unauthorized! Only clients can access this page.");
-    //         window.location.href = "../pages/signIn.pages";
-    //         return;
-    //     }
-    //
-    //     console.log("Welcome Client:", decoded.username);
-    //
-    //     // $.ajax({
-    //     //     url: "http://localhost:8080/api/clients/appointments",
-    //     //     method: "GET",
-    //     //     headers: { Authorization: "Bearer " + token },
-    //     //     success: function (data) {
-    //     //
-    //     //     },
-    //     //     error: function (err) {
-    //     //         console.error("Error fetching appointments", err);
-    //     //     }
-    //     // });
-    //
-    //
-    //     // document.getElementById("logoutBtn").addEventListener("click", function () {
-    //     //     localStorage.removeItem("token");
-    //     //     localStorage.removeItem("role");
-    //     //     window.location.href = "../pages/signIn.pages";
-    //     // });
-    // });
-    //
-    //
-    // function parseJwt(token) {
-    //     try {
-    //         const base64Url = token.split('.')[1];
-    //         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    //         const jsonPayload = decodeURIComponent(
-    //             atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
-    //         );
-    //         return JSON.parse(jsonPayload);
-    //     } catch (e) {
-    //         console.error("Invalid token", e);
-    //         return null;
-    //     }
-    // }
+
+        function loadLawyers() {
+            $.ajax({
+                url: "http://localhost:8080/api/client/explore/getAllLawyers", // adjust backend endpoint
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                success: function (response) {
+                    var $grid = $(".lawyer-grid");
+                    $grid.empty();
+
+                    let data = response.data;
+
+                    data.forEach(function (lawyer) {
+
+                        let name = lawyer.fullName;
+                        let specialties = lawyer.specialties;
+                        let bio = lawyer.bio;
+                        const profileUrl = lawyer.profilePictureUrl;
+                        const BASE_URL = "http://localhost:8080";
+                        const url = BASE_URL + profileUrl;
+
+
+                        var card = `
+                    <div class="lawyer-card" data-lawyer-id="${lawyer.id}">
+                        <img src="${url || 'https://via.placeholder.com/100'}" 
+                             alt="Lawyer Avatar" class="avatar">
+                        <div class="name">${name}</div>
+                        <div class="specialty">${specialties || ''}</div>
+                        
+                        <p class="description">${bio || ''}</p>
+                        <a href="#" class="btn-book" data-lawyer-id="${lawyer.id}">Book Now</a>
+                    </div>
+                `;
+                        $grid.append(card);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching lawyers:", error);
+                }
+            });
+        }
+
+        function generateStars(rating) {
+            var stars = "";
+            var full = Math.floor(rating);
+            var half = rating % 1 >= 0.5 ? 1 : 0;
+
+            for (var i = 0; i < full; i++) stars += '<i class="fas fa-star"></i>';
+            if (half) stars += '<i class="fas fa-star-half-alt"></i>';
+            for (var j = full + half; j < 5; j++) stars += '<i class="far fa-star"></i>';
+
+            return stars;
+        }
+
+// call it on page load
+        loadLawyers();
+
+
+        // <div className="rating">
+        //     ${generateStars(lawyer.rating || 0)}
+        //     <span>${lawyer.rating || 0} (${lawyer.reviews || 0})</span>
+        // </div>
+
+
+        // JWT parser function
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(
+                    atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
+                );
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                console.error("Invalid token", e);
+                return null;
+            }
+        }
+
+    });
+
+
 

@@ -296,6 +296,123 @@
                     <input type="text" id="address" value="456 Legal Ave, Suite 101, Lawton, CA 90210" readonly>
                 </div>
             </div>
+
+<!--            <div class="availability-section">-->
+<!--                <h3>My Availability</h3>-->
+<!--                <div id="availability-grid" class="availability-grid">-->
+<!--                    &lt;!&ndash; Availability rows will be generated here by JavaScript &ndash;&gt;-->
+<!--                </div>-->
+<!--                <button id="addAvailabilityBtn" class="add-button" style="display: none;">Add Time Slot</button>-->
+<!--            </div>-->
+
+            <div class="availability-section">
+                <h3>My Availability</h3>
+                <div id="availability-grid" class="availability-grid">
+
+                    <div class="availability-day-group" data-day="MONDAY">
+                        <div class="availability-day-header">
+                            <h4>Monday</h4>
+                            <label class="switch">
+                                <input type="checkbox" class="day-toggle" checked> <!-- 'checked' if available by default -->
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="time-slots">
+                            <input type="time" class="start-time">
+                            <input type="time" class="end-time">
+                        </div>
+                    </div>
+
+                    <!-- Example for Tuesday -->
+                    <div class="availability-day-group" data-day="TUESDAY">
+                        <div class="availability-day-header">
+                            <h4>Tuesday</h4>
+                            <label class="switch">
+                                <input type="checkbox" class="day-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="time-slots">
+                            <input type="time" class="start-time" >
+                            <input type="time" class="end-time" >
+                        </div>
+                    </div>
+
+                    <div class="availability-day-group" data-day="WEDNESDAY">
+                        <div class="availability-day-header">
+                            <h4>Wednesday</h4>
+                            <label class="switch">
+                                <input type="checkbox" class="day-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="time-slots">
+                            <input type="time" class="start-time" >
+                            <input type="time" class="end-time" >
+                        </div>
+                    </div>
+
+                    <div class="availability-day-group" data-day="THURSDAY">
+                        <div class="availability-day-header">
+                            <h4>Thursday</h4>
+                            <label class="switch">
+                                <input type="checkbox" class="day-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="time-slots">
+                            <input type="time" class="start-time" >
+                            <input type="time" class="end-time" >
+                        </div>
+                    </div>
+
+                    <div class="availability-day-group" data-day="FRIDAY">
+                        <div class="availability-day-header">
+                            <h4>Friday</h4>
+                            <label class="switch">
+                                <input type="checkbox" class="day-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="time-slots">
+                            <input type="time" class="start-time" >
+                            <input type="time" class="end-time" >
+                        </div>
+                    </div>
+
+                    <div class="availability-day-group" data-day="SATURDAY">
+                        <div class="availability-day-header">
+                            <h4>Saturday</h4>
+                            <label class="switch">
+                                <input type="checkbox" class="day-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="time-slots">
+                            <input type="time" class="start-time" >
+                            <input type="time" class="end-time" >
+                        </div>
+                    </div>
+
+                    <div class="availability-day-group" data-day="SUNDAY">
+                        <div class="availability-day-header">
+                            <h4>Sunday</h4>
+                            <label class="switch">
+                                <input type="checkbox" class="day-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div class="time-slots">
+                            <input type="time" class="start-time" >
+                            <input type="time" class="end-time" >
+                        </div>
+                    </div>
+
+
+                </div>
+                <button id="addAvailabilityBtn" class="add-button" style="display: none;">Add Time Slot</button>
+            </div>
+
             <div class="profile-actions">
                 <button id="editProfileBtn">Edit Profile</button>
                 <button id="saveProfileBtn" style="display: none;">Save Changes</button>

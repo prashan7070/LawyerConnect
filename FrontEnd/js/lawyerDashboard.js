@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileImageInput = document.getElementById('profileImageInput');
     const profileAvatar = document.getElementById('profileAvatar');
 
+
+
     // JWT token check
     const token = localStorage.getItem("token");
     if (!token) {
@@ -21,9 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Decode JWT to get lawyer info if needed
     const decoded = parseJwt(token);
+
     if (!decoded || decoded.role !== "LAWYER") {
         alert("Unauthorized! Only lawyers can access this page.");
-        window.location.href = "../pages/signIn.html";
+        window.location.href = "../pages/loginAndSignUp.html";
         return;
     }
 
@@ -44,8 +47,50 @@ document.addEventListener('DOMContentLoaded', () => {
             const pageId = link.dataset.page + '-page';
             showPage(pageId);
             if (pageId !== 'profile-page') cancelEdit();
+
         });
     });
+
+
+
+    // Update editProfile and cancelEdit functions
+    function toggleEditMode(isEditing) {
+        const inputs = $('#profile-page input, #profile-page textarea, .time-slots input');
+        const toggleSwitches = $('#profile-page .day-toggle');
+
+        inputs.prop('readonly', !isEditing);
+        toggleSwitches.prop('disabled', !isEditing); // Disable toggles too
+
+        // Special handling for time inputs:
+        $('.availability-day-group').each(function() {
+            const dayToggle = $(this).find('.day-toggle');
+            const startTimeInput = $(this).find('.start-time');
+            const endTimeInput = $(this).find('.end-time');
+
+
+            if (isEditing) {
+                // If editing, enable time inputs only if the toggle is checked
+                if (dayToggle.is(':checked')) {
+                    startTimeInput.prop('disabled', false);
+                    endTimeInput.prop('disabled', false);
+                } else {
+                    startTimeInput.prop('disabled', true);
+                    endTimeInput.prop('disabled', true);
+                }
+            } else {
+                // If not editing, disable all time inputs
+                startTimeInput.prop('disabled', true);
+                endTimeInput.prop('disabled', true);
+
+
+            }
+        });
+
+
+    }
+
+
+
 
     // Profile Edit functionality
     editProfileBtn.addEventListener('click', () => {
@@ -57,7 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
         editProfileBtn.style.display = 'none';
         saveProfileBtn.style.display = 'inline-block';
         cancelEditBtn.style.display = 'inline-block';
+
+        toggleEditMode(true);
+
+
     });
+
+
+
+
 
     loadProfile();
 
@@ -97,62 +150,115 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         profileAvatar.src = "../assets/images/default-avatar.png";
                     }
+
+
+                    // Render availability after loading profile data
+                    // renderAvailabilitySection(profile.availabilitySlots || []);
+
+
                 } else {
                     profilePage.dataset.hasProfile = "false";
+                    // renderAvailabilitySection([]);
                 }
+
+                toggleEditMode(false);
             },
             error: function () {
                 console.error("Could not load profile");
                 profilePage.dataset.hasProfile = "false";
+                // renderAvailabilitySection([]); // Render empty availability on error
+                // toggleEditMode(false); // Set to read-only even on error
             }
         });
     }
 
 
-    // function saveProfile() {
-    //     const profileData = {
-    //         fullName: document.getElementById("fullName").value,
-    //         email: document.getElementById("email").value,
-    //         address: document.getElementById("address").value,
-    //         phone: document.getElementById("phone").value,
-    //         specialties: document.getElementById("specialties").value,
-    //         bio: document.getElementById("bio").value
-    //     };
-    //
-    //     const hasProfile = profilePage.dataset.hasProfile === "true";
-    //     const url = hasProfile
-    //         ? "http://localhost:8080/api/lawyers/profile/" + profilePage.dataset.profileId
-    //         : "http://localhost:8080/api/lawyers/profile";
-    //
-    //     const method = hasProfile ? "PUT" : "POST";
-    //
-    //     $.ajax({
-    //         url: url,
-    //         type: method,
-    //         contentType: "application/json",
-    //         headers: {
-    //             "Authorization": "Bearer " + token
-    //         },
-    //         data: JSON.stringify(profileData),
-    //         success: function () {
-    //             alert("Profile saved successfully!");
-    //             profileInputs.forEach(input => {
-    //                 input.readOnly = true;
-    //                 input.style.borderColor = 'var(--border-color)';
-    //             });
-    //             profileImageUploadSection.style.display = 'none';
-    //             editProfileBtn.style.display = 'inline-block';
-    //             saveProfileBtn.style.display = 'none';
-    //             cancelEditBtn.style.display = 'none';
-    //             loadProfile(); // refresh data
-    //         },
-    //         error: function (xhr) {
-    //             alert("Error saving profile: " + xhr.responseText);
-    //         }
-    //     });
-    // }
+    function initAvailabilityListeners() {
+        $('#availability-grid .day-toggle').on('change', function () {
+            const toggle = $(this);
+            const dayGroup = toggle.closest('.availability-day-group');
+            const startTimeInput = dayGroup.find('.start-time');
+            const endTimeInput = dayGroup.find('.end-time');
+
+            if (toggle.is(':checked')) {
+                startTimeInput.prop('disabled', false);
+                endTimeInput.prop('disabled', false);
+            } else {
+                startTimeInput.prop('disabled', true).val('');
+                endTimeInput.prop('disabled', true).val('');
+            }
+        });
+
+        // Run once immediately so correct state is applied on load
+        $('#availability-grid .day-toggle').trigger('change');
+    }
+
+// Call once when page is ready
+    $(document).ready(function () {
+        initAvailabilityListeners();
+    });
+
+
+
+
+    function renderAvailabilitySection(availabilityList = []) {
+        const availabilityGrid = $('#availability-grid');
+        availabilityGrid.empty(); // Clear existing content
+
+        const daysOfWeek = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+
+        daysOfWeek.forEach(day => {
+            const dayAvailability = availabilityList.find(slot => slot.dayOfWeek === day);
+            const isAvailable = dayAvailability !== undefined;
+            const startTime = dayAvailability ? dayAvailability.startTime : '';
+            const endTime = dayAvailability ? dayAvailability.endTime : '';
+
+            const dayGroup = `
+            <div class="availability-day-group" data-day="${day}">
+                <div class="availability-day-header">
+                    <h4>${day.charAt(0) + day.slice(1).toLowerCase()}</h4>
+                    <label class="switch">
+                        <input type="checkbox" class="day-toggle" ${isAvailable ? 'checked' : ''}>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="time-slots">
+                    <input type="time" class="start-time" value="${startTime}" ${!isAvailable ? 'disabled' : ''}>
+                    <input type="time" class="end-time" value="${endTime}" ${!isAvailable ? 'disabled' : ''}>
+                </div>
+            </div>
+        `;
+            availabilityGrid.append(dayGroup);
+        });
+
+        // Add event listeners for the new toggles
+        availabilityGrid.find('.day-toggle').on('change', function() {
+            const toggle = $(this);
+            const dayGroup = toggle.closest('.availability-day-group');
+            const startTimeInput = dayGroup.find('.start-time');
+            const endTimeInput = dayGroup.find('.end-time');
+
+            if (toggle.is(':checked')) {
+                startTimeInput.prop('disabled', false);
+                endTimeInput.prop('disabled', false);
+
+            } else {
+                startTimeInput.prop('disabled', true);
+                endTimeInput.prop('disabled', true);
+                startTimeInput.val(''); // Clear times when disabled
+                endTimeInput.val(''); // Clear times when disabled
+
+            }
+        });
+
+        
+    }
+
+
+
 
     function saveProfile() {
+
         const formData = new FormData();
 
         // append normal fields
@@ -164,6 +270,30 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append("yearsOfExperience", document.getElementById("yearsExperience").value);
         formData.append("licenceNumber", document.getElementById("barId").value);
         formData.append("bio", document.getElementById("bio").value);
+
+
+
+        // const availabilityData = [];
+        // document.querySelectorAll('.availability-day-group').forEach((dayGroup, index) => {
+        //     const dayToggle = dayGroup.querySelector('.day-toggle');
+        //     const dayOfWeek = dayGroup.dataset.day; // Get the day from data-day attribute
+        //     const startTimeInput = dayGroup.querySelector('.start-time');
+        //     const endTimeInput = dayGroup.querySelector('.end-time');
+        //
+        //     // Only include if the toggle is checked AND times are provided
+        //     if (dayToggle.checked && startTimeInput.value && endTimeInput.value) {
+        //         availabilityData.push({
+        //             dayOfWeek: dayOfWeek,
+        //             startTime: startTimeInput.value,
+        //             endTime: endTimeInput.value
+        //         });
+        //     }
+        // });
+        //
+        // // Append availability data as a JSON string
+        // formData.append("availabilitySlots", JSON.stringify(availabilityData));
+        // // --- End Collect Availability Data ---
+
 
         // append file
         const file = document.getElementById("profileImageInput").files[0];
@@ -210,6 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editProfileBtn.style.display = 'inline-block';
         saveProfileBtn.style.display = 'none';
         cancelEditBtn.style.display = 'none';
+        toggleEditMode(false);
     }
 
 

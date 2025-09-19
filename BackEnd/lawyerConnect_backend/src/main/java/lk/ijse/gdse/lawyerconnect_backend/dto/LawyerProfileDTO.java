@@ -12,6 +12,7 @@ import lombok.Setter;
 
 public class LawyerProfileDTO {
 
+    private Long id;
     private String fullName;
     private String email;
     private String workingAddress;

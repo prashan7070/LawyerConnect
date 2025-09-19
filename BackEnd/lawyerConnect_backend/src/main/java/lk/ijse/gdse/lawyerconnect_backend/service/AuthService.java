@@ -37,13 +37,17 @@ public class AuthService {
     }
     // register user
     public String register(RegisterDTO registerDTO){
+
         if (userRepository.findByUsername(registerDTO.getUsername())
                 .isPresent()){
             throw new RuntimeException("Username already exists");
         }
+
         User user=User.builder()
+                .name(registerDTO.getName())
                 .username(registerDTO.getUsername())
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
+                .email(registerDTO.getEmail())
                 .role(Role.valueOf(registerDTO.getRole()))
                 .build();
         userRepository.save(user);

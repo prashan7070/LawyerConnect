@@ -1,10 +1,13 @@
 package lk.ijse.gdse.lawyerconnect_backend.dto;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 @Data
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class RegisterDTO {
     private String name;
     private String username;

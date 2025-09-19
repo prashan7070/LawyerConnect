@@ -34,8 +34,18 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
                     throw new RuntimeException("Profile already exists for this user");
                 });
 
-        LawyerProfile profile = modelMapper.map(dto , LawyerProfile.class);
+//        LawyerProfile profile = modelMapper.map(dto , LawyerProfile.class);
+        LawyerProfile profile = new LawyerProfile();
 
+        profile.setFullName(dto.getFullName());
+        profile.setEmail(dto.getEmail());
+        profile.setWorkingAddress(dto.getWorkingAddress());
+        profile.setPhone(dto.getPhone());
+        profile.setSpecialties(dto.getSpecialties());
+        profile.setYearsOfExperience(dto.getYearsOfExperience());
+        profile.setLicenceNumber(dto.getLicenceNumber());
+        profile.setBio(dto.getBio());
+        profile.setProfilePictureUrl(dto.getProfilePictureUrl());
         profile.setUser(user);
 
         if (profilePicture != null && !profilePicture.isEmpty()) {
@@ -53,7 +63,17 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
         LawyerProfile profile = lawyerProfileRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
 
-        modelMapper.map(dto , profile);
+//        modelMapper.map(dto , profile);
+
+        profile.setFullName(dto.getFullName());
+        profile.setEmail(dto.getEmail());
+        profile.setWorkingAddress(dto.getWorkingAddress());
+        profile.setPhone(dto.getPhone());
+        profile.setSpecialties(dto.getSpecialties());
+        profile.setYearsOfExperience(dto.getYearsOfExperience());
+        profile.setLicenceNumber(dto.getLicenceNumber());
+        profile.setBio(dto.getBio());
+        profile.setProfilePictureUrl(dto.getProfilePictureUrl());
 
 //        profile.setUser(user);
 
@@ -105,6 +125,8 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
             throw new RuntimeException("Failed to store file", e);
         }
     }
+
+
 
 
 
