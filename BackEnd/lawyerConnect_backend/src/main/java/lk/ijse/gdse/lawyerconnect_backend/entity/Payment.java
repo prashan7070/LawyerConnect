@@ -3,6 +3,7 @@ package lk.ijse.gdse.lawyerconnect_backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
@@ -15,7 +16,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double amount;
+    private BigDecimal amount;
     private String paymentMethod;
     private String transactionId;
     private LocalDateTime paidAt;

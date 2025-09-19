@@ -1,9 +1,14 @@
 package lk.ijse.gdse.lawyerconnect_backend.service.impl;
 
+import lk.ijse.gdse.lawyerconnect_backend.dto.AvailabilityDTO;
 import lk.ijse.gdse.lawyerconnect_backend.dto.LawyerProfileDTO;
+import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerAvailability;
 import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerProfile;
+import lk.ijse.gdse.lawyerconnect_backend.entity.Specialization;
 import lk.ijse.gdse.lawyerconnect_backend.entity.User;
+import lk.ijse.gdse.lawyerconnect_backend.repository.LawyerAvailabilityRepository;
 import lk.ijse.gdse.lawyerconnect_backend.repository.LawyerProfileRepository;
+import lk.ijse.gdse.lawyerconnect_backend.repository.SpecializationRepository;
 import lk.ijse.gdse.lawyerconnect_backend.service.LawyerProfileService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -15,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -22,6 +28,8 @@ import java.util.UUID;
 public class LawyerProfileServiceImpl implements LawyerProfileService {
 
     private final LawyerProfileRepository lawyerProfileRepository;
+    private final LawyerAvailabilityRepository lawyerAvailabilityRepository;
+    private final SpecializationRepository specializationRepository;
     private final ModelMapper modelMapper;
     private final String UPLOAD_DIR = "uploads/profile-images";
 
@@ -47,6 +55,15 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
         profile.setBio(dto.getBio());
         profile.setProfilePictureUrl(dto.getProfilePictureUrl());
         profile.setUser(user);
+
+        if (dto.getSpecializationIds() != null && !dto.getSpecializationIds().isEmpty()) {
+            List<Specialization> specs = specializationRepository.findAllById(dto.getSpecializationIds());
+            profile.setSpecializations(specs);
+
+//            // optional: also store names as a simple string
+//            String names = specs.stream().map(Specialization::getSpecialization).toList().toString();
+//            profile.setSpecialties(names);
+        }
 
         if (profilePicture != null && !profilePicture.isEmpty()) {
             String fileUrl = saveFile(profilePicture);
@@ -74,6 +91,12 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
         profile.setLicenceNumber(dto.getLicenceNumber());
         profile.setBio(dto.getBio());
         profile.setProfilePictureUrl(dto.getProfilePictureUrl());
+
+
+        if (dto.getSpecializationIds() != null && !dto.getSpecializationIds().isEmpty()) {
+            List<Specialization> specs = specializationRepository.findAllById(dto.getSpecializationIds());
+            profile.setSpecializations(specs);
+        }
 
 //        profile.setUser(user);
 
@@ -127,6 +150,38 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
     }
 
 
+
+    @Override
+    public void saveAvailability(User user, AvailabilityDTO availabilityDTO) {
+
+        LawyerProfile profile = lawyerProfileRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Profile not found"));
+
+        LawyerAvailability availability = LawyerAvailability.builder()
+                .date(availabilityDTO.getDate())
+                .startTime(availabilityDTO.getStartTime())
+                .endTime(availabilityDTO.getEndTime())
+                .lawyerProfile(profile)
+                .build();
+
+        lawyerAvailabilityRepository.save(availability);
+
+    }
+
+
+    @Override
+    public List<AvailabilityDTO> getAvailability(User user) {
+
+        LawyerProfile profile = lawyerProfileRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Profile not found"));
+
+        return lawyerAvailabilityRepository.findByLawyerProfile(profile)
+                .stream()
+                .map(a -> modelMapper.map(a, AvailabilityDTO.class))
+                .toList();
+
+
+    }
 
 
 

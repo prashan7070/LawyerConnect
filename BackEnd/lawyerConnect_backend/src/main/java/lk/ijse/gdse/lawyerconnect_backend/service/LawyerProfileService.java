@@ -1,5 +1,6 @@
 package lk.ijse.gdse.lawyerconnect_backend.service;
 
+import lk.ijse.gdse.lawyerconnect_backend.dto.AvailabilityDTO;
 import lk.ijse.gdse.lawyerconnect_backend.dto.LawyerProfileDTO;
 import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerProfile;
 import lk.ijse.gdse.lawyerconnect_backend.entity.User;
@@ -13,5 +14,7 @@ public interface LawyerProfileService {
         void saveProfile(User user, LawyerProfileDTO dto, MultipartFile profilePicture);
         void updateProfile(User user , LawyerProfileDTO dto, MultipartFile profilePicture);
         LawyerProfileDTO getProfile(User user);
+        void saveAvailability(User user, AvailabilityDTO availabilityDTO);
+        List<AvailabilityDTO> getAvailability(User user);
 
 }

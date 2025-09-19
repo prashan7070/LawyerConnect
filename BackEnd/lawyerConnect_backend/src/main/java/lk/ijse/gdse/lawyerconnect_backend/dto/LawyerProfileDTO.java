@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -22,6 +25,10 @@ public class LawyerProfileDTO {
     private String licenceNumber;
     private String bio;
     private String profilePictureUrl;
+    private BigDecimal onlineFee;
+    private BigDecimal inPersonFee;
+
+    private List<Long> specializationIds;
 
 
 }

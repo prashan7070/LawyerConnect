@@ -3,6 +3,7 @@ package lk.ijse.gdse.lawyerconnect_backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class LawyerProfile{
     private String licenceNumber;
     private String bio;
     private String profilePictureUrl;
+    private BigDecimal onlineFee;
+    private BigDecimal inPersonFee;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -41,4 +44,6 @@ public class LawyerProfile{
 
     @OneToMany(mappedBy = "lawyer")
     private List<Appointment> appointments;
+
+
 }

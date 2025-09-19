@@ -14,7 +14,6 @@ public class Specialization {
     private Long id;
 
     private String specialization;
-    private String description;
 
     @ManyToMany(mappedBy = "specializations")
     private List<LawyerProfile> lawyers;

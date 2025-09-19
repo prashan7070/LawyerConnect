@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileImageInput = document.getElementById('profileImageInput');
     const profileAvatar = document.getElementById('profileAvatar');
 
+    const onlineChargeInput = document.getElementById("onlineCharge");
+    const inPersonChargeInput = document.getElementById("inPersonCharge");
+
 
 
     // JWT token check
@@ -109,7 +112,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-
+    $(document).ready(function() {
+        $.ajax({
+            url: "http://localhost:8080/api/lawyer/profile/getspecializations",
+            method: "GET",
+            success: function(data) {
+                const dropdown = $("#specialtiesDropdown");
+                data.forEach(function(spec) {
+                    dropdown.append(
+                        $("<option>").text(spec.name).val(spec.id)  // value = id
+                    );
+                });
+            },
+            error: function() {
+                console.error("Failed to fetch specializations.");
+            }
+        });
+    });
 
 
     loadProfile();
@@ -137,10 +156,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById("yearsExperience").value = profile.yearsOfExperience || "";
                     document.getElementById("barId").value = profile.licenceNumber || "";
                     document.getElementById("bio").value = profile.bio || "";
+                    onlineChargeInput.value = profile. onlineFee||"";
+                    inPersonChargeInput.value = profile.inPersonFee || "";
 
-                    // if (profile.profilePictureUrl) {
-                    //     profileAvatar.src = profile.profilePictureUrl;
-                    // }
 
                     const BASE_URL = "http://localhost:8080";
 
@@ -152,13 +170,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
 
-                    // Render availability after loading profile data
-                    // renderAvailabilitySection(profile.availabilitySlots || []);
+                    if (profile.specializations && profile.specializations.length > 0) {
+                        $("#specialtiesDropdown").val(
+                            profile.specializations.map(spec => spec.id)
+                        );
+                    }
+
+
+
+                    renderAvailabilitySection(profile.availabilitySlots || []);
 
 
                 } else {
                     profilePage.dataset.hasProfile = "false";
-                    // renderAvailabilitySection([]);
+                    renderAvailabilitySection([]);
                 }
 
                 toggleEditMode(false);
@@ -232,26 +257,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Add event listeners for the new toggles
-        availabilityGrid.find('.day-toggle').on('change', function() {
-            const toggle = $(this);
-            const dayGroup = toggle.closest('.availability-day-group');
-            const startTimeInput = dayGroup.find('.start-time');
-            const endTimeInput = dayGroup.find('.end-time');
+        // availabilityGrid.find('.day-toggle').on('change', function() {
+        //     const toggle = $(this);
+        //     const dayGroup = toggle.closest('.availability-day-group');
+        //     const startTimeInput = dayGroup.find('.start-time');
+        //     const endTimeInput = dayGroup.find('.end-time');
+        //
+        //     if (toggle.is(':checked')) {
+        //         startTimeInput.prop('disabled', false);
+        //         endTimeInput.prop('disabled', false);
+        //
+        //     } else {
+        //         startTimeInput.prop('disabled', true);
+        //         endTimeInput.prop('disabled', true);
+        //         startTimeInput.val(''); // Clear times when disabled
+        //         endTimeInput.val(''); // Clear times when disabled
+        //
+        //     }
+        // });
 
-            if (toggle.is(':checked')) {
-                startTimeInput.prop('disabled', false);
-                endTimeInput.prop('disabled', false);
+        initAvailabilityListeners();
 
-            } else {
-                startTimeInput.prop('disabled', true);
-                endTimeInput.prop('disabled', true);
-                startTimeInput.val(''); // Clear times when disabled
-                endTimeInput.val(''); // Clear times when disabled
 
-            }
-        });
-
-        
     }
 
 
@@ -270,29 +297,40 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append("yearsOfExperience", document.getElementById("yearsExperience").value);
         formData.append("licenceNumber", document.getElementById("barId").value);
         formData.append("bio", document.getElementById("bio").value);
+        formData.append("onlineCharge", onlineChargeInput.value);
+        formData.append("inPersonCharge", inPersonChargeInput.value);
 
 
+        // collect specializationIds
+        const selectedSpecializations = Array.from(
+            document.getElementById("specialtiesDropdown").selectedOptions
+        ).map(option => option.value);
 
-        // const availabilityData = [];
-        // document.querySelectorAll('.availability-day-group').forEach((dayGroup, index) => {
-        //     const dayToggle = dayGroup.querySelector('.day-toggle');
-        //     const dayOfWeek = dayGroup.dataset.day; // Get the day from data-day attribute
-        //     const startTimeInput = dayGroup.querySelector('.start-time');
-        //     const endTimeInput = dayGroup.querySelector('.end-time');
-        //
-        //     // Only include if the toggle is checked AND times are provided
-        //     if (dayToggle.checked && startTimeInput.value && endTimeInput.value) {
-        //         availabilityData.push({
-        //             dayOfWeek: dayOfWeek,
-        //             startTime: startTimeInput.value,
-        //             endTime: endTimeInput.value
-        //         });
-        //     }
-        // });
-        //
-        // // Append availability data as a JSON string
-        // formData.append("availabilitySlots", JSON.stringify(availabilityData));
-        // // --- End Collect Availability Data ---
+        selectedSpecializations.forEach((id, index) => {
+            formData.append(`specializationIds[${index}]`, id);  // ✅ Spring binds this automatically
+        });
+
+
+        const availabilityData = [];
+        document.querySelectorAll('.availability-day-group').forEach((dayGroup, index) => {
+            const dayToggle = dayGroup.querySelector('.day-toggle');
+            const dayOfWeek = dayGroup.dataset.day; // Get the day from data-day attribute
+            const startTimeInput = dayGroup.querySelector('.start-time');
+            const endTimeInput = dayGroup.querySelector('.end-time');
+
+            // Only include if the toggle is checked AND times are provided
+            if (dayToggle.checked && startTimeInput.value && endTimeInput.value) {
+                availabilityData.push({
+                    dayOfWeek: dayOfWeek,
+                    startTime: startTimeInput.value,
+                    endTime: endTimeInput.value
+                });
+            }
+        });
+
+        formData.append("availabilitySlots", JSON.stringify(availabilityData));
+
+
 
 
         // append file

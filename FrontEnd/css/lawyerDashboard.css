@@ -405,137 +405,22 @@ body {
     display: none;
 }
 
+.charge-option {
+    margin-bottom: 10px;
+}
 
+.charge-option label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+}
 
-/*!* Availability Section Styles *!*/
-/*.availability-section {*/
-/*    grid-column: 1 / -1; !* Span full width in profile-info *!*/
-/*    margin-top: 30px;*/
-/*    padding-top: 25px;*/
-/*    border-top: 1px solid var(--border-color);*/
-/*}*/
-
-/*.availability-section h3 {*/
-/*    font-size: 22px;*/
-/*    color: var(--primary-color);*/
-/*    margin-bottom: 20px;*/
-/*    text-align: center;*/
-/*}*/
-
-/*.availability-grid {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    gap: 15px;*/
-/*}*/
-
-/*.availability-day-group {*/
-/*    background-color: var(--background-light);*/
-/*    border: 1px solid var(--border-color);*/
-/*    border-radius: 8px;*/
-/*    padding: 15px;*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    gap: 10px;*/
-/*}*/
-
-/*.availability-day-header {*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    align-items: center;*/
-/*    margin-bottom: 10px;*/
-/*    font-weight: 600;*/
-/*    color: var(--text-dark);*/
-/*}*/
-
-/*.availability-day-header h4 {*/
-/*    margin: 0;*/
-/*    font-size: 18px;*/
-/*}*/
-
-/*.availability-item {*/
-/*    display: grid;*/
-/*    grid-template-columns: 1fr 1fr 1fr 40px; !* Day, Start Time, End Time, Actions *!*/
-/*    gap: 10px;*/
-/*    align-items: center;*/
-/*    background-color: var(--card-background);*/
-/*    padding: 10px;*/
-/*    border-radius: 5px;*/
-/*    box-shadow: 0 2px 5px var(--shadow-light);*/
-/*}*/
-
-/*.availability-item input[type="time"],*/
-/*.availability-item select {*/
-/*    width: 100%;*/
-/*    padding: 8px;*/
-/*    border: 1px solid var(--border-color);*/
-/*    border-radius: 5px;*/
-/*    font-size: 15px;*/
-/*    font-family: 'Roboto Mono', monospace;*/
-/*    transition: border-color 0.3s ease;*/
-/*}*/
-
-/*.availability-item input[type="time"]:focus,*/
-/*.availability-item select:focus {*/
-/*    border-color: var(--primary-color);*/
-/*}*/
-
-/*.availability-item .remove-slot-btn {*/
-/*    background-color: #DC3545; !* Danger red *!*/
-/*    color: white;*/
-/*    border: none;*/
-/*    border-radius: 5px;*/
-/*    padding: 8px;*/
-/*    cursor: pointer;*/
-/*    font-size: 16px;*/
-/*    transition: background-color 0.3s ease;*/
-/*}*/
-
-/*.availability-item .remove-slot-btn:hover {*/
-/*    background-color: #C82333;*/
-/*}*/
-
-/*.add-button {*/
-/*    background-color: var(--secondary-color);*/
-/*    color: var(--card-background);*/
-/*    padding: 10px 20px;*/
-/*    border: none;*/
-/*    border-radius: 8px;*/
-/*    cursor: pointer;*/
-/*    font-size: 16px;*/
-/*    font-weight: 500;*/
-/*    margin-top: 20px;*/
-/*    display: block;*/
-/*    width: fit-content;*/
-/*    margin-left: auto;*/
-/*    margin-right: auto;*/
-/*    transition: background-color 0.3s ease;*/
-/*}*/
-
-/*.add-button:hover {*/
-/*    background-color: #218838;*/
-/*}*/
-
-/*!* Specific styling for the day select in availability item *!*/
-/*.availability-item .day-select {*/
-/*    grid-column: 1 / span 1; !* Keep it occupying only the first column *!*/
-/*}*/
-
-/*!* Read-only styles for availability *!*/
-/*.availability-item.readonly input,*/
-/*.availability-item.readonly select {*/
-/*    background-color: #f0f0f0;*/
-/*    border-color: var(--border-color);*/
-/*    cursor: default;*/
-/*}*/
-
-/*.availability-item.readonly .remove-slot-btn {*/
-/*    display: none;*/
-/*}*/
-
-/*.availability-day-group.readonly .add-button {*/
-/*    display: none !important;*/
-/*}*/
-
+.charge-option input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
 
 
 
@@ -651,5 +536,25 @@ input:checked + .slider:before {
     cursor: not-allowed;
     border-color: #e0e0e0;
 }
+
+
+.simple-dropdown {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+}
+
+/* Optional: hover/focus effect */
+.simple-dropdown:hover,
+.simple-dropdown:focus {
+    border-color: #4A90E2;
+    outline: none;
+}
+
 
 
