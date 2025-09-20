@@ -3,6 +3,7 @@ package lk.ijse.gdse.lawyerconnect_backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,10 +16,13 @@ public class ClientProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String fullName;
+    private String email;
     private String phone;
-    private String city;
+    private String address;
+    private String nic;
+    private LocalDate dob;
     private String profilePictureUrl;
-    private LocalDateTime dob;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

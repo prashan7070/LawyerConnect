@@ -310,10 +310,20 @@
 
         <div id="profile-page">
             <h2>My Profile</h2>
-            <div class="profile-header">
-                <img src="https://via.placeholder.com/120/4CAF50/FFFFFF?text=JP" alt="Client Avatar" class="avatar-large">
-                <div class="name">Jane P.</div>
-                <div class="email">jane.doe@example.com</div>
+
+            <div class="profile-header-section">
+                <div class="profile-image-wrapper">
+                    <img id="profileAvatar" src="https://via.placeholder.com/120/4CAF50/FFFFFF?text=JP" alt="Client Avatar" class="avatar-large">
+                    <div class="profile-image-upload" id="profileImageUploadSection">
+                        <input type="file" id="profileImageInput" accept="image/*">
+                        <label for="profileImageInput" class="upload-button"><i class="fas fa-camera"></i> Change Image</label>
+                        <span id="fileName" class="file-name">No file chosen</span>
+                    </div>
+                </div>
+                <div class="profile-text-details">
+                    <div class="name">Jane P.</div>
+                    <div class="email">jane.doe@example.com</div>
+                </div>
             </div>
             <div class="profile-info">
                 <div class="info-group">
@@ -321,29 +331,26 @@
                     <input type="text" id="fullName" value="Jane P." readonly>
                 </div>
                 <div class="info-group">
-                    <label for="contactEmail">Contact Email</label>
-                    <input type="email" id="contactEmail" value="jane.doe@example.com" readonly>
+                    <label for="email">Contact Email</label>
+                    <input type="email" id="email" value="" readonly>
                 </div>
                 <div class="info-group">
-                    <label for="phoneNumber">Phone Number</label>
-                    <input type="text" id="phoneNumber" value="+1 (555) 123-4567" readonly>
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" value="" readonly>
                 </div>
                 <div class="info-group">
                     <label for="address">Address</label>
-                    <input type="text" id="address" value="123 Client St, City, State, ZIP" readonly>
+                    <input type="text" id="address" value="" readonly>
                 </div>
                 <div class="info-group">
-                    <label for="membershipTier">Membership Tier</label>
-                    <input type="text" id="membershipTier" value="Standard" readonly>
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" value="">
                 </div>
                 <div class="info-group">
-                    <label for="registeredDate">Registered Since</label>
-                    <input type="text" id="registeredDate" value="January 1, 2023" readonly>
+                    <label for="nic">Nic Number</label>
+                    <input type="text" id="nic" value="" readonly>
                 </div>
-                <div class="info-group" style="grid-column: 1 / -1;">
-                    <label for="bio">Bio / About Me</label>
-                    <textarea id="bio" readonly>Passionate about finding the right legal counsel for various needs. Always looking for reliable and expert advice.</textarea>
-                </div>
+
             </div>
             <div class="profile-actions">
                 <button id="editProfileBtn">Edit Profile</button>
@@ -444,6 +451,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script src="../js/clientDashboard.js"></script>
 
 

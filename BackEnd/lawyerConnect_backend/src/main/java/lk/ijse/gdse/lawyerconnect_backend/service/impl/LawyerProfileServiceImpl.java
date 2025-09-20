@@ -39,6 +39,7 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
 
 
     @Override
+    @Transactional
     public void saveProfile(User user, LawyerProfileDTO dto, MultipartFile profilePicture) {
 
         lawyerProfileRepository.findByUser(user)
@@ -69,7 +70,6 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
         }
 
 
-
         if (profilePicture != null && !profilePicture.isEmpty()) {
             String fileUrl = saveFile(profilePicture);
             profile.setProfilePictureUrl(fileUrl);
@@ -77,6 +77,7 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
 
         lawyerProfileRepository.save(profile);
         saveAvailability(user , dto.getAvailabilitySlots());
+
     }
 
 

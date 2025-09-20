@@ -78,7 +78,7 @@ public class LawyerProfileController {
         return new ResponseEntity(new ApiResponse(200,"Profile Created Successfully",null), HttpStatus.OK);
 
     }
-    
+
 
 
     @GetMapping("/getProfile")

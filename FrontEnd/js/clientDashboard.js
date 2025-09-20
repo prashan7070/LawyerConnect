@@ -8,6 +8,8 @@
         const saveProfileBtn = document.getElementById('saveProfileBtn');
         const cancelEditBtn = document.getElementById('cancelEditBtn');
         const profileInputs = profilePage.querySelectorAll('input, textarea');
+        const profileImageUploadSection = document.getElementById('profileImageUploadSection');
+        const profileImageInput = document.getElementById('profileImageInput');
 
         // Lawyer Profile Page Elements
         const lawyerProfilePage = document.getElementById('lawyer-profile-page');
@@ -58,6 +60,13 @@
 
         // Decode JWT to get lawyer info if needed
         const decoded = parseJwt(token);
+
+        if (!decoded || decoded.role !== "CLIENT") {
+            alert("Unauthorized! Only clients can access this page.");
+            window.location.href = "../pages/landingPage.html";
+            return;
+        }
+
 
         const bookButtons = document.querySelectorAll('.btn-book');
 
@@ -141,6 +150,7 @@
                 input.readOnly = false;
                 input.style.borderColor = 'var(--primary-color)';
             });
+            profileImageUploadSection.style.display = 'block';
             editProfileBtn.style.display = 'none';
             saveProfileBtn.style.display = 'inline-block';
             cancelEditBtn.style.display = 'inline-block';
@@ -161,15 +171,37 @@
         cancelEditBtn.addEventListener('click', cancelEdit);
 
         function cancelEdit() {
-            profileInputs.forEach(input => {
-                input.readOnly = true;
-                input.style.borderColor = 'var(--border-color)';
-
-            });
+            // profileInputs.forEach(input => {
+            //     input.readOnly = true;
+            //     input.style.borderColor = 'var(--border-color)';
+            //
+            // });
+            profileInputs.forEach(input => input.readOnly = true);
+            profileInputs.forEach(input => input.style.borderColor = 'var(--border-color)');
+            profileImageUploadSection.style.display = 'none';
             editProfileBtn.style.display = 'inline-block';
             saveProfileBtn.style.display = 'none';
             cancelEditBtn.style.display = 'none';
         }
+
+
+        profileImageInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => { profileAvatar.src = e.target.result; };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+        profileImageUploadSection.style.display = 'none'; // Ensure it's hidden on load
+        // Also, ensure readonly inputs have their correct initial background
+        profileInputs.forEach(input => {
+            if (input.readOnly) {
+                input.style.backgroundColor = '#eceff1';
+            }
+        });
 
         // "Book Now" buttons on home page -> Lawyer Profile Page
         // bookButtons.forEach(button => {
@@ -213,8 +245,6 @@
         //     });
         // });
 
-
-        // NEW ✅ Delegated Book Now event
         document.addEventListener('click', function (e) {
             if (e.target.classList.contains('btn-book')) {
                 e.preventDefault();
@@ -378,6 +408,124 @@
 
             showPage('bookings-page'); // Navigate to bookings page
         });
+
+
+
+
+        function saveProfile() {
+
+            const formData = new FormData();
+
+
+            const clientProfile = {
+                fullName: document.getElementById("fullName").value,
+                email: document.getElementById("email").value,
+                address: document.getElementById("address").value,
+                phone: document.getElementById("phone").value,
+                nic: document.getElementById("nic").value,
+                dob: document.getElementById("dob").value,
+
+            };
+
+            console.log(clientProfile);
+
+            // Append DTO as JSON
+            formData.append("clientProfile", new Blob([JSON.stringify(clientProfile)], { type: "application/json" }));
+
+            // Append profile picture
+            const file = document.getElementById("profileImageInput").files[0];
+            if (file) formData.append("profilePicture", file);
+
+
+            const hasProfile = profilePage.dataset.hasProfile === "true";
+            const url = hasProfile
+                ? "http://localhost:8080/api/client/profile/updateProfile"
+                : "http://localhost:8080/api/client/profile/saveProfile";
+
+            const method = hasProfile ? "PUT" : "POST";
+
+            $.ajax({
+                url: url,
+                type: method,
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function () {
+                    alert("Profile saved successfully!");
+                    loadClientProfile();
+                },
+                error: function (xhr) {
+                    alert("Error saving profile: " + xhr.responseText);
+                }
+            });
+        }
+
+
+
+        saveProfileBtn.addEventListener('click', saveProfile);
+
+        loadClientProfile();
+
+        function loadClientProfile() {
+            $.ajax({
+                url: "http://localhost:8080/api/client/profile/getProfile",
+                type: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                success: function (response) {
+
+                    if (response && response.data) {
+                        let profile = response.data;
+
+                        console.log(profile);
+
+                        profilePage.dataset.hasProfile = "true";
+                        profilePage.dataset.profileId = profile.id;
+
+                        document.getElementById("fullName").value = profile.fullName || "";
+                        document.getElementById("email").value = profile.email || "";
+                        document.getElementById("address").value = profile.address || "";
+                        document.getElementById("phone").value = profile.phone || "";
+                        document.getElementById("nic").value = profile.nic || "";
+                        document.getElementById("dob").value = profile.dob || "";
+
+
+                        const BASE_URL = "http://localhost:8080";
+
+                        if (profile.profilePictureUrl) {
+                            profileAvatar.src = BASE_URL + profile.profilePictureUrl;
+
+                        } else {
+                            profileAvatar.src = "../assets/images/default-avatar.png";
+                        }
+
+
+
+
+                    } else {
+                        profilePage.dataset.hasProfile = "false";
+
+                    }
+
+
+                },
+                error: function () {
+                    console.error("Could not load profile");
+                    profilePage.dataset.hasProfile = "false";
+
+                }
+            });
+        }
+
+
+
+
+
+
 
 
         function loadLawyers() {

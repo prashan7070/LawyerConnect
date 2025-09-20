@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!decoded || decoded.role !== "LAWYER") {
         alert("Unauthorized! Only lawyers can access this page.");
-        window.location.href = "../pages/loginAndSignUp.html";
+        window.location.href = "../pages/landingPage.html";
         return;
     }
 
