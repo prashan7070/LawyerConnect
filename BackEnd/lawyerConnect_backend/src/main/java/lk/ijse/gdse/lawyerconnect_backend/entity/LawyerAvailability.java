@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -19,7 +20,8 @@ public class LawyerAvailability {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate date;
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek dayOfWeek;
 
     private LocalTime startTime;
 

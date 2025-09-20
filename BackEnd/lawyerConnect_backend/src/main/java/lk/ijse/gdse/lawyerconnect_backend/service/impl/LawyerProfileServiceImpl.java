@@ -2,6 +2,7 @@ package lk.ijse.gdse.lawyerconnect_backend.service.impl;
 
 import lk.ijse.gdse.lawyerconnect_backend.dto.AvailabilityDTO;
 import lk.ijse.gdse.lawyerconnect_backend.dto.LawyerProfileDTO;
+import lk.ijse.gdse.lawyerconnect_backend.dto.SpecializationDTO;
 import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerAvailability;
 import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerProfile;
 import lk.ijse.gdse.lawyerconnect_backend.entity.Specialization;
@@ -12,7 +13,9 @@ import lk.ijse.gdse.lawyerconnect_backend.repository.SpecializationRepository;
 import lk.ijse.gdse.lawyerconnect_backend.service.LawyerProfileService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,16 +58,17 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
         profile.setLicenceNumber(dto.getLicenceNumber());
         profile.setBio(dto.getBio());
         profile.setProfilePictureUrl(dto.getProfilePictureUrl());
+        profile.setOnlineFee(dto.getOnlineFee());
+        profile.setInPersonFee(dto.getInPersonFee());
         profile.setUser(user);
 
         if (dto.getSpecializationIds() != null && !dto.getSpecializationIds().isEmpty()) {
             List<Specialization> specs = specializationRepository.findAllById(dto.getSpecializationIds());
             profile.setSpecializations(specs);
 
-//            // optional: also store names as a simple string
-//            String names = specs.stream().map(Specialization::getSpecialization).toList().toString();
-//            profile.setSpecialties(names);
         }
+
+
 
         if (profilePicture != null && !profilePicture.isEmpty()) {
             String fileUrl = saveFile(profilePicture);
@@ -71,11 +76,13 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
         }
 
         lawyerProfileRepository.save(profile);
+        saveAvailability(user , dto.getAvailabilitySlots());
     }
 
 
 
     @Override
+    @Transactional
     public void updateProfile(User user , LawyerProfileDTO dto, MultipartFile profilePicture) {
         LawyerProfile profile = lawyerProfileRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
@@ -91,12 +98,15 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
         profile.setLicenceNumber(dto.getLicenceNumber());
         profile.setBio(dto.getBio());
         profile.setProfilePictureUrl(dto.getProfilePictureUrl());
-
+        profile.setOnlineFee(dto.getOnlineFee());
+        profile.setInPersonFee(dto.getInPersonFee());
 
         if (dto.getSpecializationIds() != null && !dto.getSpecializationIds().isEmpty()) {
             List<Specialization> specs = specializationRepository.findAllById(dto.getSpecializationIds());
             profile.setSpecializations(specs);
         }
+
+        saveAvailability(user , dto.getAvailabilitySlots());
 
 //        profile.setUser(user);
 
@@ -117,7 +127,23 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
         LawyerProfile lawyerProfile = lawyerProfileRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
 
-        return modelMapper.map(lawyerProfile , LawyerProfileDTO.class);
+
+        LawyerProfileDTO lawyerProfileDTO =  modelMapper.map(lawyerProfile , LawyerProfileDTO.class);
+
+        List<SpecializationDTO> specDtos = lawyerProfile.getSpecializations()
+                .stream()
+                .map(spec -> modelMapper.map(spec, SpecializationDTO.class))
+                .toList();
+        lawyerProfileDTO.setSpecializations(specDtos);
+
+        List<AvailabilityDTO> availabilityDtos = lawyerAvailabilityRepository.findByLawyerProfile(lawyerProfile)
+                .stream()
+                .map(a -> modelMapper.map(a, AvailabilityDTO.class))
+                .toList();
+        lawyerProfileDTO.setAvailabilitySlots(availabilityDtos);
+
+
+        return lawyerProfileDTO;
 
     }
 
@@ -151,20 +177,29 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
 
 
 
-    @Override
-    public void saveAvailability(User user, AvailabilityDTO availabilityDTO) {
+    @Transactional
+    public void saveAvailability(User user, List<AvailabilityDTO> availabilityDTO) {
 
         LawyerProfile profile = lawyerProfileRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
 
-        LawyerAvailability availability = LawyerAvailability.builder()
-                .date(availabilityDTO.getDate())
-                .startTime(availabilityDTO.getStartTime())
-                .endTime(availabilityDTO.getEndTime())
-                .lawyerProfile(profile)
-                .build();
+        if (availabilityDTO != null && !availabilityDTO.isEmpty()) {
 
-        lawyerAvailabilityRepository.save(availability);
+            lawyerAvailabilityRepository.deleteByLawyerProfile(profile);
+
+            List<LawyerAvailability> availabilities = availabilityDTO.stream()
+                    .map(dto -> LawyerAvailability.builder()
+                            .dayOfWeek((dto.getDayOfWeek()))
+                            .startTime(dto.getStartTime())
+                            .endTime(dto.getEndTime())
+                            .lawyerProfile(profile)
+                            .build()
+                    )
+                    .toList();
+
+            lawyerAvailabilityRepository.saveAll(availabilities);
+        }
+
 
     }
 
@@ -183,6 +218,15 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
 
     }
 
+    @Override
+    public List<SpecializationDTO> getSpecializations() {
+
+        List<Specialization> specializations = specializationRepository.findAll();
+        if (specializations.isEmpty()){
+            throw new RuntimeException("can not find any specializations");
+        }
+        return modelMapper.map(specializations , new TypeToken<List<SpecializationDTO>>(){}.getType());
+    }
 
 
 }

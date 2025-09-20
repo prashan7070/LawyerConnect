@@ -30,5 +30,9 @@ public class LawyerProfileDTO {
 
     private List<Long> specializationIds;
 
+    private List<SpecializationDTO> specializations;
+
+    private List<AvailabilityDTO> availabilitySlots;
+
 
 }

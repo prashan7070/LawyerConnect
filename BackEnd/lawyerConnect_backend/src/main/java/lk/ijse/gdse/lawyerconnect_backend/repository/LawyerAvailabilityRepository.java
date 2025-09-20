@@ -9,5 +9,7 @@ import java.util.List;
 public interface LawyerAvailabilityRepository extends JpaRepository<LawyerAvailability , Long> {
 
     List<LawyerAvailability> findByLawyerProfile(LawyerProfile profile);
+    void deleteByLawyerProfile(LawyerProfile profile);
+
 
 }

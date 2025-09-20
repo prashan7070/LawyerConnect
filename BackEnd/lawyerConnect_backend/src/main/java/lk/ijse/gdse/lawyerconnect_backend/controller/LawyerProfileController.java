@@ -1,8 +1,13 @@
 package lk.ijse.gdse.lawyerconnect_backend.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lk.ijse.gdse.lawyerconnect_backend.dto.ApiResponse;
+import lk.ijse.gdse.lawyerconnect_backend.dto.AvailabilityDTO;
 import lk.ijse.gdse.lawyerconnect_backend.dto.LawyerProfileDTO;
+import lk.ijse.gdse.lawyerconnect_backend.dto.SpecializationDTO;
 import lk.ijse.gdse.lawyerconnect_backend.entity.User;
 import lk.ijse.gdse.lawyerconnect_backend.repository.UserRepository;
 import lk.ijse.gdse.lawyerconnect_backend.service.LawyerProfileService;
@@ -21,6 +26,7 @@ import java.io.IOException;
 import java.net.Authenticator;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/lawyer/profile")
@@ -33,15 +39,20 @@ public class LawyerProfileController {
     private final UserService userService;
 
 
+
+
     @PostMapping("/saveProfile")
-    public ResponseEntity<ApiResponse> saveLawyerProfile(@ModelAttribute LawyerProfileDTO lawyerProfileDTO , @RequestParam(value = "profilePicture" , required = false) MultipartFile profilePicture){
+    public ResponseEntity<ApiResponse> saveLawyerProfile(@RequestPart("lawyerProfile") LawyerProfileDTO lawyerProfileDTO , @RequestPart(value = "profilePicture" , required = false) MultipartFile profilePicture , @RequestPart(value = "availabilitySlots", required = false) List<AvailabilityDTO> availabilitySlots) {
 
         System.out.println("Save profile controller called");
+
+        lawyerProfileDTO.setAvailabilitySlots(availabilitySlots);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
         User user = userService.getUserByUsername(username);
+
         lawyerProfileService.saveProfile(user , lawyerProfileDTO , profilePicture);
 
         return new ResponseEntity(new ApiResponse(200,"Profile Created Successfully",null), HttpStatus.CREATED);
@@ -49,8 +60,15 @@ public class LawyerProfileController {
     }
 
 
+
+
+
     @PutMapping("/updateProfile")
-    public ResponseEntity<ApiResponse> updateLawyerProfile(@ModelAttribute LawyerProfileDTO lawyerProfileDTO , @RequestParam(value = "profilePicture" , required = false) MultipartFile profilePicture){
+    public ResponseEntity<ApiResponse> updateLawyerProfile(@RequestPart("lawyerProfile") LawyerProfileDTO lawyerProfileDTO , @RequestPart(value = "profilePicture" , required = false) MultipartFile profilePicture , @RequestPart(value = "availabilitySlots", required = false) List<AvailabilityDTO> availabilitySlots){
+
+
+        System.out.println("update profile called");
+        lawyerProfileDTO.setAvailabilitySlots(availabilitySlots);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -59,8 +77,9 @@ public class LawyerProfileController {
         lawyerProfileService.updateProfile(user , lawyerProfileDTO , profilePicture);
         return new ResponseEntity(new ApiResponse(200,"Profile Created Successfully",null), HttpStatus.OK);
 
-
     }
+    
+
 
     @GetMapping("/getProfile")
     public ResponseEntity<ApiResponse> getLawyerProfile(){
@@ -70,6 +89,19 @@ public class LawyerProfileController {
         LawyerProfileDTO lawyerProfileDTO = lawyerProfileService.getProfile(user);
         return new ResponseEntity(new ApiResponse(200,"Profile fetched Successfully",lawyerProfileDTO), HttpStatus.OK);
     }
+
+
+    @GetMapping("/getSpecializations")
+    public ResponseEntity<ApiResponse> getLawyerSpecializations(){
+
+        System.out.println("get specification called");
+
+        List<SpecializationDTO> specializationDTOS = lawyerProfileService.getSpecializations();
+
+        return new ResponseEntity(new ApiResponse(200,"specializations fetched Successfully",specializationDTOS), HttpStatus.OK);
+    }
+
+
 
 
 

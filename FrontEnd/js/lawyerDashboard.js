@@ -114,15 +114,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $(document).ready(function() {
         $.ajax({
-            url: "http://localhost:8080/api/lawyer/profile/getspecializations",
+            url: "http://localhost:8080/api/lawyer/profile/getSpecializations",
             method: "GET",
-            success: function(data) {
-                const dropdown = $("#specialtiesDropdown");
-                data.forEach(function(spec) {
-                    dropdown.append(
-                        $("<option>").text(spec.name).val(spec.id)  // value = id
-                    );
-                });
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            success: function(response) {
+
+                if(response && response.data){
+
+                    let data = response.data;
+                    console.log(data);
+                    const dropdown = $("#specialtiesDropdown");
+                    data.forEach(function(spec) {
+                        dropdown.append(
+                            $("<option>").text(spec.specialization).val(spec.id)  // value = id
+                        );
+                    });
+
+                }
+
             },
             error: function() {
                 console.error("Failed to fetch specializations.");
@@ -191,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
             error: function () {
                 console.error("Could not load profile");
                 profilePage.dataset.hasProfile = "false";
-                // renderAvailabilitySection([]); // Render empty availability on error
+                renderAvailabilitySection([]); // Render empty availability on error
                 // toggleEditMode(false); // Set to read-only even on error
             }
         });
@@ -205,8 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const startTimeInput = dayGroup.find('.start-time');
             const endTimeInput = dayGroup.find('.end-time');
 
-            if (toggle.is(':checked')) {
-                startTimeInput.prop('disabled', false);
+            if (toggle.is(':checked')) {startTimeInput.prop('disabled', false);
                 endTimeInput.prop('disabled', false);
             } else {
                 startTimeInput.prop('disabled', true).val('');
@@ -284,60 +294,151 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+    // function saveProfile() {
+    //
+    //     const formData = new FormData();
+    //
+    //     // append normal fields
+    //     formData.append("fullName", document.getElementById("fullName").value);
+    //     formData.append("email", document.getElementById("email").value);
+    //     formData.append("workingAddress", document.getElementById("address").value);
+    //     formData.append("phone", document.getElementById("phone").value);
+    //     formData.append("specialties", document.getElementById("specialties").value);
+    //     formData.append("yearsOfExperience", document.getElementById("yearsExperience").value);
+    //     formData.append("licenceNumber", document.getElementById("barId").value);
+    //     formData.append("bio", document.getElementById("bio").value);
+    //     formData.append("onlineCharge", onlineChargeInput.value);
+    //     formData.append("inPersonCharge", inPersonChargeInput.value);
+    //
+    //
+    //     // collect specializationIds
+    //     const selectedSpecializations = Array.from(
+    //         document.getElementById("specialtiesDropdown").selectedOptions
+    //     ).map(option => option.value);
+    //
+    //     selectedSpecializations.forEach((id, index) => {
+    //         formData.append(`specializationIds[${index}]`, id);
+    //     });
+    //
+    //
+    //     const availabilityData = [];
+    //     document.querySelectorAll('.availability-day-group').forEach((dayGroup, index) => {
+    //         const dayToggle = dayGroup.querySelector('.day-toggle');
+    //         const dayOfWeek = dayGroup.dataset.day; // Get the day from data-day attribute
+    //         const startTimeInput = dayGroup.querySelector('.start-time');
+    //         const endTimeInput = dayGroup.querySelector('.end-time');
+    //
+    //         // Only include if the toggle is checked AND times are provided
+    //         if (dayToggle.checked && startTimeInput.value && endTimeInput.value) {
+    //             availabilityData.push({
+    //                 dayOfWeek: dayOfWeek,
+    //                 startTime: startTimeInput.value,
+    //                 endTime: endTimeInput.value
+    //             });
+    //         }
+    //     });
+    //
+    //     // formData.append("availabilitySlots", JSON.stringify(availabilityData));
+    //     formData.append("availabilitySlots", new Blob([JSON.stringify(availabilityData)], { type: "application/json" }));
+    //
+    //
+    //
+    //
+    //     // append file
+    //     const file = document.getElementById("profileImageInput").files[0];
+    //     if (file) {
+    //         formData.append("profilePicture", file);
+    //     }
+    //
+    //     const hasProfile = profilePage.dataset.hasProfile === "true";
+    //     const url = hasProfile
+    //         // ? "http://localhost:8080/api/lawyers/profile/" + profilePage.dataset.profileId
+    //         ? "http://localhost:8080/api/lawyer/profile/updateProfile"
+    //         : "http://localhost:8080/api/lawyer/profile/saveProfile";
+    //
+    //     const method = hasProfile ? "PUT" : "POST";
+    //
+    //     $.ajax({
+    //         url: url,
+    //         type: method,
+    //         headers: {
+    //             "Authorization": "Bearer " + token
+    //         },
+    //         processData: false,
+    //         contentType: false,
+    //         data: formData,
+    //         success: function () {
+    //             alert("Profile saved successfully!");
+    //             loadProfile();
+    //         },
+    //         error: function (xhr) {
+    //             alert("Error saving profile: " + xhr.responseText);
+    //         }
+    //     });
+    // }
+
+
+
+
+
+
+
     function saveProfile() {
 
         const formData = new FormData();
+        // Create a DTO object for simple fields
 
-        // append normal fields
-        formData.append("fullName", document.getElementById("fullName").value);
-        formData.append("email", document.getElementById("email").value);
-        formData.append("workingAddress", document.getElementById("address").value);
-        formData.append("phone", document.getElementById("phone").value);
-        formData.append("specialties", document.getElementById("specialties").value);
-        formData.append("yearsOfExperience", document.getElementById("yearsExperience").value);
-        formData.append("licenceNumber", document.getElementById("barId").value);
-        formData.append("bio", document.getElementById("bio").value);
-        formData.append("onlineCharge", onlineChargeInput.value);
-        formData.append("inPersonCharge", inPersonChargeInput.value);
-
-
-        // collect specializationIds
+            // collect specializationIds
         const selectedSpecializations = Array.from(
             document.getElementById("specialtiesDropdown").selectedOptions
-        ).map(option => option.value);
+        ).map(option => Number(option.value));
 
-        selectedSpecializations.forEach((id, index) => {
-            formData.append(`specializationIds[${index}]`, id);  // ✅ Spring binds this automatically
-        });
+            // selectedSpecializations.forEach((id, index) => {
+            //     formData.append(`specializationIds[${index}]`, id);
+            // });
 
 
+        const lawyerProfileDTO = {
+            fullName: document.getElementById("fullName").value,
+            email: document.getElementById("email").value,
+            workingAddress: document.getElementById("address").value,
+            phone: document.getElementById("phone").value,
+            specialties: document.getElementById("specialties").value,
+            yearsOfExperience: document.getElementById("yearsExperience").value,
+            licenceNumber: document.getElementById("barId").value,
+            bio: document.getElementById("bio").value,
+            onlineFee: onlineChargeInput.value,
+            inPersonFee: inPersonChargeInput.value,
+            specializationIds: selectedSpecializations
+
+        };
+
+        // Append DTO as JSON
+        formData.append("lawyerProfile", new Blob([JSON.stringify(lawyerProfileDTO)], { type: "application/json" }));
+
+        // Append profile picture
+        const file = document.getElementById("profileImageInput").files[0];
+        if (file) formData.append("profilePicture", file);
+
+        // Collect availability slots
         const availabilityData = [];
-        document.querySelectorAll('.availability-day-group').forEach((dayGroup, index) => {
+        document.querySelectorAll('.availability-day-group').forEach(dayGroup => {
             const dayToggle = dayGroup.querySelector('.day-toggle');
-            const dayOfWeek = dayGroup.dataset.day; // Get the day from data-day attribute
+            const dayOfWeek = dayGroup.dataset.day;
             const startTimeInput = dayGroup.querySelector('.start-time');
             const endTimeInput = dayGroup.querySelector('.end-time');
 
-            // Only include if the toggle is checked AND times are provided
             if (dayToggle.checked && startTimeInput.value && endTimeInput.value) {
                 availabilityData.push({
-                    dayOfWeek: dayOfWeek,
+                    dayOfWeek,
                     startTime: startTimeInput.value,
                     endTime: endTimeInput.value
                 });
             }
         });
 
-        formData.append("availabilitySlots", JSON.stringify(availabilityData));
-
-
-
-
-        // append file
-        const file = document.getElementById("profileImageInput").files[0];
-        if (file) {
-            formData.append("profilePicture", file);
-        }
+        // Append availabilitySlots as JSON
+        formData.append("availabilitySlots", new Blob([JSON.stringify(availabilityData)], { type: "application/json" }));
 
         const hasProfile = profilePage.dataset.hasProfile === "true";
         const url = hasProfile
@@ -365,6 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
 
 
     saveProfileBtn.addEventListener('click', saveProfile);
