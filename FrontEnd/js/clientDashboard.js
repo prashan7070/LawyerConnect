@@ -11,6 +11,9 @@
         const profileImageUploadSection = document.getElementById('profileImageUploadSection');
         const profileImageInput = document.getElementById('profileImageInput');
         const searchInput = document.getElementById("searchInput");
+        const headerName = document.getElementById("headerName");
+        const headerEmail = document.getElementById("headerEmail");
+        const bookingFee = document.getElementById("BookingFee");
 
         //sidebar
         const sidebarProfile = document.getElementById('sidebarProfile');
@@ -142,7 +145,17 @@
                 confirmLawyerName.textContent = currentLawyer.name;
             }
 
+            const selectedServiceType = serviceTypeInput.value;
             confirmServiceType.textContent = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
+
+            let fee = 0;
+            if (selectedServiceType === "ONLINE") {
+                fee = currentLawyer.onlineFee || 0;
+            } else if (selectedServiceType === "IN_PERSON") {
+                fee = currentLawyer.inPersonFee || 0;
+            }
+
+            bookingFee.textContent = `LKR ${fee.toFixed(2)}`;
 
             const slotJson = selectedBookingTimeInput.val();
             if (slotJson) {
@@ -270,6 +283,7 @@
                 lawyerProfileSpecialty.textContent = currentLawyer.specialty;
                 lawyerProfileDescription.textContent = currentLawyer.description;
                 bookLawyerName.textContent = currentLawyer.name;
+                lawyerProfileAbout.textContent = currentLawyer.description;
 
                 lawyerProfileStars.innerHTML = generateStars(parseFloat(currentLawyer.rating));
                 lawyerProfileRating.textContent = currentLawyer.rating;
@@ -631,7 +645,8 @@
                         document.getElementById("dob").value = profile.dob || "";
                         sidebarName.textContent = profile.fullName || "";
                         sidebarEmail.textContent = profile.email || "";
-
+                        headerName.textContent = profile.fullName || "";
+                        headerEmail.textContent = profile.email || "";
 
                         const BASE_URL = "http://localhost:8080";
 

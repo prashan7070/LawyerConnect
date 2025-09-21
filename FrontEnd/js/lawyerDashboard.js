@@ -13,6 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const onlineChargeInput = document.getElementById("onlineCharge");
     const inPersonChargeInput = document.getElementById("inPersonCharge");
+    const sidenavProfile = document.getElementById('sidenavProfile');
+    const sidenavName = document.getElementById('sidenavName');
+    const sidenavEmail = document.getElementById('sidenavEmail');
+    const profileHeaderName = document.getElementById('profile-header-name');
+    const profileHeaderSpeciality = document.getElementById('profile-header-speciality');
+    const profileHeaderEmail = document.getElementById('profile-header-email');
 
 
 
@@ -167,14 +173,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById("yearsExperience").value = profile.yearsOfExperience || "";
                     document.getElementById("barId").value = profile.licenceNumber || "";
                     document.getElementById("bio").value = profile.bio || "";
+                    profileHeaderName.textContent = profile.fullName || "";
+                    profileHeaderSpeciality.textContent = profile.specialties || "";
+                    profileHeaderEmail.textContent = profile.email || "";
                     onlineChargeInput.value = profile. onlineFee||"";
                     inPersonChargeInput.value = profile.inPersonFee || "";
+                    sidenavName.textContent = profile.fullName || "";
+                    sidenavEmail.textContent = profile.email || "";
 
 
                     const BASE_URL = "http://localhost:8080";
 
                     if (profile.profilePictureUrl) {
                         profileAvatar.src = BASE_URL + profile.profilePictureUrl;
+                        sidenavProfile.src = BASE_URL + profile.profilePictureUrl;
 
                     } else {
                         profileAvatar.src = "../assets/images/default-avatar.png";
@@ -202,8 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
             error: function () {
                 console.error("Could not load profile");
                 profilePage.dataset.hasProfile = "false";
-                renderAvailabilitySection([]); // Render empty availability on error
-                // toggleEditMode(false); // Set to read-only even on error
+                renderAvailabilitySection([]);
+                // toggleEditMode(false);
             }
         });
     }
@@ -266,120 +278,12 @@ document.addEventListener('DOMContentLoaded', () => {
             availabilityGrid.append(dayGroup);
         });
 
-        // Add event listeners for the new toggles
-        // availabilityGrid.find('.day-toggle').on('change', function() {
-        //     const toggle = $(this);
-        //     const dayGroup = toggle.closest('.availability-day-group');
-        //     const startTimeInput = dayGroup.find('.start-time');
-        //     const endTimeInput = dayGroup.find('.end-time');
-        //
-        //     if (toggle.is(':checked')) {
-        //         startTimeInput.prop('disabled', false);
-        //         endTimeInput.prop('disabled', false);
-        //
-        //     } else {
-        //         startTimeInput.prop('disabled', true);
-        //         endTimeInput.prop('disabled', true);
-        //         startTimeInput.val(''); // Clear times when disabled
-        //         endTimeInput.val(''); // Clear times when disabled
-        //
-        //     }
-        // });
+
 
         initAvailabilityListeners();
 
 
     }
-
-
-
-
-    // function saveProfile() {
-    //
-    //     const formData = new FormData();
-    //
-    //     // append normal fields
-    //     formData.append("fullName", document.getElementById("fullName").value);
-    //     formData.append("email", document.getElementById("email").value);
-    //     formData.append("workingAddress", document.getElementById("address").value);
-    //     formData.append("phone", document.getElementById("phone").value);
-    //     formData.append("specialties", document.getElementById("specialties").value);
-    //     formData.append("yearsOfExperience", document.getElementById("yearsExperience").value);
-    //     formData.append("licenceNumber", document.getElementById("barId").value);
-    //     formData.append("bio", document.getElementById("bio").value);
-    //     formData.append("onlineCharge", onlineChargeInput.value);
-    //     formData.append("inPersonCharge", inPersonChargeInput.value);
-    //
-    //
-    //     // collect specializationIds
-    //     const selectedSpecializations = Array.from(
-    //         document.getElementById("specialtiesDropdown").selectedOptions
-    //     ).map(option => option.value);
-    //
-    //     selectedSpecializations.forEach((id, index) => {
-    //         formData.append(`specializationIds[${index}]`, id);
-    //     });
-    //
-    //
-    //     const availabilityData = [];
-    //     document.querySelectorAll('.availability-day-group').forEach((dayGroup, index) => {
-    //         const dayToggle = dayGroup.querySelector('.day-toggle');
-    //         const dayOfWeek = dayGroup.dataset.day; // Get the day from data-day attribute
-    //         const startTimeInput = dayGroup.querySelector('.start-time');
-    //         const endTimeInput = dayGroup.querySelector('.end-time');
-    //
-    //         // Only include if the toggle is checked AND times are provided
-    //         if (dayToggle.checked && startTimeInput.value && endTimeInput.value) {
-    //             availabilityData.push({
-    //                 dayOfWeek: dayOfWeek,
-    //                 startTime: startTimeInput.value,
-    //                 endTime: endTimeInput.value
-    //             });
-    //         }
-    //     });
-    //
-    //     // formData.append("availabilitySlots", JSON.stringify(availabilityData));
-    //     formData.append("availabilitySlots", new Blob([JSON.stringify(availabilityData)], { type: "application/json" }));
-    //
-    //
-    //
-    //
-    //     // append file
-    //     const file = document.getElementById("profileImageInput").files[0];
-    //     if (file) {
-    //         formData.append("profilePicture", file);
-    //     }
-    //
-    //     const hasProfile = profilePage.dataset.hasProfile === "true";
-    //     const url = hasProfile
-    //         // ? "http://localhost:8080/api/lawyers/profile/" + profilePage.dataset.profileId
-    //         ? "http://localhost:8080/api/lawyer/profile/updateProfile"
-    //         : "http://localhost:8080/api/lawyer/profile/saveProfile";
-    //
-    //     const method = hasProfile ? "PUT" : "POST";
-    //
-    //     $.ajax({
-    //         url: url,
-    //         type: method,
-    //         headers: {
-    //             "Authorization": "Bearer " + token
-    //         },
-    //         processData: false,
-    //         contentType: false,
-    //         data: formData,
-    //         success: function () {
-    //             alert("Profile saved successfully!");
-    //             loadProfile();
-    //         },
-    //         error: function (xhr) {
-    //             alert("Error saving profile: " + xhr.responseText);
-    //         }
-    //     });
-    // }
-
-
-
-
 
 
 
@@ -442,7 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const hasProfile = profilePage.dataset.hasProfile === "true";
         const url = hasProfile
-            // ? "http://localhost:8080/api/lawyers/profile/" + profilePage.dataset.profileId
             ? "http://localhost:8080/api/lawyer/profile/updateProfile"
             : "http://localhost:8080/api/lawyer/profile/saveProfile";
 
@@ -493,6 +396,125 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+
+
+    loadLawyerAppointments();
+
+
+    function loadLawyerAppointments() {
+        $.ajax({
+            url: "http://localhost:8080/api/appointments/lawyer",
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            success: function(response) {
+                const appointments = response.data;
+
+                const upcomingStatuses = ["CONFIRMED", "PENDING"];
+                const pastStatuses = ["CANCELLED", "COMPLETED"];
+
+                const upcoming = appointments.filter(app => upcomingStatuses.includes(app.status));
+                const past = appointments.filter(app => pastStatuses.includes(app.status));
+
+                renderAppointments("#upcoming-appointments-list", upcoming);
+                renderAppointments("#past-appointments-list", past);
+                renderAppointments("#home-page .appointments-section .appointment-list", upcoming);
+            },
+            error: function(err) {
+                console.error("Failed to load appointments", err);
+            }
+        });
+    }
+
+// Render appointment cards
+    function renderAppointments(containerSelector, appointments) {
+        const container = $(containerSelector);
+        container.empty();
+        const BASE_URL = "http://localhost:8080";
+
+        appointments.forEach(app => {
+            const card = $(`
+            <div class="appointment-item" 
+                 data-id="${app.appointmentId}" 
+                 data-client-name="${app.clientName}" 
+                 data-client-phone="${app.clientPhone}" 
+                 data-lawyer-phone="${app.lawyerPhone}" 
+                 data-status="${app.status}">
+                <img src="${BASE_URL + app.clientProfileUrl}" alt="Client Avatar" class="avatar">
+                <div class="details">
+                    <div class="client-name">${app.clientName}</div>
+                    <div class="time-topic">${app.date}, ${app.startTime} - ${app.endTime} - ${app.consultationType}</div>
+                    <div class="status status-text">Status: ${app.status}</div>
+                </div>
+                <div class="actions">
+                    <button class="btn-view">View</button>
+                    <button class="btn-whatsapp">WhatsApp</button>
+                </div>
+            </div>
+        `);
+            container.append(card);
+        });
+    }
+
+// WhatsApp button
+    $(document).on("click", ".btn-whatsapp", function() {
+        const $card = $(this).closest(".appointment-item");
+        const clientName = $card.data("client-name");
+        const clientPhone = $card.data("client-phone");
+
+        const message = `Hello ${clientName}, this is your lawyer.`;
+        const url = `https://wa.me/${clientPhone}?text=${encodeURIComponent(message)}`;
+        window.open(url, "_blank");
+    });
+
+    $(document).on("click", ".btn-view", function() {
+        const $card = $(this).closest(".appointment-item");
+        const appointmentId = $card.data("id");
+        const currentStatus = $card.data("status");
+
+        Swal.fire({
+            title: 'Appointment Details',
+            html: `
+            <p>Client: ${$card.data("client-name")}</p>
+            <p>Time: ${$card.find(".time-topic").text()}</p>
+            <p>Status:
+                <select id="statusSelect">
+                    <option value="CONFIRMED" ${currentStatus === 'CONFIRMED' ? 'selected' : ''}>CONFIRMED</option>
+                    <option value="PENDING" ${currentStatus === 'PENDING' ? 'selected' : ''}>PENDING</option>
+                    <option value="CANCELLED" ${currentStatus === 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+                    <option value="COMPLETED" ${currentStatus === 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
+                </select>
+            </p>
+        `,
+            showCancelButton: true,
+            confirmButtonText: 'Update Status'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const newStatus = document.getElementById("statusSelect").value;
+                updateAppointmentStatus(appointmentId, newStatus, $card);
+            }
+        });
+    });
+
+// Update status AJAX
+    function updateAppointmentStatus(appointmentId, status, $card) {
+        $.ajax({
+            url: `http://localhost:8080/api/appointments/${appointmentId}/updateStatus`,
+            type: "PUT",
+            headers: { "Authorization": "Bearer " + token },
+            contentType: "application/json",
+            data: JSON.stringify({ status }),
+            success: function() {
+                Swal.fire("Success", "Status updated successfully!", "success");
+                $card.data("status", status);
+                $card.find(".status-text").text("Status: " + status);
+            },
+            error: function() {
+                Swal.fire("Error", "Failed to update status.", "error");
+            }
+        });
+    }
 
 
 

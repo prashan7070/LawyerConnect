@@ -17,6 +17,9 @@ public class AppointmentDTO {
     private String lawyerName;
     private String clientName;
     private String lawyerPhone;
+    private String clientPhone;
+    private String clientProfileUrl;
+    private String lawyerProfileUrl;
     private Long clientId;
     private String date;
     private String startTime;

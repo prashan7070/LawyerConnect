@@ -3,6 +3,7 @@ package lk.ijse.gdse.lawyerconnect_backend.service.impl;
 import lk.ijse.gdse.lawyerconnect_backend.dto.AppointmentDTO;
 import lk.ijse.gdse.lawyerconnect_backend.dto.BookAppointmentRequestDTO;
 import lk.ijse.gdse.lawyerconnect_backend.dto.BookAppointmentResponseDTO;
+import lk.ijse.gdse.lawyerconnect_backend.dto.UpdateStatusRequestDTO;
 import lk.ijse.gdse.lawyerconnect_backend.entity.*;
 import lk.ijse.gdse.lawyerconnect_backend.repository.AppointmentRepository;
 import lk.ijse.gdse.lawyerconnect_backend.repository.ClientProfileRepository;
@@ -17,8 +18,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,7 +75,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .durationMinutes(duration)
                 .consultationType(request.getConsultationType())
                 .location(request.getLocation())
-                .status(AppointmentStatus.CONFIRMED)
+                .status(AppointmentStatus.PENDING)
                 .notes(request.getNotes())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
@@ -105,8 +109,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
 
-
-
     public List<AppointmentDTO> getClientAppointments(User user) {
 
         ClientProfile client = clientProfileRepository.findByUser(user)
@@ -124,6 +126,41 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .lawyerName(app.getLawyer().getFullName())
                 .clientName(app.getClient().getFullName())
                 .lawyerPhone(app.getLawyer().getPhone())
+                .clientPhone(app.getClient().getPhone())
+                .clientProfileUrl(app.getClient().getProfilePictureUrl())
+                .lawyerProfileUrl(app.getLawyer().getProfilePictureUrl())
+                .clientId(app.getClient().getId())
+                .date(app.getScheduledAt().toLocalDate().toString())
+                .startTime(app.getScheduledAt().toLocalTime().toString())
+                .endTime(app.getScheduledAt().plusMinutes(app.getDurationMinutes()).toLocalTime().toString())
+                .consultationType(app.getConsultationType())
+                .status(app.getStatus())
+                .notes(app.getNotes())
+                .build()
+        ).toList();
+
+    }
+
+    @Override
+    public List<AppointmentDTO> getLawyerAppointments(User user) {
+        LawyerProfile profile = lawyerProfileRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        List<Appointment> appointments = appointmentRepository.findByLawyerId(profile.getId());
+
+        if (appointments.isEmpty()){
+            throw new RuntimeException("lawyer doesn't have any appointments");
+        }
+
+        return appointments.stream().map(app -> AppointmentDTO.builder()
+                .appointmentId(app.getId())
+                .lawyerId(app.getLawyer().getId())
+                .lawyerName(app.getLawyer().getFullName())
+                .clientName(app.getClient().getFullName())
+                .lawyerPhone(app.getLawyer().getPhone())
+                .clientPhone(app.getClient().getPhone())
+                .clientProfileUrl(app.getClient().getProfilePictureUrl())
+                .lawyerProfileUrl(app.getLawyer().getProfilePictureUrl())
                 .clientId(app.getClient().getId())
                 .date(app.getScheduledAt().toLocalDate().toString())
                 .startTime(app.getScheduledAt().toLocalTime().toString())
@@ -135,10 +172,24 @@ public class AppointmentServiceImpl implements AppointmentService {
         ).toList();
     }
 
+    @Override
+    public void updateAppointmentStatus(String appointmentId, UpdateStatusRequestDTO dto) {
 
+        Appointment appointment = appointmentRepository.findById(Long.valueOf(appointmentId))
+                .orElseThrow(() -> new RuntimeException("appointment not found"));
 
+        AppointmentStatus newStatus;
 
+        try {
+            newStatus = AppointmentStatus.valueOf(dto.getStatus().trim().toUpperCase());
+        } catch (IllegalArgumentException | NullPointerException e) {
+            throw new RuntimeException("Invalid status value");
+        }
 
+        appointment.setStatus(newStatus); // or appointment.setStatus(newStatus) if your entity uses the enum
+        appointmentRepository.save(appointment);
+
+    }
 
 
 }

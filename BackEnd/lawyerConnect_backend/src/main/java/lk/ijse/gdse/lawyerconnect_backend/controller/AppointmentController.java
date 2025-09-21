@@ -1,10 +1,7 @@
 package lk.ijse.gdse.lawyerconnect_backend.controller;
 
 
-import lk.ijse.gdse.lawyerconnect_backend.dto.ApiResponse;
-import lk.ijse.gdse.lawyerconnect_backend.dto.AppointmentDTO;
-import lk.ijse.gdse.lawyerconnect_backend.dto.BookAppointmentRequestDTO;
-import lk.ijse.gdse.lawyerconnect_backend.dto.BookAppointmentResponseDTO;
+import lk.ijse.gdse.lawyerconnect_backend.dto.*;
 import lk.ijse.gdse.lawyerconnect_backend.entity.User;
 import lk.ijse.gdse.lawyerconnect_backend.service.AppointmentService;
 import lk.ijse.gdse.lawyerconnect_backend.service.UserService;
@@ -15,7 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/appointments")
@@ -59,6 +58,37 @@ public class AppointmentController {
 
 
     }
+
+
+
+    @GetMapping("/lawyer")
+    public ResponseEntity<ApiResponse> getLawyerAppointments() {
+
+        System.out.println("lawyer getAppointments called");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.getUserByUsername(username);
+        List<AppointmentDTO> appointments = appointmentService.getLawyerAppointments(user);
+
+        return new ResponseEntity(new ApiResponse(200,"Appointments fetched Successfully",appointments), HttpStatus.OK);
+
+
+    }
+
+
+    @PutMapping("/{appointmentId}/updateStatus")
+    public ResponseEntity<ApiResponse> updateAppointmentStatus(@PathVariable String appointmentId , @RequestBody UpdateStatusRequestDTO dto){
+
+        appointmentService.updateAppointmentStatus(appointmentId , dto);
+
+        return new ResponseEntity(new ApiResponse(200,"Appointments updated Successfully",null), HttpStatus.OK);
+
+    }
+
+
+
+
 
 
 
