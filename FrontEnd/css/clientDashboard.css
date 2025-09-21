@@ -169,11 +169,26 @@ body {
     color: var(--text-dark);
 }
 
+/*.lawyer-grid {*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));*/
+/*    gap: 25px;*/
+/*}*/
+
+
+/*new card stying*/
+
 .lawyer-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* Use fixed number of columns or a smaller max-width for columns */
+    /* Option 1: Fixed 3 columns, allowing wrapping */
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+    /* Option 2: More flexible, but limits max width of each column */
+    /* grid-template-columns: repeat(auto-fill, minmax(280px, 320px)); */
     gap: 25px;
+    justify-content: center; /* Center the grid items if there are fewer than a full row */
 }
+
 
 .lawyer-card {
     background-color: var(--card-background);
@@ -185,7 +200,28 @@ body {
     align-items: center;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 280px; /* Adjust this value as needed to control card width */
+    width: 100%; /* Ensure it takes full width within its grid cell up to max-width */
 }
+
+
+/*for updating lawyer cards*/
+@media (max-width: 1024px) {
+    .lawyer-grid {
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+    }
+}
+
+
+@media (max-width: 768px) {
+    .lawyer-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Revert to auto-fit for very small screens or single column */
+    }
+    .lawyer-card {
+        max-width: 100%; /* Allow cards to take full width on small screens */
+    }
+}
+
 
 .lawyer-card:hover {
     transform: translateY(-5px);
@@ -590,8 +626,6 @@ body {
 
 
 
-
-
 #profile-page .profile-header-section {
     display: flex;
     flex-direction: column; /* Stack image and text vertically */
@@ -713,6 +747,7 @@ body {
 
 .profile-info input[type="text"],
 .profile-info input[type="email"],
+.profile-info input[type="date"],
 .profile-info textarea {
     width: calc(100% - 24px); /* Account for padding */
     padding: 12px;
@@ -722,6 +757,12 @@ body {
     outline: none;
     transition: border-color 0.3s ease;
     background-color: var(--background-light); /* Make readonly fields distinguishable */
+    /* Add this for date/time inputs to remove default browser styling if needed */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+
 }
 
 .profile-info input[readonly] {
@@ -730,6 +771,7 @@ body {
 }
 
 .profile-info input:focus:not([readonly]),
+.profile-info input[type="date"]:focus,
 .profile-info textarea:focus:not([readonly]) {
     border-color: var(--primary-color);
     background-color: var(--card-background); /* Revert to white when editable */
@@ -976,6 +1018,64 @@ body {
 .settings-item input[type="checkbox"] {
     transform: scale(1.2);
     accent-color: var(--primary-color);
+}
+
+
+
+
+/* Styles for the dynamic time slots */
+.time-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsive grid */
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.time-slot-button {
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 5px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.time-slot-button:hover {
+    background-color: #e0e0e0;
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.time-slot-button.selected {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px var(--shadow-medium);
+}
+
+.time-slot-button.disabled {
+    background-color: #f0f0f0;
+    color: var(--text-light);
+    border-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.time-slot-button.disabled:hover {
+    background-color: #f0f0f0;
+    border-color: #ccc;
+    transform: none;
+}
+
+.no-slots-message {
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    grid-column: 1 / -1; /* Make it span all columns */
 }
 
 

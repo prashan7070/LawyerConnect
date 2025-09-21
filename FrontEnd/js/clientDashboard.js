@@ -49,6 +49,13 @@
         const confirmDateTime = document.getElementById('confirmDateTime');
         const confirmCaseDescription = document.getElementById('confirmCaseDescription');
 
+        //available time slots
+        const availableTimeSlotsDiv = $('#availableTimeSlots');
+        const selectedBookingTimeInput = $('#selectedBookingTime');
+        const timeSlotsContainer = $('#timeSlotsContainer');
+        const noSlotsMessage = $('.no-slots-message');
+
+
 
         // JWT token check
         const token = localStorage.getItem("token");
@@ -74,8 +81,11 @@
         const upcomingBookingsList = document.getElementById('upcoming-bookings-list');
         const pastBookingsList = document.getElementById('past-bookings-list');
 
+
         let currentLawyer = null; // To store the selected lawyer's data
         let currentBookingStep = 1;
+
+
 
         function showPage(pageId) {
             pages.forEach(page => {
@@ -124,10 +134,37 @@
             if (currentLawyer) {
                 confirmLawyerName.textContent = currentLawyer.name;
             }
+            // confirmServiceType.textContent = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
+            // confirmDateTime.textContent = `${bookingDateInput.value} at ${bookingTimeInput.value}`;
+            // confirmCaseDescription.textContent = caseDescriptionInput.value;
+
             confirmServiceType.textContent = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
-            confirmDateTime.textContent = `${bookingDateInput.value} at ${bookingTimeInput.value}`;
+
+            const slotJson = selectedBookingTimeInput.val();
+            if (slotJson) {
+                try {
+                    const s = JSON.parse(slotJson);
+                    // format nicely: e.g. "Sep 23, 2025 at 10:00 - 11:00"
+                    const dt = new Date(`${s.date}T${s.startTime}`);
+                    const formattedDate = dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+                    const start = s.startTime.substring(0,5);
+                    const end = s.endTime.substring(0,5);
+                    confirmDateTime.textContent = `${formattedDate} at ${start} - ${end}`;
+                } catch (e) {
+                    confirmDateTime.textContent = `${bookingDateInput.value} at ${bookingTimeInput.value}`;
+                }
+            } else {
+                confirmDateTime.textContent = `${bookingDateInput.value} at ${bookingTimeInput.value}`;
+            }
+
             confirmCaseDescription.textContent = caseDescriptionInput.value;
+
+
         }
+
+
+
+
 
         // Initial page load
         showPage('home-page');
@@ -144,6 +181,8 @@
             });
         });
 
+
+
         // Profile Edit functionality
         editProfileBtn.addEventListener('click', () => {
             profileInputs.forEach(input => {
@@ -156,9 +195,9 @@
             cancelEditBtn.style.display = 'inline-block';
         });
 
+
+
         saveProfileBtn.addEventListener('click', () => {
-            // In a real application, you would send this data to a server
-            alert('Profile saved! (This is a demo, no actual data saved)');
             profileInputs.forEach(input => {
                 input.readOnly = true;
                 input.style.borderColor = 'var(--border-color)';
@@ -167,6 +206,7 @@
             saveProfileBtn.style.display = 'none';
             cancelEditBtn.style.display = 'none';
         });
+
 
         cancelEditBtn.addEventListener('click', cancelEdit);
 
@@ -202,6 +242,8 @@
                 input.style.backgroundColor = '#eceff1';
             }
         });
+
+
 
         // "Book Now" buttons on home page -> Lawyer Profile Page
         // bookButtons.forEach(button => {
@@ -316,7 +358,6 @@
         }
 
 
-
         // Start Booking button on Lawyer Profile Page -> Booking Flow Step 1
         startBookingBtn.addEventListener('click', () => {
             if (currentLawyer) {
@@ -324,21 +365,63 @@
                 currentBookingStep = 1;
                 updateBookingSteps(currentBookingStep);
                 showPage('booking-flow-page');
+
+
+                // ✅ Added: reset booking flow context + clear previous selections
+                bookingFlowPage.dataset.lawyerId = currentLawyer.id;
+                bookingDateInput.value = "";                        // clear previous date
+                availableTimeSlotsDiv.innerHTML = "";               // clear old slots
+                timeSlotsContainer.style.display = "none";          // hide until date picked
+                selectedBookingTimeInput.value = "";                // clear hidden slot
+
+
             } else {
                 alert("No lawyer selected. Please go back to find a lawyer.");
                 showPage('home-page');
             }
         });
 
+
+        // ✅ Added: fetch when user picks a date
+        bookingDateInput.addEventListener('change', () => {
+            const selectedDate = bookingDateInput.value; // format YYYY-MM-DD
+            const lawyerId = bookingFlowPage.dataset.lawyerId || (currentLawyer && currentLawyer.id);
+
+            if (!selectedDate || !lawyerId) {
+                timeSlotsContainer.hide();
+                return;
+            }
+
+            fetchAndDisplayTimeSlots(lawyerId, selectedDate);
+        });
+
+
+
+
+
+
+
+
         // Navigation within Booking Flow
         backToProfileBtn.addEventListener('click', () => {
             showPage('lawyer-profile-page'); // Go back to the lawyer's profile
         });
 
+
+
+
+
+
         serviceScheduleForm.addEventListener('submit', (e) => {
             e.preventDefault();
             currentBookingStep = 2;
             updateBookingSteps(currentBookingStep);
+
+            // ✅ Added: Load slots when user submits step 1 with date
+            const selectedDate = bookingDateInput.value;
+            if (currentLawyer && selectedDate) {
+                fetchAndDisplayTimeSlots(currentLawyer.id, selectedDate);
+            }
         });
 
         backToStep1Btn.addEventListener('click', () => {
@@ -358,6 +441,11 @@
             updateBookingSteps(currentBookingStep);
         });
 
+
+
+
+
+
         finalConfirmBookingBtn.addEventListener('click', () => {
             // Final booking logic here
             if (!currentLawyer) {
@@ -366,25 +454,50 @@
                 return;
             }
 
-            const selectedServiceText = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
-            const bookingDate = bookingDateInput.value;
-            const bookingTime = bookingTimeInput.value;
-            const caseDescription = caseDescriptionInput.value;
+            // const selectedServiceText = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
+            // const bookingDate = bookingDateInput.value;
+            // const bookingTime = bookingTimeInput.value;
+            // const caseDescription = caseDescriptionInput.value;
+            //
+            // if (!selectedServiceText || !bookingDate || !bookingTime || !caseDescription) {
+            //     alert('Please ensure all booking details are filled before confirming.');
+            //     return;
+            // }
+            //
+            // const bookingDateTime = new Date(`${bookingDate}T${bookingTime}`);
+            // const formattedDateTime = bookingDateTime.toLocaleString('en-US', {
+            //     month: 'long',
+            //     day: 'numeric',
+            //     year: 'numeric',
+            //     hour: '2-digit',
+            //     minute: '2-digit',
+            //     hour12: true
+            // });
 
-            if (!selectedServiceText || !bookingDate || !bookingTime || !caseDescription) {
-                alert('Please ensure all booking details are filled before confirming.');
+            const selectedServiceText = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
+            const caseDescription = caseDescriptionInput.value;
+            const slotJson = selectedBookingTimeInput.val();
+
+            if (!selectedServiceText || !slotJson || !caseDescription) {
+                alert('Please ensure service, a time slot and case description are selected before confirming.');
                 return;
             }
 
-            const bookingDateTime = new Date(`${bookingDate}T${bookingTime}`);
+            let slot;
+            try {
+                slot = JSON.parse(slotJson);
+            } catch (e) {
+                alert('Selected time is invalid.');
+                return;
+            }
+
+            const bookingDateTime = new Date(`${slot.date}T${slot.startTime}`);
             const formattedDateTime = bookingDateTime.toLocaleString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
+                month: 'long', day: 'numeric', year: 'numeric',
+                hour: '2-digit', minute: '2-digit', hour12: true
             });
+
+
 
             const newBookingHtml = `
             <div class="booking-card">
@@ -404,10 +517,152 @@
             // Reset booking flow
             currentLawyer = null;
             serviceScheduleForm.reset();
+
+            //new
+            selectedBookingTimeInput.val("");
+
             currentBookingStep = 1;
 
             showPage('bookings-page'); // Navigate to bookings page
         });
+
+
+
+
+
+        //function for fetching available slots
+
+        // function fetchAndDisplayTimeSlots(lawyerId, selectedDate) {
+        //     if (!lawyerId || !selectedDate) {
+        //         timeSlotsContainer.hide();
+        //         return;
+        //     }
+        //
+        //     // Show loading indicator if desired
+        //     availableTimeSlotsDiv.html('<p class="loading-message">Loading available slots...</p>');
+        //     timeSlotsContainer.show();
+        //     noSlotsMessage.hide();
+        //
+        //     // **Backend Call Placeholder:**
+        //     // You'll replace this with an actual AJAX call to your backend
+        //     // Your backend API should return available 60-min slots for the given lawyerId and date.
+        //     // For demonstration, we'll simulate a response.
+        //     const simulatedAvailableSlots = simulateBackendTimeSlots(selectedDate); // Replace with actual AJAX
+        //
+        //     // Clear previous slots
+        //     availableTimeSlotsDiv.empty();
+        //
+        //     if (simulatedAvailableSlots.length === 0) {
+        //         noSlotsMessage.show();
+        //     } else {
+        //         noSlotsMessage.hide();
+        //         simulatedAvailableSlots.forEach(slot => {
+        //             const button = $('<button>')
+        //                 .addClass('time-slot-button')
+        //                 .text(slot.time)
+        //                 .attr('data-time', slot.rawTime); // Store raw time for submission
+        //
+        //             if (!slot.isAvailable) { // Assuming your backend tells you if a slot is taken
+        //                 button.addClass('disabled').prop('disabled', true);
+        //             } else {
+        //                 button.on('click', function() {
+        //                     // Deselect all other slots
+        //                     $('.time-slot-button').removeClass('selected');
+        //                     // Select this slot
+        //                     $(this).addClass('selected');
+        //                     // Store the selected time in the hidden input
+        //                     selectedBookingTimeInput.val($(this).attr('data-time'));
+        //                 });
+        //             }
+        //             availableTimeSlotsDiv.append(button);
+        //         });
+        //     }
+        // }
+
+
+        // ✅ Added: Real backend call for slots
+        function fetchAndDisplayTimeSlots(lawyerId, selectedDate) {
+            if (!lawyerId || !selectedDate) {
+                timeSlotsContainer.hide();
+                return;
+            }
+
+            availableTimeSlotsDiv.html('<p class="loading-message">Loading available slots...</p>');
+            timeSlotsContainer.show();
+            noSlotsMessage.hide();
+
+            $.ajax({
+                url: `http://localhost:8080/api/client/availability/${lawyerId}?date=${selectedDate}&slotMinutes=60`,
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                success: function(response) {
+                    availableTimeSlotsDiv.empty();
+
+                    const slots = response.data || [];
+                    if (slots.length === 0) {
+                        noSlotsMessage.show();
+                        return;
+                    }
+
+                    noSlotsMessage.hide();
+
+                    // slots.forEach(slot => {
+                    //     const button = $('<button>')
+                    //         .addClass('time-slot-button')
+                    //         .text(`${slot.startTime} - ${slot.endTime}`)
+                    //         .attr('data-time', slot.startTime);
+                    //
+                    //     button.on('click', function() {
+                    //         $('.time-slot-button').removeClass('selected');
+                    //         $(this).addClass('selected');
+                    //         bookingTimeInput.value = $(this).attr('data-time');
+                    //         selectedBookingTimeInput.val($(this).attr('data-time'));
+                    //     });
+                    //
+                    //     availableTimeSlotsDiv.append(button);
+                    // });
+
+                    slots.forEach(slot => {
+                        // slot expected shape: { date: "YYYY-MM-DD", startTime: "HH:MM:SS", endTime: "HH:MM:SS" }
+                        const btn = $('<button>')
+                            .addClass('time-slot-button')
+                            .text(`${slot.startTime.substring(0,5)} - ${slot.endTime.substring(0,5)}`)
+                            .attr('data-date', slot.date)
+                            .attr('data-start', slot.startTime)
+                            .attr('data-end', slot.endTime);
+
+                        btn.on('click', function() {
+                            $('.time-slot-button').removeClass('selected');
+                            $(this).addClass('selected');
+
+                            const chosen = {
+                                date: $(this).attr('data-date'),
+                                startTime: $(this).attr('data-start'),
+                                endTime: $(this).attr('data-end')
+                            };
+
+                            // store JSON string in the hidden input (clean and structured)
+                            selectedBookingTimeInput.val(JSON.stringify(chosen));
+
+
+                        });
+
+                        availableTimeSlotsDiv.append(btn);
+                    });
+
+
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching slots:", error);
+                    availableTimeSlotsDiv.html('<p class="error-message">Failed to load slots. Try again.</p>');
+                }
+            });
+        }
+
+
+
 
 
 
@@ -464,8 +719,12 @@
         }
 
 
-
         saveProfileBtn.addEventListener('click', saveProfile);
+
+
+
+
+
 
         loadClientProfile();
 
