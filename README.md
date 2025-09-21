@@ -25,8 +25,8 @@ Secure and intuitive forms for users to register or log in to their LawyerConnec
 
 ### 3. Client Dashboard
 The client dashboard offers a personalized view of their consultations, messages, and a display of existing lawyers they can connect with.
+
  
-<img width="1347" height="608" alt="6" src="https://github.com/user-attachments/assets/f724e649-5e54-4673-80a0-cf8b9534fe40" />
 
 ### 4. Lawyer Dashboard
 Lawyers can manage their appointments, view client inquiries, update their profiles, and track their professional engagements from a centralized dashboard.
