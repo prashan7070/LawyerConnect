@@ -13,4 +13,6 @@ public interface AppointmentRepository  extends JpaRepository<Appointment , Long
 
     List<Appointment> findByLawyerAndScheduledAtBetweenOrderByScheduledAtAsc(LawyerProfile lawyer, LocalDateTime start, LocalDateTime end);
 
+    List<Appointment> findByClientId(Long clientId);
+
 }

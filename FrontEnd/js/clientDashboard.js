@@ -89,6 +89,7 @@
 
 
         let currentLawyer = null; // To store the selected lawyer's data
+        let currentClient = null;
         let currentBookingStep = 1;
 
 
@@ -178,6 +179,9 @@
                 const pageId = link.dataset.page + '-page';
                 showPage(pageId);
                 // Reset profile edit mode if switching pages
+                if (pageId === "my-bookings-page") {
+                    loadClientBookings();
+                }
                 if (pageId !== 'profile-page') {
                     cancelEdit();
                 }
@@ -727,18 +731,6 @@
 
 
 
-
-
-
-
-        // search by keywords
-
-        // searchBtn.addEventListener("click", () => {
-        //     const keyword = searchInput.value.trim();
-        //     if(keyword) searchLawyers(keyword);
-        // });
-
-        //live search as typing
         searchInput.addEventListener("keyup", (e) => {
             const keyword = e.target.value.trim();
             if(keyword.length >= 2 || keyword.length === 0) {
@@ -778,6 +770,105 @@
                 }
             });
         }
+
+
+        loadClientBookings();
+
+
+        function loadClientBookings() {
+            $.ajax({
+                url: "http://localhost:8080/api/appointments/client",
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                success: function (response) {
+                    const appointments = response.data || [];
+                    const $upcoming = $("#upcoming-bookings-list").empty();
+                    const $past = $("#past-bookings-list").empty();
+
+                    const now = new Date();
+
+                    appointments.forEach(app => {
+                        const appDateTime = new Date(app.date + "T" + app.startTime);
+
+                        // Build card
+                        const $card = $(`
+                    <div class="booking-card" data-booking-id="${app.appointmentId}" data-lawyer-phone="${app.lawyerPhone}" data-client-name="${app.clientName}">
+                        <div class="booking-details">
+                            <div class="lawyer-name">${app.lawyerName}</div>
+                            <div class="booking-date-time">${app.date} ${app.startTime} - ${formatConsultationType(app.consultationType)}</div>
+                            <div class="booking-notes">${app.notes || ""}</div>
+                        </div>
+                        <span class="booking-status ${app.status.toLowerCase()}">${app.status}</span>
+                        <div class="booking-actions">
+                            <button class="btn-view"><i class="fas fa-info-circle"></i></button>
+                            <button class="btn-message"><i class="fab fa-whatsapp"></i></button>
+                        </div>
+                    </div>
+                `);
+
+                        if (!(app.status === "CONFIRMED" && appDateTime >= now)) {
+                            $card.find(".btn-message").prop("disabled", true).addClass("disabled");
+                        }
+
+                        if ((app.status === "PENDING" || app.status === "CONFIRMED") && appDateTime >= now) {
+                            $upcoming.append($card);
+                        } else {
+                            $past.append($card);
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading appointments:", error);
+                }
+            });
+
+            function formatConsultationType(type) {
+                if (!type) return "";
+                return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase().replace("_", " ");
+            }
+        }
+
+
+        $(document).on("click", ".btn-view", function () {
+            const $card = $(this).closest(".booking-card");
+            const lawyerName = $card.find(".lawyer-name").text();
+            const dateTime = $card.find(".booking-date-time").text();
+            const notes = $card.find(".booking-notes").text();
+            const status = $card.find(".booking-status").text();
+
+            Swal.fire({
+                title: "Booking Details",
+                html: `
+            <p><strong>Lawyer:</strong> ${lawyerName}</p>
+            <p><strong>Date & Time:</strong> ${dateTime}</p>
+            <p><strong>Status:</strong> ${status}</p>
+            <p><strong>Notes:</strong> ${notes || "—"}</p>
+        `,
+                confirmButtonText: "Close"
+            });
+        });
+
+
+
+
+        $(document).on("click", ".btn-message", function () {
+            if ($(this).prop("disabled")) return;
+
+            const $card = $(this).closest(".booking-card");
+            const bookingId = $card.data("booking-id");
+            const lawyerName = $card.find(".lawyer-name").text();
+            const dateTime = $card.find(".booking-date-time").text();
+            const clientName = $card.data("client-name");
+            const lawyerPhone = $card.data("lawyer-phone");
+
+            const message = `Hello ${lawyerName}, this is ${clientName}. 
+I would like to discuss my appointment (ID: ${bookingId}) scheduled for ${dateTime}.`;
+
+            const whatsappUrl = `https://wa.me/${lawyerPhone}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, "_blank");
+        });
 
 
 

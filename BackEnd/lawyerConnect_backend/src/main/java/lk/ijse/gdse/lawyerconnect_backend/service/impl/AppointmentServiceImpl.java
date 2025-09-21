@@ -1,5 +1,6 @@
 package lk.ijse.gdse.lawyerconnect_backend.service.impl;
 
+import lk.ijse.gdse.lawyerconnect_backend.dto.AppointmentDTO;
 import lk.ijse.gdse.lawyerconnect_backend.dto.BookAppointmentRequestDTO;
 import lk.ijse.gdse.lawyerconnect_backend.dto.BookAppointmentResponseDTO;
 import lk.ijse.gdse.lawyerconnect_backend.entity.*;
@@ -101,6 +102,43 @@ public class AppointmentServiceImpl implements AppointmentService {
                 appointment.getStatus()
         );
     }
+
+
+
+
+
+    public List<AppointmentDTO> getClientAppointments(User user) {
+
+        ClientProfile client = clientProfileRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
+
+        List<Appointment> appointments = appointmentRepository.findByClientId(client.getId());
+
+        if (appointments.isEmpty()){
+            throw new RuntimeException("client doesn't have any appointments");
+        }
+
+        return appointments.stream().map(app -> AppointmentDTO.builder()
+                .appointmentId(app.getId())
+                .lawyerId(app.getLawyer().getId())
+                .lawyerName(app.getLawyer().getFullName())
+                .clientName(app.getClient().getFullName())
+                .lawyerPhone(app.getLawyer().getPhone())
+                .clientId(app.getClient().getId())
+                .date(app.getScheduledAt().toLocalDate().toString())
+                .startTime(app.getScheduledAt().toLocalTime().toString())
+                .endTime(app.getScheduledAt().plusMinutes(app.getDurationMinutes()).toLocalTime().toString())
+                .consultationType(app.getConsultationType())
+                .status(app.getStatus())
+                .notes(app.getNotes())
+                .build()
+        ).toList();
+    }
+
+
+
+
+
 
 
 }
