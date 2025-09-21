@@ -25,32 +25,40 @@ Secure and intuitive forms for users to register or log in to their LawyerConnec
 
 ### 3. Client Dashboard
 The client dashboard offers a personalized view of their consultations, messages, and a display of existing lawyers they can connect with.
+<img width="1347" height="608" alt="6" src="https://github.com/user-attachments/assets/033fc47e-078e-4c14-8592-f0edc3f0144b" />
 
- 
 
 ### 4. Lawyer Dashboard
 Lawyers can manage their appointments, view client inquiries, update their profiles, and track their professional engagements from a centralized dashboard.
- <img width="781" height="583" alt="14" src="https://github.com/user-attachments/assets/ccf0e777-538f-4d45-8922-b5d78f3d44f1" />
-<img width="1021" height="608" alt="13" src="https://github.com/user-attachments/assets/2a711753-2be9-4ba1-be44-8538637c5afb" />
-<img width="876" height="604" alt="15" src="https://github.com/user-attachments/assets/7a37ca2f-0cc4-4922-aaa6-ac5c6193efea" />
+<img width="1337" height="605" alt="18" src="https://github.com/user-attachments/assets/bd2037d3-9d63-4a31-ad69-3f8f72b68c95" />
 
 
 ### 5. Client Profile
 A dedicated section for clients to view and update their personal information and preferences.
  
-<img width="1054" height="604" alt="12" src="https://github.com/user-attachments/assets/ace2a858-3303-4f6b-8d11-c32b000611de" />
+<img width="910" height="597" alt="16" src="https://github.com/user-attachments/assets/2960b16b-e2ca-4e45-8e6a-07e35e4557b6" />
+
 
 ### 6. Lawyer Profile
 Each lawyer has a detailed profile showcasing their expertise, experience, and client testimonials, helping clients make informed decisions.
  
+<img width="876" height="604" alt="15" src="https://github.com/user-attachments/assets/997ad9ea-09c8-4f7e-a481-536fb5f0dec3" />
+<img width="781" height="583" alt="14" src="https://github.com/user-attachments/assets/b581258d-8174-41cc-add1-e1d88ee4ab16" />
+<img width="1021" height="608" alt="13" src="https://github.com/user-attachments/assets/42667f9d-a417-4d0c-83e6-42678cd495b2" />
 
 ### 7. Booking Flow Page
 Clients can easily book appointments with their chosen lawyers through a user-friendly scheduling interface.
  
+<img width="1233" height="589" alt="19" src="https://github.com/user-attachments/assets/cc6b3ae1-f05e-4710-bee2-a64e1bee4f68" />
+<img width="680" height="602" alt="30" src="https://github.com/user-attachments/assets/a42fd613-e909-4b97-ad75-e1fcb7393703" />
+<img width="617" height="596" alt="31" src="https://github.com/user-attachments/assets/45a304af-8adf-49c7-9b57-3224ed7f0afd" />
+<img width="683" height="604" alt="32" src="https://github.com/user-attachments/assets/59bd98ce-7444-47fe-a9ac-af69bddf6896" />
+
 
 ### 8. My Bookings
 A comprehensive overview for users to track and manage all their scheduled and past appointments.
  
+<img width="1253" height="579" alt="17" src="https://github.com/user-attachments/assets/6e7d5a88-2649-4b5e-b5d8-6ab7b1fcb907" />
 
 ---
 
