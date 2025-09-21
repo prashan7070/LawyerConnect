@@ -7,10 +7,7 @@ import lk.ijse.gdse.lawyerconnect_backend.service.LawyerExploreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +25,13 @@ public class LawyerExploreController {
             List<LawyerProfileDTO> lawyerProfiles = lawyerExploreService.getAllLawyers();
             return new ResponseEntity(new ApiResponse(200 , "success" , lawyerProfiles), HttpStatus.OK);
 
+        }
+
+
+        @GetMapping("/searchByCategory")
+        public ResponseEntity<ApiResponse> searchLawyersByCategory(@RequestParam String keyword) {
+            List<LawyerProfileDTO> lawyers = lawyerExploreService.searchLawyersByCategory(keyword);
+            return ResponseEntity.ok(new ApiResponse(200, "Lawyers fetched successfully", lawyers));
         }
 
 

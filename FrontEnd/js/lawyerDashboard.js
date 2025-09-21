@@ -494,6 +494,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
+
+
+
     // JWT parser function
     function parseJwt(token) {
         try {

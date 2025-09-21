@@ -10,6 +10,12 @@
         const profileInputs = profilePage.querySelectorAll('input, textarea');
         const profileImageUploadSection = document.getElementById('profileImageUploadSection');
         const profileImageInput = document.getElementById('profileImageInput');
+        const searchInput = document.getElementById("searchInput");
+
+        //sidebar
+        const sidebarProfile = document.getElementById('sidebarProfile');
+        const sidebarName = document.getElementById('sidebarName');
+        const sidebarEmail = document.getElementById('sidebarEmail');
 
         // Lawyer Profile Page Elements
         const lawyerProfilePage = document.getElementById('lawyer-profile-page');
@@ -619,12 +625,16 @@
                         document.getElementById("phone").value = profile.phone || "";
                         document.getElementById("nic").value = profile.nic || "";
                         document.getElementById("dob").value = profile.dob || "";
+                        sidebarName.textContent = profile.fullName || "";
+                        sidebarEmail.textContent = profile.email || "";
 
 
                         const BASE_URL = "http://localhost:8080";
 
                         if (profile.profilePictureUrl) {
                             profileAvatar.src = BASE_URL + profile.profilePictureUrl;
+                            sidebarProfile.src = BASE_URL + profile.profilePictureUrl;
+
 
                         } else {
                             profileAvatar.src = "../assets/images/default-avatar.png";
@@ -649,7 +659,7 @@
 
 
 
-
+        loadLawyers();
 
 
         function loadLawyers() {
@@ -715,8 +725,62 @@
             return stars;
         }
 
-        
-        loadLawyers();
+
+
+
+
+
+
+        // search by keywords
+
+        // searchBtn.addEventListener("click", () => {
+        //     const keyword = searchInput.value.trim();
+        //     if(keyword) searchLawyers(keyword);
+        // });
+
+        //live search as typing
+        searchInput.addEventListener("keyup", (e) => {
+            const keyword = e.target.value.trim();
+            if(keyword.length >= 2 || keyword.length === 0) {
+                searchLawyers(keyword);
+            }
+        });
+
+        function searchLawyers(keyword) {
+            $.ajax({
+                url: "http://localhost:8080/api/client/explore/searchByCategory",
+                method: "GET",
+                headers: { "Authorization": "Bearer " + token },
+                data: { keyword: keyword },
+                success: function(response) {
+                    const data = response.data;
+                    const $grid = $(".lawyer-grid");
+                    $grid.empty();
+
+                    data.forEach(lawyer => {
+                        const BASE_URL = "http://localhost:8080";
+                        const profileUrl = lawyer.profilePictureUrl ? BASE_URL + lawyer.profilePictureUrl : 'https://via.placeholder.com/100';
+
+                        const card = `
+                    <div class="lawyer-card" data-lawyer-id="${lawyer.id}">
+                        <img src="${profileUrl}" alt="Lawyer Avatar" class="avatar">
+                        <div class="name">${lawyer.fullName}</div>
+                        <div class="specialty">${lawyer.specialties || ''}</div>
+                        <p class="description">${lawyer.bio || ''}</p>
+                        <a href="#" class="btn-book" data-lawyer-id="${lawyer.id}">Book Now</a>
+                    </div>
+                `;
+                        $grid.append(card);
+                    });
+                },
+                error: function(xhr) {
+                    console.error("Search failed:", xhr.responseText);
+                }
+            });
+        }
+
+
+
 
 
         // JWT parser function

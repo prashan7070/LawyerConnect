@@ -11,6 +11,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,17 @@ public class LawyerExploreServiceImpl implements LawyerExploreService {
     public List<LawyerProfileDTO> getAllLawyers() {
 
         List<LawyerProfile> profiles = lawyerProfileRepository.findAll();
+        if (profiles.isEmpty()){
+            throw new RuntimeException("No profiles Found");
+        }
+        return modelMapper.map(profiles , new TypeToken<List<LawyerProfileDTO>>(){}.getType());
+
+    }
+
+
+    @Override
+    public List<LawyerProfileDTO> searchLawyersByCategory(String keyword) {
+        List<LawyerProfile> profiles =  lawyerProfileRepository.findBySpecializationsSpecializationContainingIgnoreCase(keyword);
         if (profiles.isEmpty()){
             throw new RuntimeException("No profiles Found");
         }

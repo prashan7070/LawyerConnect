@@ -9,4 +9,5 @@ public interface LawyerExploreService {
 
     List<LawyerProfileDTO> getAllLawyers();
 
+    List<LawyerProfileDTO> searchLawyersByCategory(String keyword);
 }
