@@ -524,6 +524,7 @@
             currentBookingStep = 1;
 
             showPage('bookings-page'); // Navigate to bookings page
+
         });
 
 
