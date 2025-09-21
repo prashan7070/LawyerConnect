@@ -135,7 +135,7 @@ Follow these steps to get LawyerConnect up and running on your local machine.
 
 Watch a quick demonstration of LawyerConnect in action:
 
-[**LawyerConnect\_Demo\_Video\_YYYYMMDD.mp4**](https://www.youtube.com/watch?v=your-video-link-here)
+[**Watch the LawyerConnect Project Demo on YouTube**](https://youtu.be/5rp0h-odY3Y)
 
 ---
 
