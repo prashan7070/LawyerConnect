@@ -134,9 +134,6 @@
             if (currentLawyer) {
                 confirmLawyerName.textContent = currentLawyer.name;
             }
-            // confirmServiceType.textContent = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
-            // confirmDateTime.textContent = `${bookingDateInput.value} at ${bookingTimeInput.value}`;
-            // confirmCaseDescription.textContent = caseDescriptionInput.value;
 
             confirmServiceType.textContent = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
 
@@ -144,7 +141,7 @@
             if (slotJson) {
                 try {
                     const s = JSON.parse(slotJson);
-                    // format nicely: e.g. "Sep 23, 2025 at 10:00 - 11:00"
+                    // format : e.g. "Sep 23, 2025 at 10:00 - 11:00"
                     const dt = new Date(`${s.date}T${s.startTime}`);
                     const formattedDate = dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
                     const start = s.startTime.substring(0,5);
@@ -211,11 +208,7 @@
         cancelEditBtn.addEventListener('click', cancelEdit);
 
         function cancelEdit() {
-            // profileInputs.forEach(input => {
-            //     input.readOnly = true;
-            //     input.style.borderColor = 'var(--border-color)';
-            //
-            // });
+
             profileInputs.forEach(input => input.readOnly = true);
             profileInputs.forEach(input => input.style.borderColor = 'var(--border-color)');
             profileImageUploadSection.style.display = 'none';
@@ -235,8 +228,7 @@
         });
 
 
-        profileImageUploadSection.style.display = 'none'; // Ensure it's hidden on load
-        // Also, ensure readonly inputs have their correct initial background
+        profileImageUploadSection.style.display = 'none';
         profileInputs.forEach(input => {
             if (input.readOnly) {
                 input.style.backgroundColor = '#eceff1';
@@ -244,48 +236,6 @@
         });
 
 
-
-        // "Book Now" buttons on home page -> Lawyer Profile Page
-        // bookButtons.forEach(button => {
-        //     button.addEventListener('click', (e) => {
-        //         e.preventDefault();
-        //         const lawyerCard = e.target.closest('.lawyer-card');
-        //         currentLawyer = {
-        //             id: lawyerCard.dataset.lawyerId,
-        //             name: lawyerCard.dataset.lawyerName,
-        //             specialty: lawyerCard.dataset.lawyerSpecialty,
-        //             rating: lawyerCard.dataset.lawyerRating,
-        //             reviews: lawyerCard.dataset.lawyerReviews,
-        //             description: lawyerCard.dataset.lawyerDescription,
-        //             avatar: lawyerCard.dataset.lawyerAvatar
-        //         };
-        //
-        //         // Populate Lawyer Profile Page
-        //         lawyerProfileAvatar.src = currentLawyer.avatar;
-        //         lawyerProfileName.textContent = currentLawyer.name;
-        //         lawyerProfileSpecialty.textContent = currentLawyer.specialty;
-        //         lawyerProfileDescription.textContent = currentLawyer.description;
-        //         bookLawyerName.textContent = currentLawyer.name; // For the button text
-        //
-        //         // Generate stars for rating
-        //         lawyerProfileStars.innerHTML = '';
-        //         const fullStars = Math.floor(parseFloat(currentLawyer.rating));
-        //         const hasHalfStar = parseFloat(currentLawyer.rating) % 1 !== 0;
-        //         for (let i = 0; i < fullStars; i++) {
-        //             lawyerProfileStars.innerHTML += '<i class="fas fa-star"></i>';
-        //         }
-        //         if (hasHalfStar) {
-        //             lawyerProfileStars.innerHTML += '<i class="fas fa-star-half-alt"></i>';
-        //         }
-        //         for (let i = 0; i < (5 - fullStars - (hasHalfStar ? 1 : 0)); i++) {
-        //             lawyerProfileStars.innerHTML += '<i class="far fa-star"></i>';
-        //         }
-        //         lawyerProfileRating.textContent = currentLawyer.rating;
-        //         lawyerProfileReviews.textContent = currentLawyer.reviews;
-        //
-        //         showPage('lawyer-profile-page');
-        //     });
-        // });
 
         document.addEventListener('click', function (e) {
             if (e.target.classList.contains('btn-book')) {
@@ -299,7 +249,10 @@
                     description: lawyerCard.querySelector('.description')?.textContent || '',
                     avatar: lawyerCard.querySelector('img')?.src || '',
                     rating: lawyerCard.dataset.lawyerRating || 0,
-                    reviews: lawyerCard.dataset.lawyerReviews || 0
+                    reviews: lawyerCard.dataset.lawyerReviews || 0,
+                    address: lawyerCard.dataset.lawyerAddress,
+                    onlineFee: parseFloat(lawyerCard.dataset.onlineFee),
+                    inPersonFee: parseFloat(lawyerCard.dataset.inpersonFee)
                 };
 
                 lawyerProfileAvatar.src = currentLawyer.avatar;
@@ -315,7 +268,6 @@
                 showPage('lawyer-profile-page');
             }
         });
-
 
 
 
@@ -367,7 +319,6 @@
                 showPage('booking-flow-page');
 
 
-                // ✅ Added: reset booking flow context + clear previous selections
                 bookingFlowPage.dataset.lawyerId = currentLawyer.id;
                 bookingDateInput.value = "";                        // clear previous date
                 availableTimeSlotsDiv.innerHTML = "";               // clear old slots
@@ -382,7 +333,7 @@
         });
 
 
-        // ✅ Added: fetch when user picks a date
+        //fetch when user picks a date
         bookingDateInput.addEventListener('change', () => {
             const selectedDate = bookingDateInput.value; // format YYYY-MM-DD
             const lawyerId = bookingFlowPage.dataset.lawyerId || (currentLawyer && currentLawyer.id);
@@ -399,15 +350,10 @@
 
 
 
-
-
-
         // Navigation within Booking Flow
         backToProfileBtn.addEventListener('click', () => {
             showPage('lawyer-profile-page'); // Go back to the lawyer's profile
         });
-
-
 
 
 
@@ -417,7 +363,7 @@
             currentBookingStep = 2;
             updateBookingSteps(currentBookingStep);
 
-            // ✅ Added: Load slots when user submits step 1 with date
+            //Load slots when user submits step 1 with date
             const selectedDate = bookingDateInput.value;
             if (currentLawyer && selectedDate) {
                 fetchAndDisplayTimeSlots(currentLawyer.id, selectedDate);
@@ -447,39 +393,18 @@
 
 
         finalConfirmBookingBtn.addEventListener('click', () => {
-            // Final booking logic here
             if (!currentLawyer) {
                 alert("Error: No lawyer selected.");
                 showPage('home-page');
                 return;
             }
 
-            // const selectedServiceText = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
-            // const bookingDate = bookingDateInput.value;
-            // const bookingTime = bookingTimeInput.value;
-            // const caseDescription = caseDescriptionInput.value;
-            //
-            // if (!selectedServiceText || !bookingDate || !bookingTime || !caseDescription) {
-            //     alert('Please ensure all booking details are filled before confirming.');
-            //     return;
-            // }
-            //
-            // const bookingDateTime = new Date(`${bookingDate}T${bookingTime}`);
-            // const formattedDateTime = bookingDateTime.toLocaleString('en-US', {
-            //     month: 'long',
-            //     day: 'numeric',
-            //     year: 'numeric',
-            //     hour: '2-digit',
-            //     minute: '2-digit',
-            //     hour12: true
-            // });
-
-            const selectedServiceText = serviceTypeInput.options[serviceTypeInput.selectedIndex].text;
+            const selectedServiceType = serviceTypeInput.value; // ONLINE / IN_PERSON
             const caseDescription = caseDescriptionInput.value;
             const slotJson = selectedBookingTimeInput.val();
 
-            if (!selectedServiceText || !slotJson || !caseDescription) {
-                alert('Please ensure service, a time slot and case description are selected before confirming.');
+            if (!selectedServiceType || !slotJson || !caseDescription) {
+                alert('Please select service, time slot, and enter case description.');
                 return;
             }
 
@@ -487,101 +412,60 @@
             try {
                 slot = JSON.parse(slotJson);
             } catch (e) {
-                alert('Selected time is invalid.');
+                alert('Invalid selected time slot.');
                 return;
             }
 
-            const bookingDateTime = new Date(`${slot.date}T${slot.startTime}`);
-            const formattedDateTime = bookingDateTime.toLocaleString('en-US', {
-                month: 'long', day: 'numeric', year: 'numeric',
-                hour: '2-digit', minute: '2-digit', hour12: true
-            });
+            const bookingRequest = {
+                lawyerId: parseInt(currentLawyer.id),
+                date: slot.date,
+                startTime: slot.startTime,
+                consultationType: selectedServiceType,
+                location: selectedServiceType === "IN_PERSON" ? currentLawyer.address || "Lawyer's Office" : "Online",
+                notes: caseDescription
+            };
 
-
-
-            const newBookingHtml = `
-            <div class="booking-card">
-                <div class="booking-details">
-                    <div class="lawyer-name">${currentLawyer.name}</div>
-                    <div class="lawyer-specialty">${currentLawyer.specialty}</div>
-                    <div class="booking-date-time">${formattedDateTime} - ${selectedServiceText}</div>
+            $.ajax({
+                url: "http://localhost:8080/api/appointments/book",
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify(bookingRequest),
+                success: function(response) {
+                    alert(`Booking confirmed with ${currentLawyer.name}!`);
+                    // Add booking to upcoming list
+                    const formattedDateTime = `${slot.date} ${slot.startTime} - ${slot.endTime}`;
+                    const newBookingHtml = `
+                <div class="booking-card">
+                    <div class="booking-details">
+                        <div class="lawyer-name">${currentLawyer.name}</div>
+                        <div class="lawyer-specialty">${currentLawyer.specialty}</div>
+                        <div class="booking-date-time">${formattedDateTime} - ${selectedServiceType}</div>
+                    </div>
+                    <span class="booking-status confirmed">Confirmed</span>
                 </div>
-                <span class="booking-status confirmed">Confirmed</span>
-            </div>
-        `;
+            `;
+                    upcomingBookingsList.insertAdjacentHTML('afterbegin', newBookingHtml);
 
-            upcomingBookingsList.insertAdjacentHTML('afterbegin', newBookingHtml); // Add to top of upcoming list
-
-            alert(`Booking Confirmed with ${currentLawyer.name} for ${formattedDateTime} (${selectedServiceText})!`);
-
-            // Reset booking flow
-            currentLawyer = null;
-            serviceScheduleForm.reset();
-
-            //new
-            selectedBookingTimeInput.val("");
-
-            currentBookingStep = 1;
-
-            showPage('bookings-page'); // Navigate to bookings page
-
+                    // Reset booking flow
+                    currentLawyer = null;
+                    serviceScheduleForm.reset();
+                    selectedBookingTimeInput.val("");
+                    currentBookingStep = 1;
+                    showPage('bookings-page');
+                },
+                error: function(xhr) {
+                    alert("Failed to book appointment: " + xhr.responseText);
+                }
+            });
         });
 
 
 
 
-
-        //function for fetching available slots
-
-        // function fetchAndDisplayTimeSlots(lawyerId, selectedDate) {
-        //     if (!lawyerId || !selectedDate) {
-        //         timeSlotsContainer.hide();
-        //         return;
-        //     }
-        //
-        //     // Show loading indicator if desired
-        //     availableTimeSlotsDiv.html('<p class="loading-message">Loading available slots...</p>');
-        //     timeSlotsContainer.show();
-        //     noSlotsMessage.hide();
-        //
-        //     // **Backend Call Placeholder:**
-        //     // You'll replace this with an actual AJAX call to your backend
-        //     // Your backend API should return available 60-min slots for the given lawyerId and date.
-        //     // For demonstration, we'll simulate a response.
-        //     const simulatedAvailableSlots = simulateBackendTimeSlots(selectedDate); // Replace with actual AJAX
-        //
-        //     // Clear previous slots
-        //     availableTimeSlotsDiv.empty();
-        //
-        //     if (simulatedAvailableSlots.length === 0) {
-        //         noSlotsMessage.show();
-        //     } else {
-        //         noSlotsMessage.hide();
-        //         simulatedAvailableSlots.forEach(slot => {
-        //             const button = $('<button>')
-        //                 .addClass('time-slot-button')
-        //                 .text(slot.time)
-        //                 .attr('data-time', slot.rawTime); // Store raw time for submission
-        //
-        //             if (!slot.isAvailable) { // Assuming your backend tells you if a slot is taken
-        //                 button.addClass('disabled').prop('disabled', true);
-        //             } else {
-        //                 button.on('click', function() {
-        //                     // Deselect all other slots
-        //                     $('.time-slot-button').removeClass('selected');
-        //                     // Select this slot
-        //                     $(this).addClass('selected');
-        //                     // Store the selected time in the hidden input
-        //                     selectedBookingTimeInput.val($(this).attr('data-time'));
-        //                 });
-        //             }
-        //             availableTimeSlotsDiv.append(button);
-        //         });
-        //     }
-        // }
-
-
-        // ✅ Added: Real backend call for slots
+        //Real backend call for slots
         function fetchAndDisplayTimeSlots(lawyerId, selectedDate) {
             if (!lawyerId || !selectedDate) {
                 timeSlotsContainer.hide();
@@ -609,21 +493,6 @@
 
                     noSlotsMessage.hide();
 
-                    // slots.forEach(slot => {
-                    //     const button = $('<button>')
-                    //         .addClass('time-slot-button')
-                    //         .text(`${slot.startTime} - ${slot.endTime}`)
-                    //         .attr('data-time', slot.startTime);
-                    //
-                    //     button.on('click', function() {
-                    //         $('.time-slot-button').removeClass('selected');
-                    //         $(this).addClass('selected');
-                    //         bookingTimeInput.value = $(this).attr('data-time');
-                    //         selectedBookingTimeInput.val($(this).attr('data-time'));
-                    //     });
-                    //
-                    //     availableTimeSlotsDiv.append(button);
-                    // });
 
                     slots.forEach(slot => {
                         // slot expected shape: { date: "YYYY-MM-DD", startTime: "HH:MM:SS", endTime: "HH:MM:SS" }
@@ -725,8 +594,6 @@
 
 
 
-
-
         loadClientProfile();
 
         function loadClientProfile() {
@@ -764,8 +631,6 @@
                         }
 
 
-
-
                     } else {
                         profilePage.dataset.hasProfile = "false";
 
@@ -780,7 +645,6 @@
                 }
             });
         }
-
 
 
 
@@ -806,13 +670,21 @@
                         let name = lawyer.fullName;
                         let specialties = lawyer.specialties;
                         let bio = lawyer.bio;
+                        let address = lawyer.workingAddress || "";
+                        let onlineFee = lawyer.onlineFee || 0;
+                        let inPersonFee = lawyer.inPersonFee || 0;
                         const profileUrl = lawyer.profilePictureUrl;
                         const BASE_URL = "http://localhost:8080";
                         const url = BASE_URL + profileUrl;
 
 
                         var card = `
-                    <div class="lawyer-card" data-lawyer-id="${lawyer.id}">
+                    <div class="lawyer-card" data-lawyer-id="${lawyer.id}" data-lawyer-name="${name}" 
+                         data-lawyer-specialty="${specialties || ''}"
+                         data-lawyer-bio="${bio || ''}"
+                         data-lawyer-address="${address}"
+                         data-online-fee="${onlineFee}"
+                         data-inperson-fee="${inPersonFee}">
                         <img src="${url || 'https://via.placeholder.com/100'}" 
                              alt="Lawyer Avatar" class="avatar">
                         <div class="name">${name}</div>
@@ -843,14 +715,8 @@
             return stars;
         }
 
-// call it on page load
+        
         loadLawyers();
-
-
-        // <div className="rating">
-        //     ${generateStars(lawyer.rating || 0)}
-        //     <span>${lawyer.rating || 0} (${lawyer.reviews || 0})</span>
-        // </div>
 
 
         // JWT parser function

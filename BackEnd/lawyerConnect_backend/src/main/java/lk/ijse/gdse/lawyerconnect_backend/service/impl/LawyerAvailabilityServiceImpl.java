@@ -44,10 +44,9 @@ public class LawyerAvailabilityServiceImpl implements LawyerAvailabilityService 
 
         List<TimeSlotDTO> availableSlots = new ArrayList<>();
 
-        // If no availability ranges => return empty
+
         if (availabilities.isEmpty()) return availableSlots;
 
-        // Build a range for the day to fetch appointments once (midnight .. next midnight)
         LocalDateTime dayStart = date.atStartOfDay();
         LocalDateTime dayEnd = date.plusDays(1).atStartOfDay();
 
@@ -68,7 +67,6 @@ public class LawyerAvailabilityServiceImpl implements LawyerAvailabilityService 
                     LocalDateTime apptStart = appt.getScheduledAt();
                     LocalDateTime apptEnd = apptStart.plusMinutes(appt.getDurationMinutes());
 
-                    // overlap if apptStart < slotEnd && apptEnd > slotStart
                     return apptStart.isBefore(slotEndDateTime) && apptEnd.isAfter(slotStartDateTime);
                 });
 
