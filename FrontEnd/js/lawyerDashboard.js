@@ -573,7 +573,8 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: { "Authorization": "Bearer " + token },
             success: function(response) {
                 const data = response.data || {};
-                // upcomingAppointments, totalClients, monthlyEarnings, avgRating
+
+                // upcomingCount, totalClients, monthlyEarnings, avgRating
 
                 $('#upcomingAppointmentsCount').text(data.upcomingCount ?? 0);
                 $('#totalClientsCount').text(data.totalClients ?? 0);

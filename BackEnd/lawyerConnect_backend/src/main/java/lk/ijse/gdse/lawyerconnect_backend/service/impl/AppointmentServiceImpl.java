@@ -2,6 +2,9 @@ package lk.ijse.gdse.lawyerconnect_backend.service.impl;
 
 import lk.ijse.gdse.lawyerconnect_backend.dto.*;
 import lk.ijse.gdse.lawyerconnect_backend.entity.*;
+import lk.ijse.gdse.lawyerconnect_backend.exception.AllReadyFoundException;
+import lk.ijse.gdse.lawyerconnect_backend.exception.InvalidAppointmentStatusException;
+import lk.ijse.gdse.lawyerconnect_backend.exception.ResourceNotFoundException;
 import lk.ijse.gdse.lawyerconnect_backend.repository.AppointmentRepository;
 import lk.ijse.gdse.lawyerconnect_backend.repository.ClientProfileRepository;
 import lk.ijse.gdse.lawyerconnect_backend.repository.LawyerProfileRepository;
@@ -33,13 +36,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     public BookAppointmentResponseDTO bookAppointment(BookAppointmentRequestDTO request, User user) {
 
         ClientProfile profile = clientProfileRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
 
         LawyerProfile lawyer = lawyerProfileRepository.findById(request.getLawyerId())
-                .orElseThrow(() -> new RuntimeException("Lawyer not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Lawyer not found"));
 
         ClientProfile client = clientProfileRepository.findById(profile.getId())
-                .orElseThrow(() -> new RuntimeException("Client not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
 
         // Parse date/time
         LocalDate date = LocalDate.parse(request.getDate());
@@ -54,7 +57,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 lawyer, startDateTime, endDateTime
         );
         if (!existing.isEmpty()) {
-            throw new RuntimeException("Selected time slot is already booked.");
+            throw new AllReadyFoundException("Selected time slot is already booked.");
         }
 
         // Determine fee
@@ -106,12 +109,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<AppointmentDTO> getClientAppointments(User user) {
 
         ClientProfile client = clientProfileRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Client not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
 
         List<Appointment> appointments = appointmentRepository.findByClientId(client.getId());
 
         if (appointments.isEmpty()){
-            throw new RuntimeException("client doesn't have any appointments");
+            throw new ResourceNotFoundException("client doesn't have any appointments");
         }
 
         return appointments.stream().map(app -> AppointmentDTO.builder()
@@ -138,12 +141,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<AppointmentDTO> getLawyerAppointments(User user) {
         LawyerProfile profile = lawyerProfileRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Client not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
 
         List<Appointment> appointments = appointmentRepository.findByLawyerId(profile.getId());
 
         if (appointments.isEmpty()){
-            throw new RuntimeException("lawyer doesn't have any appointments");
+            throw new ResourceNotFoundException("lawyer doesn't have any appointments");
         }
 
         return appointments.stream().map(app -> AppointmentDTO.builder()
@@ -170,14 +173,15 @@ public class AppointmentServiceImpl implements AppointmentService {
     public void updateAppointmentStatus(String appointmentId, UpdateStatusRequestDTO dto) {
 
         Appointment appointment = appointmentRepository.findById(Long.valueOf(appointmentId))
-                .orElseThrow(() -> new RuntimeException("appointment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("appointment not found"));
 
         AppointmentStatus newStatus;
 
         try {
             newStatus = AppointmentStatus.valueOf(dto.getStatus().trim().toUpperCase());
         } catch (IllegalArgumentException | NullPointerException e) {
-            throw new RuntimeException("Invalid status value");
+//            throw new RuntimeException("Invalid status value");
+            throw new InvalidAppointmentStatusException("Invalid status value");
         }
 
         appointment.setStatus(newStatus); // or appointment.setStatus(newStatus) if your entity uses the enum
@@ -189,7 +193,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<ClientDTO> getClientsOfLawyer(User user) {
 
         LawyerProfile lawyer = lawyerProfileRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Lawyer not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Lawyer not found"));
 
         List<Appointment> appointments = appointmentRepository.findByLawyerId(lawyer.getId());
 

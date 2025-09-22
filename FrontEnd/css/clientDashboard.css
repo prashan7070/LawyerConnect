@@ -964,6 +964,10 @@ body {
     background-color: #F44336; /* Red */
 }
 
+.booking-card .booking-status.pending {
+    background-color: #36f4db;
+}
+
 /* Settings Page Styles */
 .settings-group {
     margin-bottom: 30px;

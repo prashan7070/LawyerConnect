@@ -6,6 +6,7 @@ import lk.ijse.gdse.lawyerconnect_backend.entity.Appointment;
 import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerAvailability;
 import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerProfile;
 import lk.ijse.gdse.lawyerconnect_backend.entity.User;
+import lk.ijse.gdse.lawyerconnect_backend.exception.ResourceNotFoundException;
 import lk.ijse.gdse.lawyerconnect_backend.repository.AppointmentRepository;
 import lk.ijse.gdse.lawyerconnect_backend.repository.LawyerAvailabilityRepository;
 import lk.ijse.gdse.lawyerconnect_backend.repository.LawyerProfileRepository;
@@ -35,7 +36,7 @@ public class LawyerAvailabilityServiceImpl implements LawyerAvailabilityService 
     @Transactional(readOnly = true)
     public List<TimeSlotDTO> getAvailableSlots(Long lawyerId, LocalDate date, int slotMinutes) {
         LawyerProfile lawyer = lawyerProfileRepository.findById(lawyerId)
-                .orElseThrow(() -> new RuntimeException("Lawyer not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Lawyer not found"));
 
         DayOfWeek dayOfWeek = date.getDayOfWeek();
 

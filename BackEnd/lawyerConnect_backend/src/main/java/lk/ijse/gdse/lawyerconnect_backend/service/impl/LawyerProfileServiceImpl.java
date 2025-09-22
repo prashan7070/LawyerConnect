@@ -7,6 +7,9 @@ import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerAvailability;
 import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerProfile;
 import lk.ijse.gdse.lawyerconnect_backend.entity.Specialization;
 import lk.ijse.gdse.lawyerconnect_backend.entity.User;
+import lk.ijse.gdse.lawyerconnect_backend.exception.AllReadyFoundException;
+import lk.ijse.gdse.lawyerconnect_backend.exception.FileStorageException;
+import lk.ijse.gdse.lawyerconnect_backend.exception.ResourceNotFoundException;
 import lk.ijse.gdse.lawyerconnect_backend.repository.LawyerAvailabilityRepository;
 import lk.ijse.gdse.lawyerconnect_backend.repository.LawyerProfileRepository;
 import lk.ijse.gdse.lawyerconnect_backend.repository.SpecializationRepository;
@@ -44,7 +47,7 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
 
         lawyerProfileRepository.findByUser(user)
                 .ifPresent(profile -> {
-                    throw new RuntimeException("Profile already exists for this user");
+                    throw new AllReadyFoundException("Profile already exists for this user");
                 });
 
 //        LawyerProfile profile = modelMapper.map(dto , LawyerProfile.class);
@@ -86,7 +89,7 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
     @Transactional
     public void updateProfile(User user , LawyerProfileDTO dto, MultipartFile profilePicture) {
         LawyerProfile profile = lawyerProfileRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
 
 //        modelMapper.map(dto , profile);
 
@@ -126,7 +129,7 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
     public LawyerProfileDTO getProfile(User user) {
 
         LawyerProfile lawyerProfile = lawyerProfileRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
 
 
         LawyerProfileDTO lawyerProfileDTO =  modelMapper.map(lawyerProfile , LawyerProfileDTO.class);
@@ -172,7 +175,9 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
 
             return "/uploads/profile-images/" + newFileName;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store file", e);
+            //            throw new RuntimeException("Failed to store file", e);
+            throw new FileStorageException("Failed to store file");
+
         }
     }
 
@@ -182,7 +187,7 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
     public void saveAvailability(User user, List<AvailabilityDTO> availabilityDTO) {
 
         LawyerProfile profile = lawyerProfileRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
 
         if (availabilityDTO != null && !availabilityDTO.isEmpty()) {
 
@@ -209,7 +214,7 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
     public List<AvailabilityDTO> getAvailability(User user) {
 
         LawyerProfile profile = lawyerProfileRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
 
         return lawyerAvailabilityRepository.findByLawyerProfile(profile)
                 .stream()
@@ -224,7 +229,7 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
 
         List<Specialization> specializations = specializationRepository.findAll();
         if (specializations.isEmpty()){
-            throw new RuntimeException("can not find any specializations");
+            throw new ResourceNotFoundException("can not find any specializations");
         }
         return modelMapper.map(specializations , new TypeToken<List<SpecializationDTO>>(){}.getType());
     }

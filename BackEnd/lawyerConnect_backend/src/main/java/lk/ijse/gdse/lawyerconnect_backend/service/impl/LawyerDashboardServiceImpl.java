@@ -4,6 +4,7 @@ import lk.ijse.gdse.lawyerconnect_backend.dto.DashboardOverviewDTO;
 import lk.ijse.gdse.lawyerconnect_backend.entity.AppointmentStatus;
 import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerProfile;
 import lk.ijse.gdse.lawyerconnect_backend.entity.User;
+import lk.ijse.gdse.lawyerconnect_backend.exception.ResourceNotFoundException;
 import lk.ijse.gdse.lawyerconnect_backend.repository.AppointmentRepository;
 import lk.ijse.gdse.lawyerconnect_backend.repository.LawyerProfileRepository;
 import lk.ijse.gdse.lawyerconnect_backend.repository.PaymentRepository;
@@ -29,22 +30,20 @@ public class LawyerDashboardServiceImpl implements LawyerDashboardService {
 
     @Override
     public DashboardOverviewDTO getOverviewForLawyer(User user) {
+
         LawyerProfile profile = lawyerProfileRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Lawyer profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Lawyer profile not found"));
 
         Long lawyerId = profile.getId();
 
-        // Upcoming = PENDING or CONFIRMED and scheduledAt >= now
         List<AppointmentStatus> upcomingStatuses = List.of(AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED);
         LocalDateTime now = LocalDateTime.now();
 
         Long upcomingCount = appointmentRepository.countUpcomingForLawyer(lawyerId, upcomingStatuses, now);
 
-        // Total distinct clients
         Long totalClients = appointmentRepository.countDistinctClientsByLawyerId(lawyerId);
         if (totalClients == null) totalClients = 0L;
 
-        // Monthly earnings: sum payments for current month
         LocalDate today = LocalDate.now();
         LocalDateTime startOfMonth = today.with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay();
         LocalDateTime endOfMonth = today.with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX);
@@ -52,7 +51,6 @@ public class LawyerDashboardServiceImpl implements LawyerDashboardService {
         BigDecimal monthlyEarnings = paymentRepository.sumPaidAmountForLawyerBetween(lawyerId, startOfMonth, endOfMonth);
         if (monthlyEarnings == null) monthlyEarnings = BigDecimal.ZERO;
 
-        // avgRating left as null for now (no reviews implemented)
         return DashboardOverviewDTO.builder()
                 .upcomingCount(upcomingCount == null ? 0L : upcomingCount)
                 .totalClients(totalClients)

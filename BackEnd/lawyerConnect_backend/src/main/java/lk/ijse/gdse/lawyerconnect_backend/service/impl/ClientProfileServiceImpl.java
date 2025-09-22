@@ -5,6 +5,9 @@ import lk.ijse.gdse.lawyerconnect_backend.dto.LawyerProfileDTO;
 import lk.ijse.gdse.lawyerconnect_backend.entity.ClientProfile;
 import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerProfile;
 import lk.ijse.gdse.lawyerconnect_backend.entity.User;
+import lk.ijse.gdse.lawyerconnect_backend.exception.AllReadyFoundException;
+import lk.ijse.gdse.lawyerconnect_backend.exception.FileStorageException;
+import lk.ijse.gdse.lawyerconnect_backend.exception.ResourceNotFoundException;
 import lk.ijse.gdse.lawyerconnect_backend.repository.ClientProfileRepository;
 import lk.ijse.gdse.lawyerconnect_backend.service.ClientProfileService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +36,7 @@ public class ClientProfileServiceImpl implements ClientProfileService {
 
         clientProfileRepository.findByUser(user)
                 .ifPresent(profile -> {
-                    throw new RuntimeException("Profile already exists for this user");
+                    throw new AllReadyFoundException("Profile already exists for this user");
                 });
 
         ClientProfile profile = modelMapper.map(clientProfileDTO , ClientProfile.class);
@@ -49,7 +52,7 @@ public class ClientProfileServiceImpl implements ClientProfileService {
     public void updateProfile(User user, ClientProfileDTO clientProfileDTO, MultipartFile profilePicture) {
 
         ClientProfile profile = clientProfileRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
 
         modelMapper.map(clientProfileDTO , profile);
         profile.setUser(user);
@@ -67,7 +70,7 @@ public class ClientProfileServiceImpl implements ClientProfileService {
     public ClientProfileDTO getProfile(User user) {
 
         ClientProfile profile = clientProfileRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
 
         return modelMapper.map(profile , ClientProfileDTO.class);
 
@@ -96,7 +99,8 @@ public class ClientProfileServiceImpl implements ClientProfileService {
 
             return "/uploads/profile-images/" + newFileName;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store file", e);
+//            throw new RuntimeException("Failed to store file", e);
+            throw new FileStorageException("Failed to store file");
         }
     }
 

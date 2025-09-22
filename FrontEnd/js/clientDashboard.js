@@ -399,12 +399,38 @@
             updateBookingSteps(currentBookingStep);
         });
 
+        // goToStep3Btn.addEventListener('click', () => {
+        //     // Here you would typically validate payment details
+        //     alert("Proceeding to confirmation! (Payment details would be processed here)");
+        //     currentBookingStep = 3;
+        //     updateBookingSteps(currentBookingStep);
+        // });
+
         goToStep3Btn.addEventListener('click', () => {
             // Here you would typically validate payment details
-            alert("Proceeding to confirmation! (Payment details would be processed here)");
-            currentBookingStep = 3;
-            updateBookingSteps(currentBookingStep);
+            Swal.fire({
+                title: "Proceed to Confirmation?",
+                text: "Your payment details will be processed.",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonText: "Proceed",
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Proceeding 🎉",
+                        text: "Payment details validated. Moving to confirmation step.",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    }).then(() => {
+                        currentBookingStep = 3;
+                        updateBookingSteps(currentBookingStep);
+                    });
+                }
+            });
         });
+
+
 
         backToStep2Btn.addEventListener('click', () => {
             currentBookingStep = 2;
@@ -416,10 +442,87 @@
 
 
 
+        // finalConfirmBookingBtn.addEventListener('click', () => {
+        //     if (!currentLawyer) {
+        //         alert("Error: No lawyer selected.");
+        //         showPage('home-page');
+        //         return;
+        //     }
+        //
+        //     const selectedServiceType = serviceTypeInput.value; // ONLINE / IN_PERSON
+        //     const caseDescription = caseDescriptionInput.value;
+        //     const slotJson = selectedBookingTimeInput.val();
+        //
+        //     if (!selectedServiceType || !slotJson || !caseDescription) {
+        //         alert('Please select service, time slot, and enter case description.');
+        //         return;
+        //     }
+        //
+        //     let slot;
+        //     try {
+        //         slot = JSON.parse(slotJson);
+        //     } catch (e) {
+        //         alert('Invalid selected time slot.');
+        //         return;
+        //     }
+        //
+        //     const bookingRequest = {
+        //         lawyerId: parseInt(currentLawyer.id),
+        //         date: slot.date,
+        //         startTime: slot.startTime,
+        //         consultationType: selectedServiceType,
+        //         location: selectedServiceType === "IN_PERSON" ? currentLawyer.address || "Lawyer's Office" : "Online",
+        //         notes: caseDescription
+        //     };
+        //
+        //     $.ajax({
+        //         url: "http://localhost:8080/api/appointments/book",
+        //         method: "POST",
+        //         headers: {
+        //             "Authorization": "Bearer " + token,
+        //             "Content-Type": "application/json"
+        //         },
+        //         data: JSON.stringify(bookingRequest),
+        //         success: function(response) {
+        //             alert(`Booking confirmed with ${currentLawyer.name}!`);
+        //             // Add booking to upcoming list
+        //             const formattedDateTime = `${slot.date} ${slot.startTime} - ${slot.endTime}`;
+        //             const newBookingHtml = `
+        //         <div class="booking-card">
+        //             <div class="booking-details">
+        //                 <div class="lawyer-name">${currentLawyer.name}</div>
+        //                 <div class="lawyer-specialty">${currentLawyer.specialty}</div>
+        //                 <div class="booking-date-time">${formattedDateTime} - ${selectedServiceType}</div>
+        //             </div>
+        //             <span class="booking-status confirmed">Confirmed</span>
+        //         </div>
+        //     `;
+        //             upcomingBookingsList.insertAdjacentHTML('afterbegin', newBookingHtml);
+        //
+        //             // Reset booking flow
+        //             currentLawyer = null;
+        //             serviceScheduleForm.reset();
+        //             selectedBookingTimeInput.val("");
+        //             currentBookingStep = 1;
+        //             showPage('bookings-page');
+        //             loadClientBookings();
+        //         },
+        //         error: function(xhr) {
+        //             alert("Failed to book appointment: " + xhr.responseText);
+        //         }
+        //     });
+        // });
+
         finalConfirmBookingBtn.addEventListener('click', () => {
             if (!currentLawyer) {
-                alert("Error: No lawyer selected.");
-                showPage('home-page');
+                Swal.fire({
+                    title: "Error ⚠️",
+                    text: "No lawyer selected.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                }).then(() => {
+                    showPage('home-page');
+                });
                 return;
             }
 
@@ -428,7 +531,12 @@
             const slotJson = selectedBookingTimeInput.val();
 
             if (!selectedServiceType || !slotJson || !caseDescription) {
-                alert('Please select service, time slot, and enter case description.');
+                Swal.fire({
+                    title: "Missing Information",
+                    text: "Please select service, time slot, and enter case description.",
+                    icon: "warning",
+                    confirmButtonText: "OK"
+                });
                 return;
             }
 
@@ -436,7 +544,12 @@
             try {
                 slot = JSON.parse(slotJson);
             } catch (e) {
-                alert('Invalid selected time slot.');
+                Swal.fire({
+                    title: "Invalid Time Slot",
+                    text: "Selected time slot is invalid.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
                 return;
             }
 
@@ -458,33 +571,46 @@
                 },
                 data: JSON.stringify(bookingRequest),
                 success: function(response) {
-                    alert(`Booking confirmed with ${currentLawyer.name}!`);
-                    // Add booking to upcoming list
-                    const formattedDateTime = `${slot.date} ${slot.startTime} - ${slot.endTime}`;
-                    const newBookingHtml = `
-                <div class="booking-card">
-                    <div class="booking-details">
-                        <div class="lawyer-name">${currentLawyer.name}</div>
-                        <div class="lawyer-specialty">${currentLawyer.specialty}</div>
-                        <div class="booking-date-time">${formattedDateTime} - ${selectedServiceType}</div>
+                    Swal.fire({
+                        title: "Booking Confirmed 🎉",
+                        text: `Your appointment with ${currentLawyer.name} has been confirmed!`,
+                        icon: "success",
+                        confirmButtonText: "Great!"
+                    }).then(() => {
+                        // Add booking to upcoming list
+                        const formattedDateTime = `${slot.date} ${slot.startTime} - ${slot.endTime}`;
+                        const newBookingHtml = `
+                    <div class="booking-card">
+                        <div class="booking-details">
+                            <div class="lawyer-name">${currentLawyer.name}</div>
+                            <div class="lawyer-specialty">${currentLawyer.specialty}</div>
+                            <div class="booking-date-time">${formattedDateTime} - ${selectedServiceType}</div>
+                        </div>
+                        <span class="booking-status confirmed">Confirmed</span>
                     </div>
-                    <span class="booking-status confirmed">Confirmed</span>
-                </div>
-            `;
-                    upcomingBookingsList.insertAdjacentHTML('afterbegin', newBookingHtml);
+                `;
+                        upcomingBookingsList.insertAdjacentHTML('afterbegin', newBookingHtml);
 
-                    // Reset booking flow
-                    currentLawyer = null;
-                    serviceScheduleForm.reset();
-                    selectedBookingTimeInput.val("");
-                    currentBookingStep = 1;
-                    showPage('bookings-page');
+                        // Reset booking flow
+                        currentLawyer = null;
+                        serviceScheduleForm.reset();
+                        selectedBookingTimeInput.val("");
+                        currentBookingStep = 1;
+                        showPage('bookings-page');
+                        loadClientBookings();
+                    });
                 },
                 error: function(xhr) {
-                    alert("Failed to book appointment: " + xhr.responseText);
+                    Swal.fire({
+                        title: "Booking Failed ❌",
+                        text: xhr.responseText || "Could not complete the booking. Please try again.",
+                        icon: "error",
+                        confirmButtonText: "Retry"
+                    });
                 }
             });
         });
+
 
 
 
@@ -805,7 +931,7 @@
                     const now = new Date();
 
                     appointments.forEach(app => {
-                        const appDateTime = new Date(app.date + "T" + app.startTime);
+                        // const appDateTime = new Date(app.date + "T" + app.startTime);
 
                         // Build card
                         const $card = $(`
@@ -815,19 +941,23 @@
                             <div class="booking-date-time">${app.date} ${app.startTime} - ${formatConsultationType(app.consultationType)}</div>
                             <div class="booking-notes">${app.notes || ""}</div>
                         </div>
-                        <span class="booking-status ${app.status.toLowerCase()}">${app.status}</span>
+                        <div class="booking-status ${app.status.toLowerCase()}">${app.status}</div>
                         <div class="booking-actions">
-                            <button class="btn-view"><i class="fas fa-info-circle"></i></button>
+                            <button class="btn-view ${app.status.toLowerCase()}"><i class="fas fa-info-circle"></i></button>
                             <button class="btn-message"><i class="fab fa-whatsapp"></i></button>
                         </div>
                     </div>
                 `);
 
-                        if (!(app.status === "CONFIRMED" && appDateTime >= now)) {
-                            $card.find(".btn-message").prop("disabled", true).addClass("disabled");
-                        }
+                        // if (!(app.status === "CONFIRMED" && appDateTime >= now)) {
+                        //     $card.find(".btn-message").prop("disabled", true).addClass("disabled");
+                        // }
+                        // && appDateTime >= now
+                        // ${app.status.toLowerCase()}
+                        console.log(app.status);
+                        // <span className="booking-status">${app.status}</span>
 
-                        if ((app.status === "PENDING" || app.status === "CONFIRMED") && appDateTime >= now) {
+                        if ((app.status === "PENDING" || app.status === "CONFIRMED")) {
                             $upcoming.append($card);
                         } else {
                             $past.append($card);
