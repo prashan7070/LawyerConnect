@@ -1,9 +1,6 @@
 package lk.ijse.gdse.lawyerconnect_backend.service.impl;
 
-import lk.ijse.gdse.lawyerconnect_backend.dto.AppointmentDTO;
-import lk.ijse.gdse.lawyerconnect_backend.dto.BookAppointmentRequestDTO;
-import lk.ijse.gdse.lawyerconnect_backend.dto.BookAppointmentResponseDTO;
-import lk.ijse.gdse.lawyerconnect_backend.dto.UpdateStatusRequestDTO;
+import lk.ijse.gdse.lawyerconnect_backend.dto.*;
 import lk.ijse.gdse.lawyerconnect_backend.entity.*;
 import lk.ijse.gdse.lawyerconnect_backend.repository.AppointmentRepository;
 import lk.ijse.gdse.lawyerconnect_backend.repository.ClientProfileRepository;
@@ -18,10 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -190,6 +184,31 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentRepository.save(appointment);
 
     }
+
+
+    public List<ClientDTO> getClientsOfLawyer(User user) {
+
+        LawyerProfile lawyer = lawyerProfileRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Lawyer not found"));
+
+        List<Appointment> appointments = appointmentRepository.findByLawyerId(lawyer.getId());
+
+        Map<Long, ClientDTO> clientsMap = new HashMap<>();
+        for (Appointment app : appointments) {
+            ClientProfile client = app.getClient();
+            clientsMap.putIfAbsent(client.getId(), ClientDTO.builder()
+                    .clientId(client.getId())
+                    .clientName(client.getFullName())
+                    .clientEmail(client.getUser().getEmail())
+                    .clientPhone(client.getPhone())
+                    .clientProfilePicture(client.getProfilePictureUrl())
+                    .build());
+        }
+
+        return new ArrayList<>(clientsMap.values());
+    }
+
+
 
 
 }

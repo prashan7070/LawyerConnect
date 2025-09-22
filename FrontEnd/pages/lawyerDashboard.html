@@ -38,32 +38,33 @@
 
             <section class="stats-cards-section">
                 <h2 class="section-title">Overview</h2>
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <i class="fas fa-calendar-check icon"></i>
                         <div class="details">
-                            <h3>12</h3>
+                            <h3 id="upcomingAppointmentsCount"></h3>
                             <p>Upcoming Appointments</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-users icon" style="color: var(--secondary-color);"></i>
                         <div class="details">
-                            <h3>85</h3>
+                            <h3 id="totalClientsCount"></h3>
                             <p>Total Clients</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-star icon" style="color: #FFC107;"></i>
                         <div class="details">
-                            <h3>4.8</h3>
+                            <h3 id="averageRating"></h3>
                             <p>Average Rating</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-dollar-sign icon" style="color: #6c757d;"></i>
                         <div class="details">
-                            <h3>$5,200</h3>
+                            <h3 id="monthlyEarnings"></h3>
                             <p>Monthly Earnings</p>
                         </div>
                     </div>
@@ -112,68 +113,13 @@
         </div>
 
         <div id="clients-page" style="display:none;">
+
             <div class="header">
                 <h1>My Clients</h1>
             </div>
             <section class="clients-section">
                 <h2 class="section-title">All Clients</h2>
-                <div class="client-list">
-                    <div class="client-item">
-                        <img src="" alt="Client Avatar" class="avatar">
-                        <div class="details">
-                            <div class="client-name">Alice Smith</div>
-                            <div class="client-email">alice.smith@example.com</div>
-                        </div>
-                        <div class="actions">
-                            <button>View Profile</button>
-                            <button class="btn-message">Message</button>
-                        </div>
-                    </div>
-                    <div class="client-item">
-                        <img src="" alt="Client Avatar" class="avatar">
-                        <div class="details">
-                            <div class="client-name">Bob Johnson</div>
-                            <div class="client-email">bob.johnson@example.com</div>
-                        </div>
-                        <div class="actions">
-                            <button>View Profile</button>
-                            <button class="btn-message">Message</button>
-                        </div>
-                    </div>
-                    <div class="client-item">
-                        <img src="" alt="Client Avatar" class="avatar">
-                        <div class="details">
-                            <div class="client-name">Carol White</div>
-                            <div class="client-email">carol.white@example.com</div>
-                        </div>
-                        <div class="actions">
-                            <button>View Profile</button>
-                            <button class="btn-message">Message</button>
-                        </div>
-                    </div>
-                    <div class="client-item">
-                        <img src="" alt="Client Avatar" class="avatar">
-                        <div class="details">
-                            <div class="client-name">David Green</div>
-                            <div class="client-email">david.green@example.com</div>
-                        </div>
-                        <div class="actions">
-                            <button>View Profile</button>
-                            <button class="btn-message">Message</button>
-                        </div>
-                    </div>
-                    <div class="client-item">
-                        <img src="F" alt="Client Avatar" class="avatar">
-                        <div class="details">
-                            <div class="client-name">Emily Four</div>
-                            <div class="client-email">emily.four@example.com</div>
-                        </div>
-                        <div class="actions">
-                            <button>View Profile</button>
-                            <button class="btn-message">Message</button>
-                        </div>
-                    </div>
-                </div>
+                <div id="clients-list" class="client-list"></div>
             </section>
         </div>
 

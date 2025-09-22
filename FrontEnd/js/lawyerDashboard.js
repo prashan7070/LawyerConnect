@@ -517,6 +517,85 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
+    loadLawyerClients();
+
+    function loadLawyerClients() {
+        $.ajax({
+            url: "http://localhost:8080/api/lawyer/dashboard/getClients",
+            method: "GET",
+            headers: { "Authorization": "Bearer " + token },
+            success: function(response) {
+                const clients = response.data;
+                // renderClients("#clients-list", clients);
+                renderClients("#clients-list", clients);
+            },
+            error: function(err) {
+                console.error("Failed to load clients", err);
+            }
+        });
+    }
+
+    function renderClients(containerSelector, clients) {
+        const container = $(containerSelector);
+        container.empty();
+        const BASE_URL = "http://localhost:8080";
+
+        clients.forEach(client => {
+            const card = $(`
+            <div class="client-item" data-id="${client.clientId}">
+                <img src="${BASE_URL + client.clientProfilePicture}" alt="Client Avatar" class="avatar">
+                <div class="details">
+                    <div class="client-name">${client.clientName}</div>
+                    <div class="client-email">${client.clientEmail}</div>
+                </div>
+                <div class="actions">
+                    <button class="btn-message" data-phone="${client.clientPhone}">Message</button>
+                </div>
+            </div>
+        `);
+            container.append(card);
+        });
+    }
+
+    $(document).on("click", ".btn-message", function() {
+        const phone = $(this).data("phone");
+        window.open(`https://wa.me/${phone}`, "_blank");
+    });
+
+
+    loadDashboardOverview();
+
+    function loadDashboardOverview() {
+
+        $.ajax({
+            url: "http://localhost:8080/api/lawyer/dashboard/overview",
+            method: "GET",
+            headers: { "Authorization": "Bearer " + token },
+            success: function(response) {
+                const data = response.data || {};
+                // upcomingAppointments, totalClients, monthlyEarnings, avgRating
+
+                $('#upcomingAppointmentsCount').text(data.upcomingCount ?? 0);
+                $('#totalClientsCount').text(data.totalClients ?? 0);
+
+                const earnings = data.monthlyEarnings ?? 0;
+                const formattedEarnings = Number(earnings).toLocaleString();
+                $('#monthlyEarnings').text('LKR ' + formattedEarnings);
+
+                if (data.avgRating != null) {
+                    $('#averageRating').text(Number(data.avgRating).toFixed(1));
+                } else {
+                    $('#averageRating').text('-');
+                }
+            },
+            error: function(err) {
+                console.error("Failed to load dashboard overview", err);
+            }
+        });
+    }
+
+
+
 
 
     // JWT parser function

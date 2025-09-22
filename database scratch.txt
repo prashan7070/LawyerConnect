@@ -1,0 +1,73 @@
+lawyer --> lawyerId(PK) , name , specialization, phonenumber, license number , email , username , password , created date 
+client --> clientId(PK) , name , usernmae , password , email , phone number , create date
+lawcase --> caseId , case cataogry , lawyerId(FK) , description
+payment ---> cleintId(FK) , paymentId , paymentDate , amount , paymentmethod 
+lawSession --> SessionId , date , time 
+appointment --> 
+review ---> 
+
+
+specializations            --> id(PK) , specialization , description
+lawyer_has_specializations --> id(FK-specializations)  , specialization_id(FK- specialization) 
+lawyer_profile             --> id(PK) , bio ,  years_of_experience , license_number , city , working_address , phone , profile_picture_url , created_at , updated_at
+client_profile             --> id(PK) , phone , city , profile_picture_url , dob , created_at , updated_at  
+user                       --> user_id(PK), name , email , gender(ENUM('male' , 'female'))  ,username ,password , role (enum('lawyer' , 'client')) , created_at , updated_at
+payments                   --> id(PK) , amount , appointment_Id , payment_method , transaction_id , paid_at , , lawyer_profile_id(FK- lawyer_profile) , client_id(FK- client_profile)
+appointments               --> id(PK) ,consultation_type (ENUM('in_person', 'online')), duration_minutes , location , scheduled_at , status(enum('pending' , 'confirmed' , cancelled , completed)) , created_at , updated_at , notes , lawyer_profile_id(FK- lawyer_profile) , client_id(FK - client_profile) 
+reviews                    --> id(PK) , lawyer_id(FK - lawyer_profile) , client_id(FK - client_profile)  , rating , feedback (TEXT) , created_at  
+messages                   --> id(PK) , message , sent_at , is_read , sender_id(FK- client_profile) , reciever_id(client_profile) 
+
+
+
+saman 
+
+saman@gmail.com
+
+0774072519
+
+
+eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiTEFXWUVSIiwic3ViIjoic2FtYW4xMjMiLCJpYXQiOjE3NTc4MzM0NjgsImV4cCI6MTc1ODY5NzQ2OH0.EHHTFxmaQmT5GXVEyIguRMFIRrOUh9a2Vr-zg1fHUJM
+
+lawyer kenekt booking ekk daddi eyata payment ekk krnn one neda client. mage lawyer ge service widiyt thiyenne online and in person, ithin lawyer profile eka updatekrddi laywer e service wlata adala payment ekath mention krnn one neda ? ethkot kohomd entites wlata field add krnne,, mage thiyena entites  thuna thamai mekata adala appoinment entity ,payment entity , lawyer profile 
+
+payments                   --> id(PK) , amount , appointment_Id , payment_method , transaction_id , paid_at , , lawyer_profile_id(FK- lawyer_profile) , client_id(FK- client_profile)
+appointments               --> id(PK) ,consultation_type (ENUM('in_person', 'online')), duration_minutes , location , scheduled_at , status(enum('pending' , 'confirmed' , cancelled , completed)) , created_at , updated_at , notes , lawyer_profile_id(FK- lawyer_profile) , client_id(FK - client_profile) 
+
+lawyer profile eke thiyenne monwd kiyl oya dannawane .. ithin lawyerge chargers kohetd enter krnne eya profile eka update krddi ?
+
+
+
+danata lawyer profile ui eke payment define krnn thanak naha,,mata one office address ekt pahalin drop down online , in person chargers add krnn option ekk hadanna, ekt one krn html css and js part ek denna,, lokuwt epa saralawa data tika ganna puluwn wenna saha danata mage html ekth ekk match wenna denna
+
+
+
+
+ INSERT INTO specialization (specialization) VALUES
+    ('Criminal Law'),
+    ('Civil Litigation'),
+    ('Family Law'),
+    ('Corporate Law'),
+    ('Intellectual Property'),
+    ('Immigration Law'),
+    ('Labor Law'),
+    ('Environmental Law'),
+    ('Tax Law'),
+    ('Constitutional Law');
+
+
+
+
+prashan          shan123 shan321    prashan@gmail.com       
+
+oshan            oshan123  oshan321       oshan@gmail.com
+
+heshan           heshan123 heshan321      heshan@gmail.com
+
+
+[**LawyerConnect\_Demo\_Video\_YYYYMMDD.mp4**](https://www.youtube.com/watch?v=your-video-link-here)
+
+
+
+https://youtu.be/5rp0h-odY3Y
+https://youtu.be/5rp0h-odY3Y
+
