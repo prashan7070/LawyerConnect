@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LawyerConnect — Admin Control Center</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/adminDashboard.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar glass-card">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <i class="fa-solid fa-scale-balanced brand-icon"></i>
+          <span>LawyerConnect</span>
+        </div>
+        <span class="badge badge-pending">ADMIN</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#overview" class="nav-item active" onclick="switchTab('overview')">
+          <i class="fa-solid fa-chart-line"></i> Overview
+        </a>
+        <a href="#users" class="nav-item" onclick="switchTab('users')">
+          <i class="fa-solid fa-users"></i> User Directory
+        </a>
+        <a href="#lawyers" class="nav-item" onclick="switchTab('lawyers')">
+          <i class="fa-solid fa-user-tie"></i> Lawyers Directory
+        </a>
+        <a href="#specializations" class="nav-item" onclick="switchTab('specializations')">
+          <i class="fa-solid fa-gavel"></i> Specializations
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" id="adminAvatar">A</div>
+          <div class="user-info">
+            <span class="user-name" id="adminName">System Admin</span>
+            <span class="user-email" id="adminEmail">admin@lawyerconnect.com</span>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="handleLogout()">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Navbar -->
+      <header class="top-nav glass-card">
+        <div class="nav-title">
+          <h1 id="pageTitle">Dashboard Overview</h1>
+          <p class="subtitle">Platform metrics, user governance & management</p>
+        </div>
+
+        <div class="nav-actions">
+          <div class="server-status">
+            <span class="status-dot online"></span>
+            <span>API Online</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Container -->
+      <div class="content-wrapper">
+
+        <!-- TAB 1: OVERVIEW -->
+        <section id="overviewSection" class="tab-section active">
+          <!-- KPI Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card glass-card">
+              <div class="kpi-icon icon-users">
+                <i class="fa-solid fa-users"></i>
+              </div>
+              <div class="kpi-data">
+                <span class="kpi-value" id="kpiTotalUsers">0</span>
+                <span class="kpi-label">Total Registered Users</span>
+              </div>
+            </div>
+
+            <div class="kpi-card glass-card">
+              <div class="kpi-icon icon-lawyers">
+                <i class="fa-solid fa-user-tie"></i>
+              </div>
+              <div class="kpi-data">
+                <span class="kpi-value" id="kpiTotalLawyers">0</span>
+                <span class="kpi-label">Registered Lawyers</span>
+              </div>
+            </div>
+
+            <div class="kpi-card glass-card">
+              <div class="kpi-icon icon-clients">
+                <i class="fa-solid fa-user-check"></i>
+              </div>
+              <div class="kpi-data">
+                <span class="kpi-value" id="kpiTotalClients">0</span>
+                <span class="kpi-label">Active Clients</span>
+              </div>
+            </div>
+
+            <div class="kpi-card glass-card">
+              <div class="kpi-icon icon-appointments">
+                <i class="fa-solid fa-calendar-check"></i>
+              </div>
+              <div class="kpi-data">
+                <span class="kpi-value" id="kpiTotalAppointments">0</span>
+                <span class="kpi-label">Total Appointments</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: USERS DIRECTORY -->
+        <section id="usersSection" class="tab-section">
+          <div class="table-container glass-card">
+            <div class="table-header">
+              <h2>User Governance</h2>
+              <input type="text" id="userSearchInput" class="search-input" placeholder="Search by name or email..." oninput="filterUsers()">
+            </div>
+
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Username / Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Created At</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <!-- Dynamic rows -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- TAB 3: LAWYERS DIRECTORY -->
+        <section id="lawyersSection" class="tab-section">
+          <div class="table-container glass-card">
+            <div class="table-header">
+              <h2>Lawyer Directory & Verification</h2>
+            </div>
+
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Lawyer Name</th>
+                  <th>License No.</th>
+                  <th>Experience</th>
+                  <th>Fees (Online / In-Person)</th>
+                  <th>Phone</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="lawyersTableBody">
+                <!-- Dynamic rows -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- TAB 4: SPECIALIZATIONS -->
+        <section id="specializationsSection" class="tab-section">
+          <div class="spec-layout">
+            <div class="glass-card spec-form-card">
+              <h3>Add Practice Area</h3>
+              <form id="addSpecForm" onsubmit="handleAddSpecialization(event)">
+                <div class="form-group">
+                  <label for="specName">Specialization Name</label>
+                  <input type="text" id="specName" class="form-input" placeholder="e.g. Maritime Law" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">
+                  <i class="fa-solid fa-plus"></i> Add Specialization
+                </button>
+              </form>
+            </div>
+
+            <div class="glass-card spec-table-card">
+              <h3>Active Practice Areas</h3>
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Specialization Name</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="specTableBody">
+                  <!-- Dynamic rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="../js/adminDashboard.js"></script>
+</body>
+</html>

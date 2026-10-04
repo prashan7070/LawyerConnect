@@ -1,0 +1,259 @@
+/* Admin Dashboard Layout & Component Styles */
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+  height: calc(100vh - 3rem);
+  position: sticky;
+  top: 1.5rem;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.brand-icon {
+  font-size: 1.5rem;
+  color: var(--accent-primary);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.nav-item:hover, .nav-item.active {
+  background: rgba(99, 102, 241, 0.15);
+  color: #ffffff;
+  border-left: 3px solid var(--accent-primary);
+}
+
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.user-email {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.btn-logout {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-logout:hover {
+  color: var(--status-danger);
+}
+
+/* Main Content */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.top-nav {
+  padding: 1.25rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.server-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--status-success);
+  background: var(--status-success-bg);
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-success);
+  box-shadow: 0 0 10px var(--status-success);
+}
+
+/* KPI Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.kpi-card {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.kpi-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+}
+
+.icon-users { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+.icon-lawyers { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.icon-clients { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.icon-appointments { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+
+.kpi-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  display: block;
+}
+
+.kpi-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Tabs */
+.tab-section {
+  display: none;
+}
+
+.tab-section.active {
+  display: block;
+}
+
+/* Forms & Tables */
+.table-container {
+  padding: 1.5rem;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.search-input, .form-input {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-color);
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.search-input:focus, .form-input:focus {
+  border-color: var(--accent-primary);
+}
+
+.spec-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1.5rem;
+}
+
+.spec-form-card, .spec-table-card {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}

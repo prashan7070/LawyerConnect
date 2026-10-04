@@ -196,39 +196,38 @@
     Swal.close();
 
     localStorage.setItem("token", response.data.accessToken);
+    localStorage.setItem("accessToken", response.data.accessToken);
+    localStorage.setItem("refreshToken", response.data.refreshToken);
+    localStorage.setItem("role", response.data.role);
+    localStorage.setItem("username", response.data.username);
+    localStorage.setItem("userId", response.data.userId);
+
     const token = response.data.accessToken;
+    const role = response.data.role;
 
     if (!token) {
-    Swal.fire({
-    title: "Login Failed ❌",
-    text: "No token received. Please try again.",
-    icon: "error"
-});
-    return;
-}
+        Swal.fire({
+            title: "Login Failed ❌",
+            text: "No token received. Please try again.",
+            icon: "error"
+        });
+        return;
+    }
 
-    const decoded = parseJwt(token);
-
-    if (decoded && decoded.role) {
     Swal.fire({
-    title: "Login Successful 🎉",
-    text: "Welcome " + decoded.role,
-    icon: "success",
-    confirmButtonText: "Continue"
-}).then(() => {
-    if (decoded.role === "CLIENT") {
-    window.location.href = "../pages/clientDashBoard.html";
-} else if (decoded.role === "LAWYER") {
-    window.location.href = "../pages/lawyerDashboard.html";
-}
-});
-} else {
-    Swal.fire({
-    title: "Invalid Token",
-    text: "Something went wrong, please log in again.",
-    icon: "error"
-});
-}
+        title: "Login Successful 🎉",
+        text: "Welcome " + role,
+        icon: "success",
+        confirmButtonText: "Continue"
+    }).then(() => {
+        if (role === "ADMIN") {
+            window.location.href = "../pages/adminDashboard.html";
+        } else if (role === "CLIENT") {
+            window.location.href = "../pages/clientDashBoard.html";
+        } else if (role === "LAWYER") {
+            window.location.href = "../pages/lawyerDashboard.html";
+        }
+    });
 },
     error: function (xhr, status, error) {
     Swal.close();

@@ -1,0 +1,227 @@
+/* ==========================================================================
+   LawyerConnect Design System — Ultra-Modern Production Theme
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Color Palette */
+  --bg-primary: #0b0f19;
+  --bg-secondary: #111827;
+  --bg-card: rgba(17, 24, 39, 0.7);
+  --bg-card-hover: rgba(31, 41, 55, 0.8);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(99, 102, 241, 0.3);
+
+  /* Primary Accent Colors */
+  --accent-primary: #6366f1;
+  --accent-primary-hover: #4f46e5;
+  --accent-glow: rgba(99, 102, 241, 0.35);
+  
+  /* Status Colors */
+  --status-success: #10b981;
+  --status-success-bg: rgba(16, 185, 129, 0.12);
+  --status-warning: #f59e0b;
+  --status-warning-bg: rgba(245, 158, 11, 0.12);
+  --status-danger: #ef4444;
+  --status-danger-bg: rgba(239, 68, 68, 0.12);
+  --status-info: #3b82f6;
+
+  /* Text Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Glassmorphism & Effects */
+  --glass-bg: rgba(15, 23, 42, 0.75);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --glass-blur: blur(16px);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.25);
+  --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Glassmorphism Card */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition-normal);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, #4338ca 100%);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-glow);
+  transition: var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-danger {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.35);
+}
+
+/* Badge System */
+.badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.badge-active, .badge-confirmed, .badge-approved {
+  background: var(--status-success-bg);
+  color: var(--status-success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-pending, .badge-warning {
+  background: var(--status-warning-bg);
+  color: var(--status-warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-suspended, .badge-cancelled, .badge-danger {
+  background: var(--status-danger-bg);
+  color: var(--status-danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Data Tables */
+.custom-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.custom-table th {
+  background: rgba(15, 23, 42, 0.8);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.custom-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.custom-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.toast {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
