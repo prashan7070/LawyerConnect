@@ -24,9 +24,11 @@ public class User {
 
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role", length = 20)
     private Role role;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
     private UserStatus status;
 
     private LocalDateTime createdAt;
