@@ -89,7 +89,11 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
     @Transactional
     public void updateProfile(User user , LawyerProfileDTO dto, MultipartFile profilePicture) {
         LawyerProfile profile = lawyerProfileRepository.findByUser(user)
-                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
+                .orElseGet(() -> {
+                    LawyerProfile newProfile = new LawyerProfile();
+                    newProfile.setUser(user);
+                    return newProfile;
+                });
 
 //        modelMapper.map(dto , profile);
 

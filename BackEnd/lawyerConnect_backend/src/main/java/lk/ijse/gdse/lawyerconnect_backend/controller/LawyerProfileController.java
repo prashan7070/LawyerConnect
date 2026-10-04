@@ -75,8 +75,18 @@ public class LawyerProfileController {
         User user = userService.getUserByUsername(username);
 
         lawyerProfileService.updateProfile(user , lawyerProfileDTO , profilePicture);
-        return new ResponseEntity(new ApiResponse(200,"Profile Created Successfully",null), HttpStatus.OK);
+        return new ResponseEntity(new ApiResponse(200,"Profile Updated Successfully",null), HttpStatus.OK);
 
+    }
+
+    @PutMapping(value = "/updateProfileJson", consumes = "application/json")
+    public ResponseEntity<ApiResponse> updateLawyerProfileJson(@RequestBody LawyerProfileDTO lawyerProfileDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.getUserByUsername(username);
+
+        lawyerProfileService.updateProfile(user, lawyerProfileDTO, null);
+        return new ResponseEntity<>(new ApiResponse(200, "Profile Updated Successfully", null), HttpStatus.OK);
     }
 
 

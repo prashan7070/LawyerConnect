@@ -68,7 +68,7 @@ export default function LawyerDashboardPage() {
   const loadLawyerData = async () => {
     try {
       const [profileRes, appRes] = await Promise.all([
-        apiClient.get('/api/v1/lawyers/me').catch(() => ({ data: { data: null } })),
+        apiClient.get('/api/lawyer/profile/getProfile').catch(() => ({ data: { data: null } })),
         apiClient.get('/api/v1/appointments/lawyer-requests').catch(() => ({ data: { data: [] } }))
       ]);
 
@@ -87,7 +87,7 @@ export default function LawyerDashboardPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await apiClient.put('/api/v1/lawyers/profile', profile);
+      await apiClient.put('/api/lawyer/profile/updateProfileJson', profile);
       alert('Lawyer profile updated successfully!');
       loadLawyerData();
     } catch (err) {
