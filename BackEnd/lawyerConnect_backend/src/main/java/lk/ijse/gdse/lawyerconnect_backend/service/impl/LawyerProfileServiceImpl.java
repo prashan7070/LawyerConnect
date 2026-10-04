@@ -114,16 +114,16 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
             profile.setSpecializations(specs);
         }
 
-        saveAvailability(user , dto.getAvailabilitySlots());
-
-//        profile.setUser(user);
-
         if (profilePicture != null && !profilePicture.isEmpty()) {
             String fileUrl = saveFile(profilePicture);
             profile.setProfilePictureUrl(fileUrl);
         }
 
-        lawyerProfileRepository.save(profile);
+        LawyerProfile savedProfile = lawyerProfileRepository.save(profile);
+
+        if (dto.getAvailabilitySlots() != null && !dto.getAvailabilitySlots().isEmpty()) {
+            saveAvailabilityForProfile(savedProfile, dto.getAvailabilitySlots());
+        }
 
     }
 
@@ -188,13 +188,8 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
 
 
     @Transactional
-    public void saveAvailability(User user, List<AvailabilityDTO> availabilityDTO) {
-
-        LawyerProfile profile = lawyerProfileRepository.findByUser(user)
-                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
-
+    public void saveAvailabilityForProfile(LawyerProfile profile, List<AvailabilityDTO> availabilityDTO) {
         if (availabilityDTO != null && !availabilityDTO.isEmpty()) {
-
             lawyerAvailabilityRepository.deleteByLawyerProfile(profile);
 
             List<LawyerAvailability> availabilities = availabilityDTO.stream()
@@ -209,8 +204,13 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
 
             lawyerAvailabilityRepository.saveAll(availabilities);
         }
+    }
 
-
+    @Transactional
+    public void saveAvailability(User user, List<AvailabilityDTO> availabilityDTO) {
+        LawyerProfile profile = lawyerProfileRepository.findByUser(user)
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
+        saveAvailabilityForProfile(profile, availabilityDTO);
     }
 
 
