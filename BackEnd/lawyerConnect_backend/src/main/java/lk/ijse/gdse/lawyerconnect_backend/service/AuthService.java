@@ -84,7 +84,7 @@ public class AuthService {
             lawyerProfileRepository.save(lawyerProfile);
         } else if (role == Role.CLIENT) {
             ClientProfile clientProfile = new ClientProfile();
-            clientProfile.setName(savedUser.getName());
+            clientProfile.setFullName(savedUser.getName());
             clientProfile.setEmail(savedUser.getEmail());
             clientProfile.setUser(savedUser);
             clientProfileRepository.save(clientProfile);
