@@ -5,14 +5,13 @@ import lk.ijse.gdse.lawyerconnect_backend.entity.LawyerProfile;
 import lk.ijse.gdse.lawyerconnect_backend.exception.ResourceNotFoundException;
 import lk.ijse.gdse.lawyerconnect_backend.repository.LawyerProfileRepository;
 import lk.ijse.gdse.lawyerconnect_backend.service.LawyerExploreService;
-import lk.ijse.gdse.lawyerconnect_backend.service.LawyerProfileService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,26 +21,20 @@ public class LawyerExploreServiceImpl implements LawyerExploreService {
     private final ModelMapper modelMapper;
 
     @Override
+    @Cacheable(value = "lawyers")
     public List<LawyerProfileDTO> getAllLawyers() {
-
-        List<LawyerProfile> profiles = lawyerProfileRepository.findAll();
-        if (profiles.isEmpty()){
-            throw new ResourceNotFoundException("No profiles Found");
-        }
+        List<LawyerProfile> profiles = lawyerProfileRepository.findAll().stream()
+                .filter(p -> p.getVerificationStatus() == null || "APPROVED".equalsIgnoreCase(p.getVerificationStatus()))
+                .toList();
         return modelMapper.map(profiles , new TypeToken<List<LawyerProfileDTO>>(){}.getType());
-
     }
-
 
     @Override
+    @Cacheable(value = "lawyers_by_category", key = "#keyword")
     public List<LawyerProfileDTO> searchLawyersByCategory(String keyword) {
-        List<LawyerProfile> profiles =  lawyerProfileRepository.findBySpecializationsSpecializationContainingIgnoreCase(keyword);
-        if (profiles.isEmpty()){
-            throw new ResourceNotFoundException("No profiles Found");
-        }
+        List<LawyerProfile> profiles = lawyerProfileRepository.findBySpecializationsSpecializationContainingIgnoreCase(keyword).stream()
+                .filter(p -> p.getVerificationStatus() == null || "APPROVED".equalsIgnoreCase(p.getVerificationStatus()))
+                .toList();
         return modelMapper.map(profiles , new TypeToken<List<LawyerProfileDTO>>(){}.getType());
-
     }
-
-
 }

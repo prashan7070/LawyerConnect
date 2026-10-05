@@ -24,16 +24,35 @@ public class User {
 
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role", length = 20)
     private Role role;
 
-//    private LocalDateTime createdAt;
-//    private LocalDateTime updatedAt;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 50)
+    private UserStatus status;
 
-    @OneToOne(mappedBy = "user")
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private LawyerProfile lawyerProfile;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private ClientProfile clientProfile;
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        if (this.status == null) {
+            this.status = UserStatus.ACTIVE;
+        }
+    }
 
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }

@@ -11,44 +11,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(FileStorageException.class)
-    public ResponseEntity<ApiResponse> handleFileStorageException(FileStorageException e){
-        return new ResponseEntity(new ApiResponse(500,e.getMessage(),null)
-                , HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ApiResponse> handleFileStorageException(FileStorageException e) {
+        return new ResponseEntity<>(new ApiResponse(500, e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponse> handleResourceNotFoundException(ResourceNotFoundException e){
-        return new ResponseEntity(new ApiResponse(404,e.getMessage(),null)
-                , HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiResponse> handleResourceNotFoundException(ResourceNotFoundException e) {
+        return new ResponseEntity<>(new ApiResponse(404, e.getMessage(), null), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(AllReadyFoundException.class)
-    public ResponseEntity<ApiResponse> handleAllReadyFoundException(AllReadyFoundException e){
-        return new ResponseEntity(new ApiResponse(400,e.getMessage(),null)
-                , HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiResponse> handleAllReadyFoundException(AllReadyFoundException e) {
+        return new ResponseEntity<>(new ApiResponse(400, e.getMessage(), null), HttpStatus.BAD_REQUEST);
     }
 
-
     @ExceptionHandler(InvalidAppointmentStatusException.class)
-    public ResponseEntity<ApiResponse> handleInvalidAppointmentStatusException(InvalidAppointmentStatusException e){
-        return new ResponseEntity<>(new ApiResponse(401,e.getMessage(),null),
-                HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ApiResponse> handleInvalidAppointmentStatusException(InvalidAppointmentStatusException e) {
+        return new ResponseEntity<>(new ApiResponse(400, e.getMessage(), null), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException
-            (MethodArgumentNotValidException e){
-        Map<String,String> errors=new HashMap<>();
-        e.getBindingResult().getFieldErrors().forEach(fieldError ->{
-            errors.put(fieldError.getField(),fieldError.getDefaultMessage());
+    public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        Map<String, String> errors = new HashMap<>();
+        e.getBindingResult().getFieldErrors().forEach(fieldError -> {
+            errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         });
-        return new ResponseEntity(new ApiResponse(400,"Validation Failed",errors)
-                , HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse(400, "Validation Failed", errors), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse> handleGenericException(Exception e) {
+        return new ResponseEntity<>(new ApiResponse(500, e.getMessage() != null ? e.getMessage() : "An unexpected server error occurred", null),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
-
