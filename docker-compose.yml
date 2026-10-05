@@ -1,25 +1,22 @@
 version: '3.8'
 
 services:
-  mysqldb:
+  # 1. MySQL Database Container
+  db:
     image: mysql:8.0
     container_name: lawyerconnect_db
     restart: always
     environment:
-      MYSQL_DATABASE: lawyer_Connect
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: lawyerconnect_db
+      MYSQL_ROOT_PASSWORD: rootpassword123
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - lawyerconnect_net
 
-  redis:
-    image: redis:7-alpine
-    container_name: lawyerconnect_redis
-    restart: always
-    ports:
-      - "6379:6379"
-
+  # 2. Spring Boot Backend Container
   backend:
     build:
       context: ./BackEnd/lawyerConnect_backend
@@ -29,13 +26,16 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/lawyer_Connect?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/lawyerconnect_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_PASSWORD: rootpassword123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
     depends_on:
-      - mysqldb
-      - redis
+      - db
+    networks:
+      - lawyerconnect_net
 
+  # 3. Next.js Frontend Container
   frontend:
     build:
       context: ./lawyerconnect-frontend
@@ -45,9 +45,15 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://backend:8080
+      NEXT_PUBLIC_API_URL: http://localhost:8080
     depends_on:
       - backend
+    networks:
+      - lawyerconnect_net
 
 volumes:
   mysql_data:
+
+networks:
+  lawyerconnect_net:
+    driver: bridge

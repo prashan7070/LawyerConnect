@@ -36,6 +36,7 @@ public class LawyerProfile{
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"lawyerProfile", "clientProfile", "password"})
     private User user;
 
     @ManyToMany
@@ -44,9 +45,11 @@ public class LawyerProfile{
             joinColumns = @JoinColumn(name = "lawyer_id"),
             inverseJoinColumns = @JoinColumn(name = "specialization_id")
     )
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("lawyers")
     private List<Specialization> specializations;
 
     @OneToMany(mappedBy = "lawyer")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Appointment> appointments;
 
 

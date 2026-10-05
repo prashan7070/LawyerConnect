@@ -28,16 +28,18 @@ public class User {
     private Role role;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 20)
+    @Column(name = "status", length = 50)
     private UserStatus status;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private LawyerProfile lawyerProfile;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private ClientProfile clientProfile;
 
     @PrePersist
