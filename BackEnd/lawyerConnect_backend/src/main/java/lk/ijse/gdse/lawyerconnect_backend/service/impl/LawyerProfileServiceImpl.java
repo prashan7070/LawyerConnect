@@ -108,6 +108,10 @@ public class LawyerProfileServiceImpl implements LawyerProfileService {
         profile.setProfilePictureUrl(dto.getProfilePictureUrl());
         profile.setOnlineFee(dto.getOnlineFee());
         profile.setInPersonFee(dto.getInPersonFee());
+        if (dto.getNicDocumentUrl() != null) profile.setNicDocumentUrl(dto.getNicDocumentUrl());
+        if (dto.getBarCertificateUrl() != null) profile.setBarCertificateUrl(dto.getBarCertificateUrl());
+        if (dto.getPracticingLicenseUrl() != null) profile.setPracticingLicenseUrl(dto.getPracticingLicenseUrl());
+        if (profile.getVerificationStatus() == null) profile.setVerificationStatus("PENDING");
 
         if (dto.getSpecializationIds() != null && !dto.getSpecializationIds().isEmpty()) {
             List<Specialization> specs = specializationRepository.findAllById(dto.getSpecializationIds());

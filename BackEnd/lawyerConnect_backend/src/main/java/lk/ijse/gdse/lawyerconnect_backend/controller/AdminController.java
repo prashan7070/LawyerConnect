@@ -38,6 +38,13 @@ public class AdminController {
         return ResponseEntity.ok(new ApiResponse(200, "OK", adminService.getAllLawyers()));
     }
 
+    @PatchMapping("/lawyers/{lawyerId}/verify")
+    public ResponseEntity<ApiResponse> updateLawyerVerification(
+            @PathVariable Long lawyerId,
+            @RequestParam String status) {
+        return ResponseEntity.ok(new ApiResponse(200, "Lawyer verification updated", adminService.updateLawyerVerification(lawyerId, status)));
+    }
+
     @PostMapping("/specializations")
     public ResponseEntity<ApiResponse> addSpecialization(@RequestBody Map<String, String> payload) {
         String name = payload.get("name");

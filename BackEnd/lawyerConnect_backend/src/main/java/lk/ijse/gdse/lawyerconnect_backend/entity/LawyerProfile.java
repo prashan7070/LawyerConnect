@@ -27,6 +27,10 @@ public class LawyerProfile{
     private String profilePictureUrl;
     private BigDecimal onlineFee;
     private BigDecimal inPersonFee;
+    private String verificationStatus = "PENDING";
+    private String nicDocumentUrl;
+    private String barCertificateUrl;
+    private String practicingLicenseUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

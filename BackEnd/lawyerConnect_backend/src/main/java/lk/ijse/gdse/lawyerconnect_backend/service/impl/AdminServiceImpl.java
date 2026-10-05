@@ -66,6 +66,26 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
+    public LawyerProfile updateLawyerVerification(Long lawyerId, String status) {
+        LawyerProfile profile = lawyerProfileRepository.findById(lawyerId)
+                .orElseThrow(() -> new RuntimeException("Lawyer profile not found with id: " + lawyerId));
+
+        profile.setVerificationStatus(status);
+        if (profile.getUser() != null) {
+            if ("APPROVED".equalsIgnoreCase(status)) {
+                profile.getUser().setStatus(UserStatus.ACTIVE);
+                userRepository.save(profile.getUser());
+            } else if ("REJECTED".equalsIgnoreCase(status)) {
+                profile.getUser().setStatus(UserStatus.SUSPENDED);
+                userRepository.save(profile.getUser());
+            }
+        }
+
+        return lawyerProfileRepository.save(profile);
+    }
+
+    @Override
+    @Transactional
     public Specialization addSpecialization(String name) {
         Specialization spec = new Specialization();
         spec.setSpecialization(name);

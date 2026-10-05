@@ -13,6 +13,7 @@ public interface AdminService {
     List<User> getAllUsers();
     User updateUserStatus(Long userId, UserStatus status);
     List<LawyerProfile> getAllLawyers();
+    LawyerProfile updateLawyerVerification(Long lawyerId, String status);
     Specialization addSpecialization(String name);
     void deleteSpecialization(Long id);
 }

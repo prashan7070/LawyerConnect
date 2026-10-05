@@ -27,6 +27,10 @@ public class LawyerProfileDTO {
     private String profilePictureUrl;
     private BigDecimal onlineFee;
     private BigDecimal inPersonFee;
+    private String verificationStatus;
+    private String nicDocumentUrl;
+    private String barCertificateUrl;
+    private String practicingLicenseUrl;
 
     private List<Long> specializationIds;
 

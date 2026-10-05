@@ -45,6 +45,10 @@ interface LawyerProfile {
   bio: string;
   profilePictureUrl?: string;
   specialties?: string;
+  verificationStatus?: string;
+  nicDocumentUrl?: string;
+  barCertificateUrl?: string;
+  practicingLicenseUrl?: string;
 }
 
 interface AppointmentRequest {
@@ -263,6 +267,43 @@ export default function LawyerDashboardPage() {
 
         {/* ================= MAIN CONTENT AREA ================= */}
         <main className="flex-1 py-6 md:pl-8 min-w-0">
+          {/* VERIFICATION STATUS BANNER */}
+          {(!profile.verificationStatus || profile.verificationStatus === 'PENDING') && (
+            <div className="p-4 mb-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-start gap-3">
+              <Clock className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-xs font-bold text-white">Advocate Verification Pending Admin Review</h4>
+                <p className="text-[11px] text-amber-300/90 mt-0.5">
+                  Your registration and legal credentials are under review by system administrators. Please ensure your Bar verification documents (NIC, Bar Certificate, Practicing License) are uploaded under the <b>Profile</b> tab.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {profile.verificationStatus === 'REJECTED' && (
+            <div className="p-4 mb-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 flex items-start gap-3">
+              <XCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-xs font-bold text-white">Advocate Verification Rejected</h4>
+                <p className="text-[11px] text-red-300/90 mt-0.5">
+                  Your advocate verification request was rejected. Please re-upload valid copies of your NIC, Bar Association Enrollment Certificate, and Practicing License under the <b>Profile</b> tab.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {profile.verificationStatus === 'APPROVED' && (
+            <div className="p-4 mb-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 flex items-start gap-3">
+              <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-xs font-bold text-white">Verified Legal Advocate</h4>
+                <p className="text-[11px] text-emerald-300/90 mt-0.5">
+                  Your advocate profile is verified and publicly visible in the legal directory.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Mobile Tab Swapper */}
           <div className="flex md:hidden overflow-x-auto gap-2 pb-4 mb-4 border-b border-slate-800">
             <button
@@ -707,6 +748,49 @@ export default function LawyerDashboardPage() {
                     placeholder="Describe your legal expertise, trial achievements, and counsel specializations..."
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500"
                   />
+                </div>
+
+                {/* Legal Verification Documents Section */}
+                <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-4">
+                  <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" /> Bar Verification Documents (Cloudinary / File URLs)
+                  </h4>
+                  <p className="text-[11px] text-slate-400">
+                    System administrators review these official documents to verify your Advocate status before enabling public bookings.
+                  </p>
+
+                  <div>
+                    <label className="text-slate-300 block mb-1">1. National Identity Card (NIC) / Passport Copy URL</label>
+                    <input
+                      type="text"
+                      placeholder="https://res.cloudinary.com/demo/image/upload/v1/nic_copy.jpg"
+                      value={profile.nicDocumentUrl || ''}
+                      onChange={(e) => setProfile({ ...profile, nicDocumentUrl: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500 font-mono text-[11px]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-slate-300 block mb-1">2. Bar Association Enrollment Certificate URL</label>
+                    <input
+                      type="text"
+                      placeholder="https://res.cloudinary.com/demo/image/upload/v1/bar_certificate.pdf"
+                      value={profile.barCertificateUrl || ''}
+                      onChange={(e) => setProfile({ ...profile, barCertificateUrl: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500 font-mono text-[11px]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-slate-300 block mb-1">3. Practicing License / Oath Certificate URL</label>
+                    <input
+                      type="text"
+                      placeholder="https://res.cloudinary.com/demo/image/upload/v1/practicing_license.pdf"
+                      value={profile.practicingLicenseUrl || ''}
+                      onChange={(e) => setProfile({ ...profile, practicingLicenseUrl: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500 font-mono text-[11px]"
+                    />
+                  </div>
                 </div>
 
                 <button
