@@ -69,39 +69,39 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col justify-between">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col justify-between font-sans">
       <Navbar />
 
       <div className="pt-32 pb-20 px-6 max-w-md mx-auto w-full flex-grow flex items-center">
-        <div className="w-full glass-panel p-8 rounded-3xl border border-slate-800 shadow-2xl relative">
+        <div className="w-full bg-zinc-900/90 p-8 rounded-3xl border border-zinc-800 shadow-2xl relative backdrop-blur-md">
           
           {/* Brand Badge */}
           <div className="text-center mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mx-auto mb-3">
-              <Scale className="w-7 h-7" />
+            <div className="w-12 h-12 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white mx-auto mb-3">
+              <Scale className="w-6 h-6" />
             </div>
             <h2 className="text-2xl font-bold text-white tracking-tight">
               {isLoginTab ? 'Welcome Back' : 'Create Account'}
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-zinc-400 mt-1">
               {isLoginTab ? 'Sign in to access your legal dashboard' : 'Join LawyerConnect legal network'}
             </p>
           </div>
 
           {/* Toggle Tabs */}
-          <div className="grid grid-cols-2 p-1 rounded-xl bg-slate-900/80 border border-slate-800 mb-6">
+          <div className="grid grid-cols-2 p-1 rounded-xl bg-zinc-950 border border-zinc-800 mb-6">
             <button
               onClick={() => { setIsLoginTab(true); setErrorMsg(''); }}
-              className={`py-2 rounded-lg text-xs font-semibold transition-all ${
-                isLoginTab ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
+              className={`py-2 rounded-lg text-xs font-bold transition-all ${
+                isLoginTab ? 'bg-white text-zinc-950 shadow-sm' : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
               Sign In
             </button>
             <button
               onClick={() => { setIsLoginTab(false); setErrorMsg(''); }}
-              className={`py-2 rounded-lg text-xs font-semibold transition-all ${
-                !isLoginTab ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
+              className={`py-2 rounded-lg text-xs font-bold transition-all ${
+                !isLoginTab ? 'bg-white text-zinc-950 shadow-sm' : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
               Register
@@ -109,7 +109,7 @@ export default function LoginPage() {
           </div>
 
           {errorMsg && (
-            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2 mb-6">
+            <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2 mb-6">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
@@ -119,31 +119,31 @@ export default function LoginPage() {
           {isLoginTab ? (
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1.5">Username</label>
+                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Username</label>
                 <div className="relative">
-                  <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+                  <User className="w-4 h-4 text-zinc-500 absolute left-3.5 top-3.5" />
                   <input
                     type="text"
                     required
                     placeholder="e.g. johndoe"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition-colors"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1.5">Password</label>
+                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Password</label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+                  <Lock className="w-4 h-4 text-zinc-500 absolute left-3.5 top-3.5" />
                   <input
                     type="password"
                     required
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition-colors"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
                   />
                 </div>
               </div>
@@ -151,7 +151,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full glow-btn py-3 rounded-xl font-semibold text-xs text-white mt-2 disabled:opacity-50"
+                className="w-full bg-white text-zinc-950 hover:bg-zinc-200 py-3 rounded-xl font-extrabold text-xs transition-all shadow-md mt-2 disabled:opacity-50"
               >
                 {loading ? 'Authenticating...' : 'Sign In'}
               </button>
@@ -160,15 +160,15 @@ export default function LoginPage() {
             /* REGISTER FORM */
             <form onSubmit={handleRegisterSubmit} className="space-y-4">
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1.5">Register As</label>
+                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Register As</label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setSelectedRole('CLIENT')}
                     className={`py-2 px-3 rounded-xl border text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
                       selectedRole === 'CLIENT'
-                        ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300'
-                        : 'border-slate-800 bg-slate-900/50 text-slate-400'
+                        ? 'bg-white text-zinc-950 border-white'
+                        : 'border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white'
                     }`}
                   >
                     <User className="w-3.5 h-3.5" /> Client
@@ -178,8 +178,8 @@ export default function LoginPage() {
                     onClick={() => setSelectedRole('LAWYER')}
                     className={`py-2 px-3 rounded-xl border text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
                       selectedRole === 'LAWYER'
-                        ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300'
-                        : 'border-slate-800 bg-slate-900/50 text-slate-400'
+                        ? 'bg-white text-zinc-950 border-white'
+                        : 'border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white'
                     }`}
                   >
                     <Briefcase className="w-3.5 h-3.5" /> Lawyer
@@ -188,57 +188,57 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1.5">Full Name</label>
+                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Full Name</label>
                 <input
                   type="text"
                   required
                   placeholder="John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1.5">Email Address</label>
+                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Email Address</label>
                 <input
                   type="email"
                   required
                   placeholder="john@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1.5">Username</label>
+                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Username</label>
                 <input
                   type="text"
                   required
                   placeholder="johndoe123"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1.5">Password</label>
+                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Password</label>
                 <input
                   type="password"
                   required
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full glow-btn py-3 rounded-xl font-semibold text-xs text-white mt-2 disabled:opacity-50"
+                className="w-full bg-white text-zinc-950 hover:bg-zinc-200 py-3 rounded-xl font-extrabold text-xs transition-all shadow-md mt-2 disabled:opacity-50"
               >
                 {loading ? 'Creating Account...' : `Register as ${selectedRole}`}
               </button>

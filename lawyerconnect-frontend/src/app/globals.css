@@ -2,15 +2,15 @@
 
 @layer base {
   :root {
-    --bg-primary: #090d16;
-    --bg-secondary: #0f172a;
-    --bg-card: rgba(15, 23, 42, 0.65);
-    --border-glass: rgba(255, 255, 255, 0.08);
-    --accent-indigo: #6366f1;
+    --bg-primary: #09090b;
+    --bg-secondary: #18181b;
+    --bg-card: rgba(24, 24, 27, 0.85);
+    --border-glass: rgba(255, 255, 255, 0.1);
+    --accent-indigo: #ffffff;
     --accent-emerald: #10b981;
     --accent-amber: #f59e0b;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
+    --text-main: #fafafa;
+    --text-muted: #a1a1aa;
   }
 
   body {
@@ -34,24 +34,26 @@
 }
 
 .glass-panel-hover:hover {
-  border-color: rgba(99, 102, 241, 0.35);
+  border-color: rgba(255, 255, 255, 0.25);
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px -10px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #38bdf8 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .glow-btn {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.35);
+  background: #ffffff;
+  color: #09090b;
+  font-weight: 600;
   transition: all 0.2s ease;
 }
 
 .glow-btn:hover {
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.55);
+  background: #e4e4e7;
   transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
 }

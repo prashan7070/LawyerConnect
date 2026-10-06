@@ -236,79 +236,89 @@ export default function AdminDashboardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 font-sans">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans">
       <Navbar />
 
       <div className="pt-28 pb-16 px-6 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 border-b border-slate-800">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 border-b border-zinc-800">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5" /> SYSTEM ADMINISTRATOR
+              <span className="px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-semibold flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-zinc-400" /> SYSTEM ADMINISTRATOR
               </span>
             </div>
             <h1 className="text-3xl font-bold tracking-tight text-white">Admin Governance & Advocate Verification</h1>
-            <p className="text-xs text-slate-400 mt-1">Verify advocate credentials, inspect Bar documents & govern user access</p>
+            <p className="text-xs text-zinc-400 mt-1">Verify advocate credentials, inspect Bar documents & govern user access</p>
           </div>
 
           <div className="flex items-center gap-2 mt-4 md:mt-0">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs text-emerald-400 font-medium">Backend API Active</span>
+            <span className="text-xs text-zinc-400 font-medium">Backend API Active</span>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-3 border-b border-slate-800/80 mb-8 pb-2 overflow-x-auto">
+        <div className="flex items-center gap-2 border-b border-zinc-800 mb-8 pb-3 overflow-x-auto">
           <button
             onClick={() => setActiveTab('verifications')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 shrink-0 ${
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
               activeTab === 'verifications'
-                ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-white text-zinc-950 shadow-sm'
+                : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
             }`}
           >
             <ShieldCheck className="w-4 h-4" /> Pending Approvals ({pendingLawyers.length})
           </button>
           <button
             onClick={() => setActiveTab('overview')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === 'overview' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === 'overview'
+                ? 'bg-white text-zinc-950 shadow-sm'
+                : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
             }`}
           >
             <Activity className="w-4 h-4" /> Overview
           </button>
           <button
             onClick={() => setActiveTab('users')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === 'users' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === 'users'
+                ? 'bg-white text-zinc-950 shadow-sm'
+                : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
             }`}
           >
             <Users className="w-4 h-4" /> User Directory
           </button>
           <button
             onClick={() => setActiveTab('lawyers')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === 'lawyers' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === 'lawyers'
+                ? 'bg-white text-zinc-950 shadow-sm'
+                : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
             }`}
           >
             <Briefcase className="w-4 h-4" /> All Advocates
           </button>
           <button
             onClick={() => setActiveTab('specs')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === 'specs' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === 'specs'
+                ? 'bg-white text-zinc-950 shadow-sm'
+                : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
             }`}
           >
             <Layers className="w-4 h-4" /> Specializations
           </button>
           <button
             onClick={() => setActiveTab('security')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === 'security' ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30' : 'text-slate-400 hover:text-white'
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === 'security'
+                ? 'bg-white text-zinc-950 shadow-sm'
+                : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
             }`}
           >
-            <Shield className="w-4 h-4 text-amber-400" /> Admin Security & Access
+            <Shield className="w-4 h-4 text-zinc-400" /> Security & Access
           </button>
         </div>
 
