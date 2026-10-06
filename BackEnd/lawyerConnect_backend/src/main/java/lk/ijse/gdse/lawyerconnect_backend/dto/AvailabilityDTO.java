@@ -12,7 +12,8 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @Builder
-public class AvailabilityDTO {
+public class AvailabilityDTO implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
 
     private DayOfWeek dayOfWeek;      // e.g. 2025-09-15
     private LocalTime startTime;  // e.g. 09:00

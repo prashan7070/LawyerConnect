@@ -66,6 +66,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
+    @org.springframework.cache.annotation.CacheEvict(value = {"lawyers", "lawyers_by_category"}, allEntries = true)
     public LawyerProfile updateLawyerVerification(Long lawyerId, String status) {
         LawyerProfile profile = lawyerProfileRepository.findById(lawyerId)
                 .orElseThrow(() -> new RuntimeException("Lawyer profile not found with id: " + lawyerId));

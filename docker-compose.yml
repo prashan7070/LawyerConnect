@@ -16,7 +16,17 @@ services:
     networks:
       - lawyerconnect_net
 
-  # 2. Spring Boot Backend Container
+  # 2. Redis Caching Container
+  redis:
+    image: redis:alpine
+    container_name: lawyerconnect_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - lawyerconnect_net
+
+  # 3. Spring Boot Backend Container
   backend:
     build:
       context: ./BackEnd/lawyerConnect_backend
@@ -30,12 +40,16 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: rootpassword123
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_CACHE_TYPE: redis
     depends_on:
       - db
+      - redis
     networks:
       - lawyerconnect_net
 
-  # 3. Next.js Frontend Container
+  # 4. Next.js Frontend Container
   frontend:
     build:
       context: ./lawyerconnect-frontend

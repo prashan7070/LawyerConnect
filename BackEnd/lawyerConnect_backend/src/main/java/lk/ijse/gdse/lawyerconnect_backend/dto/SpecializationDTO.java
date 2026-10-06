@@ -7,7 +7,8 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class SpecializationDTO {
+public class SpecializationDTO implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Long id;
     private String specialization;
