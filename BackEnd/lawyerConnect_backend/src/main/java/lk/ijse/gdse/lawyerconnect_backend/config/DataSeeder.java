@@ -145,11 +145,17 @@ public class DataSeeder implements CommandLineRunner {
                 }
         };
 
+        int count = 0;
         for (Object[] item : lawyersData) {
             String name = (String) item[0];
             String email = (String) item[1];
             String username = (String) item[2];
             String rawPassword = (String) item[3];
+            
+            // First 6 lawyers are pre-approved so clients can immediately explore them!
+            // Remaining 4 lawyers are PENDING so Admin can test the approval workflow!
+            String initialStatus = (count < 6) ? "APPROVED" : "PENDING";
+            count++;
 
             // 1. Save User Entity
             User user = userRepository.findByUsername(username).orElseGet(() -> {
@@ -159,7 +165,7 @@ public class DataSeeder implements CommandLineRunner {
                 u.setUsername(username);
                 u.setPassword(passwordEncoder.encode(rawPassword));
                 u.setRole(Role.LAWYER);
-                u.setStatus(UserStatus.ACTIVE); // Active user account, PENDING lawyer verification!
+                u.setStatus(UserStatus.ACTIVE);
                 u.setCreatedAt(LocalDateTime.now());
                 return userRepository.save(u);
             });
@@ -182,7 +188,7 @@ public class DataSeeder implements CommandLineRunner {
             profile.setBio((String) item[9]);
             profile.setOnlineFee((BigDecimal) item[10]);
             profile.setInPersonFee((BigDecimal) item[11]);
-            profile.setVerificationStatus("PENDING"); // Pending Admin Approval!
+            profile.setVerificationStatus(initialStatus);
             profile.setNicDocumentUrl((String) item[12]);
             profile.setBarCertificateUrl((String) item[13]);
             profile.setPracticingLicenseUrl((String) item[14]);
@@ -192,6 +198,6 @@ public class DataSeeder implements CommandLineRunner {
             lawyerProfileRepository.save(profile);
         }
 
-        System.out.println("DataSeeder: 10 Sri Lankan Advocates seeded successfully with PENDING verification status!");
+        System.out.println("DataSeeder: 10 Sri Lankan Advocates seeded successfully (6 APPROVED, 4 PENDING)!");
     }
 }
