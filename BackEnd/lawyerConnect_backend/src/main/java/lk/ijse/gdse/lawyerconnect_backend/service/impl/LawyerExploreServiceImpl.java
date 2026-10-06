@@ -26,7 +26,13 @@ public class LawyerExploreServiceImpl implements LawyerExploreService {
         List<LawyerProfile> profiles = lawyerProfileRepository.findAll().stream()
                 .filter(p -> p.getVerificationStatus() == null || "APPROVED".equalsIgnoreCase(p.getVerificationStatus()))
                 .toList();
-        return modelMapper.map(profiles , new TypeToken<List<LawyerProfileDTO>>(){}.getType());
+        List<LawyerProfileDTO> dtos = modelMapper.map(profiles, new TypeToken<List<LawyerProfileDTO>>(){}.getType());
+        for (int i = 0; i < profiles.size(); i++) {
+            if (profiles.get(i).getUser() != null) {
+                dtos.get(i).setUserId(profiles.get(i).getUser().getUserId());
+            }
+        }
+        return dtos;
     }
 
     @Override
@@ -35,6 +41,12 @@ public class LawyerExploreServiceImpl implements LawyerExploreService {
         List<LawyerProfile> profiles = lawyerProfileRepository.findBySpecializationsSpecializationContainingIgnoreCase(keyword).stream()
                 .filter(p -> p.getVerificationStatus() == null || "APPROVED".equalsIgnoreCase(p.getVerificationStatus()))
                 .toList();
-        return modelMapper.map(profiles , new TypeToken<List<LawyerProfileDTO>>(){}.getType());
+        List<LawyerProfileDTO> dtos = modelMapper.map(profiles, new TypeToken<List<LawyerProfileDTO>>(){}.getType());
+        for (int i = 0; i < profiles.size(); i++) {
+            if (profiles.get(i).getUser() != null) {
+                dtos.get(i).setUserId(profiles.get(i).getUser().getUserId());
+            }
+        }
+        return dtos;
     }
 }

@@ -17,6 +17,7 @@ public class LawyerProfileDTO implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+    private Long userId;
     private String fullName;
     private String email;
     private String workingAddress;

@@ -39,9 +39,11 @@ import {
   CalendarDays
 } from 'lucide-react';
 import { apiClient, getStoredAuth } from '@/lib/api';
+import MessengerChat from '@/components/MessengerChat';
 
 interface Lawyer {
   id: number;
+  userId?: number;
   fullName: string;
   specialties: string;
   yearsOfExperience: number;
@@ -97,6 +99,20 @@ export default function ClientDashboardPage() {
   const [profileModalLawyer, setProfileModalLawyer] = useState<Lawyer | null>(null);
   const [profileActiveTab, setProfileActiveTab] = useState<'about' | 'practice' | 'rates' | 'reviews'>('about');
   const [bookingLawyer, setBookingLawyer] = useState<Lawyer | null>(null);
+
+  // Messenger Chat State
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [selectedChatPartner, setSelectedChatPartner] = useState<{ id: number; name: string; avatarUrl?: string } | null>(null);
+
+  const openChatWithLawyer = (lawyer: Lawyer) => {
+    const targetId = lawyer.userId || lawyer.id;
+    setSelectedChatPartner({
+      id: targetId,
+      name: lawyer.fullName,
+      avatarUrl: lawyer.profilePictureUrl
+    });
+    setIsChatOpen(true);
+  };
 
   // Booking Wizard Steps (1: Type, 2: Date & Slot, 3: Case Brief, 4: Payment)
   const [bookingStep, setBookingStep] = useState<number>(1);
@@ -426,16 +442,22 @@ export default function ClientDashboardPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-3 gap-1.5">
                     <button
                       onClick={() => setProfileModalLawyer(lawyer)}
-                      className="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-all"
+                      className="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold transition-all"
                     >
                       View Profile
                     </button>
                     <button
+                      onClick={() => openChatWithLawyer(lawyer)}
+                      className="py-2.5 rounded-xl bg-indigo-600/20 hover:bg-indigo-600 border border-indigo-500/30 text-indigo-300 hover:text-white text-[11px] font-semibold transition-all flex items-center justify-center gap-1"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" /> Direct Message
+                    </button>
+                    <button
                       onClick={() => startBooking(lawyer)}
-                      className="py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-1"
+                      className="py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold transition-all shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-1"
                     >
                       <Calendar className="w-3.5 h-3.5" /> Book Now
                     </button>
@@ -568,6 +590,12 @@ export default function ClientDashboardPage() {
                       title="Share Advocate Profile"
                     >
                       <Share2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => openChatWithLawyer(profileModalLawyer)}
+                      className="px-5 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-bold transition-all flex items-center gap-2 border border-slate-800"
+                    >
+                      <MessageSquare className="w-4 h-4 text-indigo-400" /> Direct Message
                     </button>
                     <button
                       onClick={() => startBooking(profileModalLawyer)}
@@ -1136,6 +1164,26 @@ export default function ClientDashboardPage() {
           </div>
         </div>
       )}
+
+      {/* FLOATING MESSENGER TRIGGER BUTTON */}
+      <button
+        onClick={() => {
+          setSelectedChatPartner(null);
+          setIsChatOpen(true);
+        }}
+        className="fixed bottom-6 right-6 z-40 p-4 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-2xl shadow-indigo-600/50 hover:scale-105 active:scale-95 transition-all border border-indigo-400/40 flex items-center gap-2 font-bold text-xs"
+        title="Open LawyerConnect Direct Messenger"
+      >
+        <MessageSquare className="w-5 h-5 fill-white/20" />
+        <span className="hidden sm:inline">Advocate Messenger</span>
+      </button>
+
+      {/* MESSENGER CHAT MODAL */}
+      <MessengerChat
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        initialPartner={selectedChatPartner}
+      />
     </div>
   );
 }

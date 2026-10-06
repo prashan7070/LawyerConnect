@@ -28,9 +28,11 @@ import {
   Wallet,
   Settings,
   ChevronRight,
-  User
+  User,
+  MessageSquare
 } from 'lucide-react';
 import { apiClient, getStoredAuth } from '@/lib/api';
+import MessengerChat from '@/components/MessengerChat';
 
 interface LawyerProfile {
   id?: number;
@@ -70,6 +72,7 @@ interface FinancialSummary {
 export default function LawyerDashboardPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'overview' | 'requests' | 'profile' | 'finance' | 'schedule'>('overview');
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const [profile, setProfile] = useState<LawyerProfile>({
     fullName: '',
@@ -832,6 +835,22 @@ export default function LawyerDashboardPage() {
           )}
         </main>
       </div>
+
+      {/* FLOATING ADVOCATE MESSENGER BUTTON */}
+      <button
+        onClick={() => setIsChatOpen(true)}
+        className="fixed bottom-6 right-6 z-40 p-4 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-2xl shadow-indigo-600/50 hover:scale-105 active:scale-95 transition-all border border-indigo-400/40 flex items-center gap-2 font-bold text-xs"
+        title="Open Client Direct Messenger"
+      >
+        <MessageSquare className="w-5 h-5 fill-white/20" />
+        <span className="hidden sm:inline">Client Messages</span>
+      </button>
+
+      {/* MESSENGER CHAT MODAL */}
+      <MessengerChat
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+      />
     </div>
   );
 }
