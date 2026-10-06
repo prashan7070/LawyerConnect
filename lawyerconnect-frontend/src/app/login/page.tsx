@@ -10,7 +10,7 @@ import { apiClient, saveAuthData } from '@/lib/api';
 export default function LoginPage() {
   const router = useRouter();
   const [isLoginTab, setIsLoginTab] = useState(true);
-  const [selectedRole, setSelectedRole] = useState<'CLIENT' | 'LAWYER' | 'ADMIN'>('CLIENT');
+  const [selectedRole, setSelectedRole] = useState<'CLIENT' | 'LAWYER'>('CLIENT');
 
   // Form State
   const [username, setUsername] = useState('');
@@ -161,7 +161,7 @@ export default function LoginPage() {
             <form onSubmit={handleRegisterSubmit} className="space-y-4">
               <div>
                 <label className="text-xs font-medium text-slate-300 block mb-1.5">Register As</label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setSelectedRole('CLIENT')}
@@ -183,17 +183,6 @@ export default function LoginPage() {
                     }`}
                   >
                     <Briefcase className="w-3.5 h-3.5" /> Lawyer
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedRole('ADMIN')}
-                    className={`py-2 px-3 rounded-xl border text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                      selectedRole === 'ADMIN'
-                        ? 'bg-amber-500/20 border-amber-500 text-amber-300'
-                        : 'border-slate-800 bg-slate-900/50 text-slate-400'
-                    }`}
-                  >
-                    <ShieldCheck className="w-3.5 h-3.5" /> Admin
                   </button>
                 </div>
               </div>

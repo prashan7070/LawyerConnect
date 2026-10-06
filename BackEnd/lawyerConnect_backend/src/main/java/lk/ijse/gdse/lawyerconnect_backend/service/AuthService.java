@@ -65,6 +65,10 @@ public class AuthService {
             role = Role.CLIENT;
         }
 
+        if (role == Role.ADMIN) {
+            throw new IllegalArgumentException("Public registration as ADMIN is strictly prohibited. Admin accounts are system provisioned.");
+        }
+
         User user = User.builder()
                 .name(registerDTO.getName())
                 .username(registerDTO.getUsername())
@@ -80,6 +84,7 @@ public class AuthService {
             LawyerProfile lawyerProfile = new LawyerProfile();
             lawyerProfile.setFullName(savedUser.getName());
             lawyerProfile.setEmail(savedUser.getEmail());
+            lawyerProfile.setVerificationStatus("PENDING");
             lawyerProfile.setUser(savedUser);
             lawyerProfileRepository.save(lawyerProfile);
         } else if (role == Role.CLIENT) {
