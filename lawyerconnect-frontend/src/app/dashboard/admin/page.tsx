@@ -354,7 +354,7 @@ export default function AdminDashboardPage() {
                           PENDING REVIEW
                         </span>
                       </div>
-                      <p className="text-xs text-indigo-400 font-medium">Bar License No: <span className="font-mono text-slate-200">{l.licenceNumber || 'N/A'}</span></p>
+                      <p className="text-xs text-zinc-400 font-medium">Bar License No: <span className="font-mono text-zinc-200">{l.licenceNumber || 'N/A'}</span></p>
 
                       <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-1">
                         <span>Experience: <strong className="text-white">{l.yearsOfExperience || 0} Years</strong></span>
@@ -372,9 +372,9 @@ export default function AdminDashboardPage() {
                               licenceNumber: l.licenceNumber || 'N/A',
                               lawyerId: l.id
                             })}
-                            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-300 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
+                            className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border border-zinc-700"
                           >
-                            <FileText className="w-3.5 h-3.5 text-indigo-400" /> View NIC <Eye className="w-3 h-3 text-indigo-400 opacity-80" />
+                            <FileText className="w-3.5 h-3.5 text-zinc-300" /> View NIC <Eye className="w-3 h-3 text-zinc-300 opacity-80" />
                           </button>
                         ) : (
                           <span className="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-600 text-xs flex items-center gap-1">
@@ -449,7 +449,7 @@ export default function AdminDashboardPage() {
           <div className="space-y-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="glass-panel p-6 rounded-2xl">
-                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-3">
+                <div className="w-10 h-10 rounded-xl bg-zinc-800 text-white flex items-center justify-center mb-3 border border-zinc-700">
                   <Users className="w-5 h-5" />
                 </div>
                 <span className="text-3xl font-extrabold text-white block mb-1">{stats.totalUsers || users.length}</span>
@@ -495,7 +495,7 @@ export default function AdminDashboardPage() {
                   placeholder="Search user..."
                   value={searchUser}
                   onChange={(e) => setSearchUser(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs text-white outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs text-white outline-none focus:border-zinc-500"
                 />
               </div>
             </div>
@@ -519,7 +519,7 @@ export default function AdminDashboardPage() {
                       <td className="p-3 font-semibold text-white">{u.name || 'N/A'}</td>
                       <td className="p-3">{u.email || u.username}</td>
                       <td className="p-3">
-                        <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-semibold text-[10px]">
+                        <span className="px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700 font-semibold text-[10px]">
                           {u.role}
                         </span>
                       </td>
@@ -627,7 +627,7 @@ export default function AdminDashboardPage() {
                     placeholder="e.g. Environmental Law"
                     value={newSpecName}
                     onChange={(e) => setNewSpecName(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-indigo-500"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-zinc-500"
                   />
                 </div>
                 <button
@@ -742,14 +742,14 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* CARD 2: PROVISION NEW SYSTEM ADMINISTRATOR */}
-            <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-6 shadow-2xl">
-              <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
-                <div className="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
+            <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-6 shadow-2xl">
+              <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
+                <div className="p-3 rounded-2xl bg-zinc-800 border border-zinc-700 text-white">
                   <Plus className="w-6 h-6" />
                 </div>
                 <div>
                   <h2 className="text-base font-bold text-white">Provision New System Administrator</h2>
-                  <p className="text-xs text-slate-400">Create additional ADMIN accounts with system access.</p>
+                  <p className="text-xs text-zinc-400">Create additional ADMIN accounts with system access.</p>
                 </div>
               </div>
 
@@ -764,48 +764,48 @@ export default function AdminDashboardPage() {
 
               <form onSubmit={handleCreateAdmin} className="space-y-4 text-xs">
                 <div>
-                  <label className="text-slate-400 block mb-1.5 font-semibold">Administrator Full Name</label>
+                  <label className="text-zinc-400 block mb-1.5 font-semibold">Administrator Full Name</label>
                   <input
                     type="text"
                     required
                     value={adminForm.name}
                     onChange={(e) => setAdminForm({ ...adminForm, name: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white outline-none focus:border-indigo-500"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white outline-none focus:border-zinc-500"
                     placeholder="e.g. Kasun Kalhara"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-slate-400 block mb-1.5 font-semibold">Username</label>
+                    <label className="text-zinc-400 block mb-1.5 font-semibold">Username</label>
                     <input
                       type="text"
                       required
                       value={adminForm.username}
                       onChange={(e) => setAdminForm({ ...adminForm, username: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white outline-none focus:border-indigo-500"
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white outline-none focus:border-zinc-500"
                       placeholder="e.g. kasun_admin"
                     />
                   </div>
                   <div>
-                    <label className="text-slate-400 block mb-1.5 font-semibold">Email Address</label>
+                    <label className="text-zinc-400 block mb-1.5 font-semibold">Email Address</label>
                     <input
                       type="email"
                       required
                       value={adminForm.email}
                       onChange={(e) => setAdminForm({ ...adminForm, email: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white outline-none focus:border-indigo-500"
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white outline-none focus:border-zinc-500"
                       placeholder="kasun@lawyerconnect.lk"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="text-slate-400 block mb-1.5 font-semibold">Initial Password</label>
+                  <label className="text-zinc-400 block mb-1.5 font-semibold">Initial Password</label>
                   <input
                     type="password"
                     required
                     value={adminForm.password}
                     onChange={(e) => setAdminForm({ ...adminForm, password: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white outline-none focus:border-indigo-500"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white outline-none focus:border-zinc-500"
                     placeholder="Assign initial password"
                   />
                 </div>
@@ -813,7 +813,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={adminLoading}
-                  className="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs shadow-lg shadow-indigo-600/20 disabled:opacity-50 transition-all"
+                  className="w-full py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-extrabold text-xs shadow-sm disabled:opacity-50 transition-all"
                 >
                   {adminLoading ? 'Provisioning Admin...' : 'Create System Admin Account'}
                 </button>
@@ -824,65 +824,65 @@ export default function AdminDashboardPage() {
 
         {/* IN-APP DOCUMENT INSPECTION MODAL */}
         {activeDoc && (
-          <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
-            <div className="bg-slate-900 border border-slate-700 rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
+          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
               {/* Modal Header */}
-              <div className="px-6 py-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
+              <div className="px-6 py-4 bg-zinc-950 border-b border-zinc-800 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center">
                     <Shield className="w-5 h-5" />
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-white flex items-center gap-2">
                       {activeDoc.docType}
                     </h3>
-                    <p className="text-xs text-slate-400">
-                      Applicant: <span className="text-indigo-300 font-semibold">{activeDoc.lawyerName}</span> ({activeDoc.licenceNumber})
+                    <p className="text-xs text-zinc-400">
+                      Applicant: <span className="text-zinc-200 font-semibold">{activeDoc.lawyerName}</span> ({activeDoc.licenceNumber})
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setActiveDoc(null)}
-                  className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
+                  className="p-2 rounded-xl bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all border border-zinc-700"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Modal Body: High-tech Official Document Certificate Viewer */}
-              <div className="p-6 overflow-y-auto space-y-4 bg-[#090d16] flex-1">
-                <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 relative overflow-hidden text-center shadow-inner">
+              <div className="p-6 overflow-y-auto space-y-4 bg-zinc-950 flex-1">
+                <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 relative overflow-hidden text-center shadow-inner">
                   {/* Background Watermark */}
-                  <div className="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-center text-5xl font-black uppercase text-amber-500 tracking-widest rotate-12">
+                  <div className="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-center text-5xl font-black uppercase text-white tracking-widest rotate-12">
                     VERIFIED DOCUMENT
                   </div>
 
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-mono mb-6">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> IN-APP SECURE DOCUMENT RECORD
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800 text-zinc-200 border border-zinc-700 text-xs font-mono mb-6">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-white" /> IN-APP SECURE DOCUMENT RECORD
                   </div>
 
-                  <div className="bg-slate-900/90 p-6 rounded-xl border border-slate-800 text-left max-w-lg mx-auto space-y-3.5 shadow-lg">
-                    <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Document Classification</span>
-                      <span className="text-xs text-amber-300 font-semibold">{activeDoc.docType}</span>
+                  <div className="bg-zinc-950 p-6 rounded-xl border border-zinc-800 text-left max-w-lg mx-auto space-y-3.5 shadow-lg">
+                    <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
+                      <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Document Classification</span>
+                      <span className="text-xs text-white font-semibold">{activeDoc.docType}</span>
                     </div>
 
-                    <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Advocate Full Name</span>
+                    <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
+                      <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Advocate Full Name</span>
                       <span className="text-xs text-white font-bold">{activeDoc.lawyerName}</span>
                     </div>
 
-                    <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Bar License Roll No</span>
-                      <span className="text-xs text-indigo-300 font-mono font-bold">{activeDoc.licenceNumber}</span>
+                    <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
+                      <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Bar License Roll No</span>
+                      <span className="text-xs text-zinc-200 font-mono font-bold">{activeDoc.licenceNumber}</span>
                     </div>
 
-                    <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Issuing Authority</span>
-                      <span className="text-xs text-emerald-400 font-medium">Bar Association of Sri Lanka (BASL)</span>
+                    <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
+                      <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Issuing Authority</span>
+                      <span className="text-xs text-zinc-300 font-medium">Bar Association of Sri Lanka (BASL)</span>
                     </div>
 
-                    <div className="pt-2 flex items-center justify-between text-[11px] text-slate-500 font-mono">
+                    <div className="pt-2 flex items-center justify-between text-[11px] text-zinc-500 font-mono">
                       <span>Verification Ref: BASL-VERIFY-2026-SRILANKA</span>
                       <span className="text-amber-400 font-semibold">STATUS: PENDING ADMIN APPROVAL</span>
                     </div>

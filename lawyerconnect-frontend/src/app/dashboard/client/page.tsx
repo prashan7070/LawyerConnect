@@ -297,7 +297,7 @@ export default function ClientDashboardPage() {
     .sort((a, b) => (b.rating || 0) - (a.rating || 0));
 
   return (
-    <div className="min-h-screen bg-[#070a12] text-slate-100 font-sans relative pb-20">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans relative pb-20">
       <Navbar />
 
       {/* CUSTOM TOAST NOTIFICATIONS */}
@@ -307,15 +307,15 @@ export default function ClientDashboardPage() {
             key={t.id}
             className={`pointer-events-auto p-4 rounded-2xl shadow-2xl backdrop-blur-xl border flex items-start gap-3 transition-all animate-in slide-in-from-right-8 ${
               t.type === 'success'
-                ? 'bg-slate-900/90 border-emerald-500/40 text-emerald-300'
+                ? 'bg-zinc-900/90 border-emerald-500/40 text-emerald-300'
                 : t.type === 'error'
-                ? 'bg-slate-900/90 border-red-500/40 text-red-300'
-                : 'bg-slate-900/90 border-indigo-500/40 text-indigo-300'
+                ? 'bg-zinc-900/90 border-red-500/40 text-red-300'
+                : 'bg-zinc-900/90 border-zinc-700 text-zinc-300'
             }`}
           >
             {t.type === 'success' && <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />}
             {t.type === 'error' && <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />}
-            {t.type === 'info' && <Info className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />}
+            {t.type === 'info' && <Info className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />}
             <div>
               <h5 className="text-xs font-bold text-white">{t.title}</h5>
               <p className="text-[11px] opacity-90 mt-0.5">{t.message}</p>
@@ -326,15 +326,15 @@ export default function ClientDashboardPage() {
 
       <div className="pt-28 px-4 sm:px-6 max-w-7xl mx-auto">
         {/* HERO BANNER */}
-        <div className="p-8 rounded-3xl bg-gradient-to-r from-indigo-900/30 via-slate-900/80 to-slate-950 border border-slate-800 mb-10 relative overflow-hidden">
+        <div className="p-8 rounded-3xl bg-zinc-900 border border-zinc-800 mb-10 relative overflow-hidden">
           <div className="max-w-2xl relative z-10">
-            <span className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-semibold inline-flex items-center gap-1.5 mb-4">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> VERIFIED SRI LANKAN BAR ADVOCATES
+            <span className="px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-semibold inline-flex items-center gap-1.5 mb-4">
+              <ShieldCheck className="w-3.5 h-3.5 text-white" /> VERIFIED SRI LANKAN BAR ADVOCATES
             </span>
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
               Find Legal Counsel & Book Consultation
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400">
+            <p className="text-xs sm:text-sm text-zinc-400">
               Browse top-rated advocates by legal specialization, review verified client feedback, and schedule video or chamber consultations.
             </p>
           </div>
@@ -342,14 +342,14 @@ export default function ClientDashboardPage() {
 
         {/* SEARCH & CATEGORY FILTERING */}
         <div className="space-y-4 mb-10">
-          <div className="p-2 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center">
-            <Search className="w-5 h-5 text-slate-400 ml-3" />
+          <div className="p-2 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center">
+            <Search className="w-5 h-5 text-zinc-400 ml-3" />
             <input
               type="text"
               placeholder="Search by lawyer name, keyword, or court chambers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none"
+              className="w-full bg-transparent px-3 py-2.5 text-sm text-white placeholder-zinc-500 outline-none"
             />
           </div>
 
@@ -361,8 +361,8 @@ export default function ClientDashboardPage() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold shrink-0 transition-all ${
                   selectedCategory === cat
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 font-bold'
-                    : 'bg-slate-900/60 text-slate-400 hover:text-slate-200 border border-slate-800/80'
+                    ? 'bg-white text-zinc-950 font-bold shadow-sm'
+                    : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
                 }`}
               >
                 {cat}
@@ -376,67 +376,67 @@ export default function ClientDashboardPage() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-amber-400" /> Top Rated Legal Advocates
+                <Sparkles className="w-5 h-5 text-white" /> Top Rated Legal Advocates
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">Ranked by client rating & verified bar experience</p>
+              <p className="text-xs text-zinc-400 mt-0.5">Ranked by client rating & verified bar experience</p>
             </div>
-            <span className="text-xs text-slate-400 font-mono">Showing {filteredLawyers.length} Advocates</span>
+            <span className="text-xs text-zinc-400 font-mono">Showing {filteredLawyers.length} Advocates</span>
           </div>
 
           {filteredLawyers.length === 0 ? (
-            <div className="p-12 text-center rounded-2xl bg-slate-900/40 border border-slate-800">
-              <UserCheck className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-              <p className="text-sm font-semibold text-slate-400">No advocates matching filter criteria.</p>
+            <div className="p-12 text-center rounded-2xl bg-zinc-900 border border-zinc-800">
+              <UserCheck className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
+              <p className="text-sm font-semibold text-zinc-400">No advocates matching filter criteria.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredLawyers.map((lawyer) => (
                 <div
                   key={lawyer.id}
-                  className="p-6 rounded-3xl bg-slate-900/60 border border-slate-800/80 hover:border-indigo-500/40 transition-all flex flex-col justify-between group"
+                  className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col justify-between group"
                 >
                   <div>
                     {/* Top Badges */}
                     <div className="flex items-center justify-between mb-4">
-                      <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-bold flex items-center gap-1">
-                        <Star className="w-3 h-3 fill-amber-400" /> TOP RATED • {lawyer.rating} ({lawyer.reviewCount})
+                      <span className="px-2.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-200 text-[10px] font-bold flex items-center gap-1">
+                        <Star className="w-3 h-3 text-white fill-white" /> TOP RATED • {lawyer.rating} ({lawyer.reviewCount})
                       </span>
-                      <span className="text-[11px] text-slate-400 font-mono">License: {lawyer.licenceNumber}</span>
+                      <span className="text-[11px] text-zinc-400 font-mono">License: {lawyer.licenceNumber}</span>
                     </div>
 
                     {/* Profile Header */}
                     <div className="flex items-start gap-4 mb-4">
-                      <div className="w-14 h-14 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center overflow-hidden shrink-0">
+                      <div className="w-14 h-14 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden shrink-0">
                         {lawyer.profilePictureUrl ? (
                           <img src={lawyer.profilePictureUrl} alt={lawyer.fullName} className="w-full h-full object-cover" />
                         ) : (
-                          <User className="w-7 h-7 text-indigo-400" />
+                          <User className="w-7 h-7 text-zinc-400" />
                         )}
                       </div>
                       <div>
                         {/* CLICKABLE NAME TO OPEN FIVERR-STYLE PROFILE */}
                         <button
                           onClick={() => setProfileModalLawyer(lawyer)}
-                          className="text-base font-bold text-white hover:text-indigo-400 text-left transition-all flex items-center gap-1"
+                          className="text-base font-bold text-white hover:text-zinc-300 text-left transition-all flex items-center gap-1"
                         >
                           {lawyer.fullName} <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-all" />
                         </button>
-                        <p className="text-xs text-indigo-400 font-semibold mt-0.5">{lawyer.specialties || 'General Practice'}</p>
-                        <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-1">
+                        <p className="text-xs text-zinc-300 font-semibold mt-0.5">{lawyer.specialties || 'General Practice'}</p>
+                        <p className="text-[11px] text-zinc-400 flex items-center gap-1 mt-1">
                           <Briefcase className="w-3 h-3" /> {lawyer.yearsOfExperience || 5}+ Years Bar Practice
                         </p>
                       </div>
                     </div>
 
                     {/* Fees Grid */}
-                    <div className="grid grid-cols-2 gap-2 p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 mb-6 text-xs">
+                    <div className="grid grid-cols-2 gap-2 p-3 rounded-xl bg-zinc-950 border border-zinc-800 mb-6 text-xs">
                       <div>
-                        <span className="text-slate-400 block text-[10px]">Online Video:</span>
-                        <span className="text-emerald-400 font-bold">LKR {lawyer.onlineFee || 3500}</span>
+                        <span className="text-zinc-400 block text-[10px]">Online Video:</span>
+                        <span className="text-zinc-200 font-bold">LKR {lawyer.onlineFee || 3500}</span>
                       </div>
                       <div>
-                        <span className="text-slate-400 block text-[10px]">In-Person Visit:</span>
-                        <span className="text-indigo-400 font-bold">LKR {lawyer.inPersonFee || 6000}</span>
+                        <span className="text-zinc-400 block text-[10px]">In-Person Visit:</span>
+                        <span className="text-white font-bold">LKR {lawyer.inPersonFee || 6000}</span>
                       </div>
                     </div>
                   </div>
@@ -445,21 +445,21 @@ export default function ClientDashboardPage() {
                   <div className="grid grid-cols-3 gap-1.5">
                     <button
                       onClick={() => setProfileModalLawyer(lawyer)}
-                      className="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold transition-all"
+                      className="py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-semibold transition-all border border-zinc-700"
                     >
                       View Profile
                     </button>
                     <button
                       onClick={() => openChatWithLawyer(lawyer)}
-                      className="py-2.5 rounded-xl bg-indigo-600/20 hover:bg-indigo-600 border border-indigo-500/30 text-indigo-300 hover:text-white text-[11px] font-semibold transition-all flex items-center justify-center gap-1"
+                      className="py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-semibold transition-all border border-zinc-700 flex items-center justify-center gap-1"
                     >
-                      <MessageSquare className="w-3.5 h-3.5" /> Direct Message
+                      <MessageSquare className="w-3.5 h-3.5 text-zinc-300" /> Direct Message
                     </button>
                     <button
                       onClick={() => startBooking(lawyer)}
-                      className="py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold transition-all shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-1"
+                      className="py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 text-[11px] font-extrabold transition-all shadow-sm flex items-center justify-center gap-1"
                     >
-                      <Calendar className="w-3.5 h-3.5" /> Book Now
+                      <Calendar className="w-3.5 h-3.5 text-zinc-950" /> Book Now
                     </button>
                   </div>
                 </div>
@@ -471,16 +471,16 @@ export default function ClientDashboardPage() {
         {/* SECTION 2: MY BOOKED CONSULTATIONS HISTORY */}
         <div>
           <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <Clock className="w-5 h-5 text-indigo-400" /> My Consultations & Booking History
+            <Clock className="w-5 h-5 text-zinc-400" /> My Consultations & Booking History
           </h2>
 
-          <div className="p-6 rounded-3xl bg-slate-900/60 border border-slate-800">
+          <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800">
             {appointments.length === 0 ? (
-              <p className="text-xs text-slate-500 text-center py-8">No active or previous legal consultations recorded.</p>
+              <p className="text-xs text-zinc-500 text-center py-8">No active or previous legal consultations recorded.</p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-300">
-                  <thead className="bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+                <table className="w-full text-left text-xs text-zinc-300">
+                  <thead className="bg-zinc-950 text-zinc-400 uppercase tracking-wider font-semibold border-b border-zinc-800">
                     <tr>
                       <th className="p-3">Ref ID</th>
                       <th className="p-3">Consultation Type</th>
@@ -489,24 +489,24 @@ export default function ClientDashboardPage() {
                       <th className="p-3">Brief / Notes</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-zinc-800">
                     {appointments.map((app) => (
-                      <tr key={app.id} className="hover:bg-slate-800/40">
-                        <td className="p-3 font-mono text-indigo-400 font-semibold">#{app.id}</td>
+                      <tr key={app.id} className="hover:bg-zinc-800/40">
+                        <td className="p-3 font-mono text-zinc-200 font-semibold">#{app.id}</td>
                         <td className="p-3 font-semibold text-white">{app.consultationType}</td>
-                        <td className="p-3 text-slate-300">{app.scheduledAt ? new Date(app.scheduledAt).toLocaleString() : 'N/A'}</td>
+                        <td className="p-3 text-zinc-300">{app.scheduledAt ? new Date(app.scheduledAt).toLocaleString() : 'N/A'}</td>
                         <td className="p-3">
                           <span className={`px-2.5 py-1 rounded-full text-[10px] font-semibold ${
                             app.status === 'CONFIRMED'
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                              ? 'bg-zinc-800 text-white border border-zinc-700'
                               : app.status === 'CANCELLED'
                               ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-                              : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                              : 'bg-zinc-800 text-zinc-300 border border-zinc-700'
                           }`}>
                             {app.status}
                           </span>
                         </td>
-                        <td className="p-3 text-slate-400 max-w-xs truncate">{app.notes || 'N/A'}</td>
+                        <td className="p-3 text-zinc-400 max-w-xs truncate">{app.notes || 'N/A'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -519,32 +519,32 @@ export default function ClientDashboardPage() {
 
       {/* ================= MODAL 1: LINKEDIN-STYLE FULL SCREEN ADVOCATE PROFILE ================= */}
       {profileModalLawyer && (
-        <div className="fixed inset-0 z-50 bg-[#070a12] text-slate-100 font-sans overflow-y-auto animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 bg-zinc-950 text-zinc-100 font-sans overflow-y-auto animate-in fade-in duration-200">
           {/* Sticky Header Nav Bar */}
-          <div className="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-xl border-b border-slate-800/80 px-6 py-4 flex items-center justify-between">
+          <div className="sticky top-0 z-30 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
             <button
               onClick={() => setProfileModalLawyer(null)}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold transition-all border border-slate-800"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-semibold transition-all border border-zinc-800"
             >
-              <ChevronLeft className="w-4 h-4 text-indigo-400" /> Back to Advocates Directory
+              <ChevronLeft className="w-4 h-4 text-zinc-400" /> Back to Advocates Directory
             </button>
 
             <div className="hidden sm:flex items-center gap-3">
               <span className="text-xs font-bold text-white">{profileModalLawyer.fullName}</span>
-              <span className="text-xs text-slate-500">•</span>
-              <span className="text-xs text-indigo-400 font-mono">{profileModalLawyer.licenceNumber}</span>
+              <span className="text-xs text-zinc-500">•</span>
+              <span className="text-xs text-zinc-400 font-mono">{profileModalLawyer.licenceNumber}</span>
             </div>
 
             <div className="flex items-center gap-3">
               <button
                 onClick={() => startBooking(profileModalLawyer)}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 text-xs font-extrabold shadow-sm transition-all flex items-center gap-2"
               >
-                <Calendar className="w-4 h-4" /> Book Consultation
+                <Calendar className="w-4 h-4 text-zinc-950" /> Book Consultation
               </button>
               <button
                 onClick={() => setProfileModalLawyer(null)}
-                className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-all border border-slate-800"
+                className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white transition-all border border-zinc-800"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -553,14 +553,14 @@ export default function ClientDashboardPage() {
 
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
             {/* LINKEDIN MAIN HERO CARD */}
-            <div className="rounded-3xl bg-slate-900/80 border border-slate-800/90 overflow-hidden shadow-2xl relative">
+            <div className="rounded-3xl bg-zinc-900 border border-zinc-800 overflow-hidden shadow-2xl relative">
               {/* Cover Banner Graphic */}
-              <div className="h-48 sm:h-56 bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-900/60 relative p-6 flex items-start justify-end">
-                <div className="absolute inset-0 opacity-10 pointer-events-none flex items-center justify-center text-8xl font-black uppercase text-indigo-400 tracking-widest">
+              <div className="h-48 sm:h-56 bg-zinc-900 border-b border-zinc-800 relative p-6 flex items-start justify-end">
+                <div className="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-center text-8xl font-black uppercase text-white tracking-widest">
                   BASL ADVOCATE
                 </div>
-                <div className="px-3.5 py-1.5 rounded-full bg-slate-950/80 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-1.5 backdrop-blur-md relative z-10">
-                  <ShieldCheck className="w-4 h-4" /> VERIFIED ADVOCATE • SUPREME COURT ROLL
+                <div className="px-3.5 py-1.5 rounded-full bg-zinc-950 border border-zinc-700 text-zinc-200 text-xs font-bold flex items-center gap-1.5 backdrop-blur-md relative z-10">
+                  <ShieldCheck className="w-4 h-4 text-white" /> VERIFIED ADVOCATE • SUPREME COURT ROLL
                 </div>
               </div>
 
@@ -569,16 +569,16 @@ export default function ClientDashboardPage() {
                 {/* Avatar Overlay */}
                 <div className="-mt-20 mb-5 flex justify-between items-end">
                   <div className="relative">
-                    <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl bg-slate-950 p-1.5 border-2 border-indigo-500/40 shadow-2xl overflow-hidden">
+                    <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl bg-zinc-950 p-1.5 border-2 border-zinc-700 shadow-2xl overflow-hidden">
                       {profileModalLawyer.profilePictureUrl ? (
                         <img src={profileModalLawyer.profilePictureUrl} alt={profileModalLawyer.fullName} className="w-full h-full object-cover rounded-2xl" />
                       ) : (
-                        <div className="w-full h-full rounded-2xl bg-indigo-950/80 flex items-center justify-center text-indigo-400">
+                        <div className="w-full h-full rounded-2xl bg-zinc-900 flex items-center justify-center text-zinc-400">
                           <User className="w-16 h-16" />
                         </div>
                       )}
                     </div>
-                    <div className="absolute bottom-2 right-2 p-1.5 rounded-full bg-emerald-500 text-slate-950 border-2 border-slate-900 shadow-lg">
+                    <div className="absolute bottom-2 right-2 p-1.5 rounded-full bg-white text-zinc-950 border-2 border-zinc-900 shadow-lg">
                       <Check className="w-4 h-4 stroke-[3]" />
                     </div>
                   </div>
@@ -586,22 +586,22 @@ export default function ClientDashboardPage() {
                   <div className="hidden sm:flex items-center gap-3">
                     <button
                       onClick={() => addToast('info', 'Share Advocate', `Copied profile link for ${profileModalLawyer.fullName}`)}
-                      className="p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 transition-all"
+                      className="p-3 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition-all"
                       title="Share Advocate Profile"
                     >
                       <Share2 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => openChatWithLawyer(profileModalLawyer)}
-                      className="px-5 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-bold transition-all flex items-center gap-2 border border-slate-800"
+                      className="px-5 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold transition-all flex items-center gap-2 border border-zinc-700"
                     >
-                      <MessageSquare className="w-4 h-4 text-indigo-400" /> Direct Message
+                      <MessageSquare className="w-4 h-4 text-zinc-300" /> Direct Message
                     </button>
                     <button
                       onClick={() => startBooking(profileModalLawyer)}
-                      className="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-xl shadow-indigo-600/30 transition-all flex items-center gap-2"
+                      className="px-6 py-3 rounded-2xl bg-white text-zinc-950 hover:bg-zinc-200 text-xs font-extrabold shadow-md transition-all flex items-center gap-2"
                     >
-                      <Calendar className="w-4 h-4" /> Schedule Consultation
+                      <Calendar className="w-4 h-4 text-zinc-950" /> Schedule Consultation
                     </button>
                   </div>
                 </div>
@@ -612,38 +612,38 @@ export default function ClientDashboardPage() {
                     <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                       {profileModalLawyer.fullName}
                     </h1>
-                    <span className="px-3 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-bold font-mono">
+                    <span className="px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-bold font-mono">
                       BASL/{profileModalLawyer.licenceNumber}
                     </span>
                   </div>
 
-                  <p className="text-sm sm:text-base text-indigo-300 font-semibold">
+                  <p className="text-sm sm:text-base text-zinc-300 font-semibold">
                     {profileModalLawyer.specialties || 'Corporate Litigation & Commercial Dispute Resolution'}
                   </p>
 
-                  <p className="text-xs text-slate-400 flex items-center gap-2 flex-wrap pt-1">
-                    <span className="flex items-center gap-1"><Building2 className="w-3.5 h-3.5 text-indigo-400" /> {profileModalLawyer.workingAddress || 'Commercial High Court Chambers, Colombo 12'}</span>
+                  <p className="text-xs text-zinc-400 flex items-center gap-2 flex-wrap pt-1">
+                    <span className="flex items-center gap-1"><Building2 className="w-3.5 h-3.5 text-zinc-400" /> {profileModalLawyer.workingAddress || 'Commercial High Court Chambers, Colombo 12'}</span>
                     <span>•</span>
-                    <span className="flex items-center gap-1"><Globe className="w-3.5 h-3.5 text-emerald-400" /> Bar Association of Sri Lanka</span>
+                    <span className="flex items-center gap-1"><Globe className="w-3.5 h-3.5 text-zinc-400" /> Bar Association of Sri Lanka</span>
                   </p>
 
                   {/* Highlights Grid */}
-                  <div className="pt-4 flex flex-wrap items-center gap-6 text-xs border-t border-slate-800/80 mt-4">
+                  <div className="pt-4 flex flex-wrap items-center gap-6 text-xs border-t border-zinc-800 mt-4">
                     <div className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                      <Star className="w-4 h-4 text-white fill-white" />
                       <span className="font-extrabold text-white text-sm">{profileModalLawyer.rating}</span>
-                      <span className="text-slate-400">({profileModalLawyer.reviewCount} Verified Client Reviews)</span>
+                      <span className="text-zinc-400">({profileModalLawyer.reviewCount} Verified Client Reviews)</span>
                     </div>
 
-                    <div className="flex items-center gap-2 text-slate-300">
-                      <Briefcase className="w-4 h-4 text-indigo-400" />
+                    <div className="flex items-center gap-2 text-zinc-300">
+                      <Briefcase className="w-4 h-4 text-zinc-400" />
                       <span className="font-bold text-white">{profileModalLawyer.yearsOfExperience || 12}+ Years</span>
-                      <span className="text-slate-400">Active Legal Practice</span>
+                      <span className="text-zinc-400">Active Legal Practice</span>
                     </div>
 
-                    <div className="flex items-center gap-2 text-slate-300">
-                      <Award className="w-4 h-4 text-emerald-400" />
-                      <span className="font-bold text-emerald-400">High Court & Supreme Court</span>
+                    <div className="flex items-center gap-2 text-zinc-300">
+                      <Award className="w-4 h-4 text-white" />
+                      <span className="font-bold text-white">High Court & Supreme Court</span>
                     </div>
                   </div>
                 </div>
@@ -652,13 +652,13 @@ export default function ClientDashboardPage() {
                 <div className="mt-6 flex sm:hidden items-center gap-3">
                   <button
                     onClick={() => startBooking(profileModalLawyer)}
-                    className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2"
+                    className="flex-1 py-3 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 text-xs font-bold shadow-md flex items-center justify-center gap-2"
                   >
                     <Calendar className="w-4 h-4" /> Book Consultation
                   </button>
                   <button
                     onClick={() => addToast('info', 'Share Advocate', `Copied profile link for ${profileModalLawyer.fullName}`)}
-                    className="p-3 rounded-xl bg-slate-950 text-slate-300 border border-slate-800"
+                    className="p-3 rounded-xl bg-zinc-950 text-zinc-300 border border-zinc-800"
                   >
                     <Share2 className="w-4 h-4" />
                   </button>
@@ -667,7 +667,7 @@ export default function ClientDashboardPage() {
             </div>
 
             {/* LINKEDIN TAB NAVIGATION */}
-            <div className="flex items-center gap-2 border-b border-slate-800/80 pb-2 overflow-x-auto">
+            <div className="flex items-center gap-2 border-b border-zinc-800 pb-2 overflow-x-auto">
               {[
                 { id: 'about', label: 'About & Bio' },
                 { id: 'practice', label: 'Practice Areas & Fees' },
@@ -679,8 +679,8 @@ export default function ClientDashboardPage() {
                   onClick={() => setProfileActiveTab(tab.id as any)}
                   className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
                     profileActiveTab === tab.id
-                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                      : 'bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800/60'
+                      ? 'bg-white text-zinc-950 font-bold shadow-sm'
+                      : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
                   }`}
                 >
                   {tab.label}
@@ -692,33 +692,33 @@ export default function ClientDashboardPage() {
             <div className="space-y-6">
               {profileActiveTab === 'about' && (
                 <div className="space-y-6">
-                  <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-4">
+                  <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4">
                     <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-indigo-400" /> Professional Summary & Legal Background
+                      <FileText className="w-5 h-5 text-zinc-400" /> Professional Summary & Legal Background
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
                       {profileModalLawyer.bio ||
                         `${profileModalLawyer.fullName} is a distinguished Senior Advocate admitted to the Bar Association of Sri Lanka with over ${profileModalLawyer.yearsOfExperience || 12} years of legal practice before the Commercial High Court and Supreme Court. Specialized in landmark corporate disputes, complex property deed litigation, and constitutional legal defense.`}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-2">
-                      <Scale className="w-6 h-6 text-indigo-400" />
+                    <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-2">
+                      <Scale className="w-6 h-6 text-zinc-400" />
                       <h4 className="text-xs font-bold text-white uppercase tracking-wider">Bar Qualification</h4>
-                      <p className="text-xs text-slate-300">BASL Registered Senior Advocate</p>
+                      <p className="text-xs text-zinc-300">BASL Registered Senior Advocate</p>
                     </div>
 
-                    <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-2">
-                      <ShieldCheck className="w-6 h-6 text-emerald-400" />
+                    <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-2">
+                      <ShieldCheck className="w-6 h-6 text-white" />
                       <h4 className="text-xs font-bold text-white uppercase tracking-wider">Court Admission</h4>
-                      <p className="text-xs text-slate-300">Supreme Court & Commercial High Court</p>
+                      <p className="text-xs text-zinc-300">Supreme Court & Commercial High Court</p>
                     </div>
 
-                    <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-2">
-                      <Clock className="w-6 h-6 text-amber-400" />
+                    <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-2">
+                      <Clock className="w-6 h-6 text-zinc-400" />
                       <h4 className="text-xs font-bold text-white uppercase tracking-wider">Consultation Hours</h4>
-                      <p className="text-xs text-slate-300">Mon - Fri: 9:00 AM - 5:00 PM</p>
+                      <p className="text-xs text-zinc-300">Mon - Fri: 9:00 AM - 5:00 PM</p>
                     </div>
                   </div>
                 </div>
@@ -726,17 +726,17 @@ export default function ClientDashboardPage() {
 
               {profileActiveTab === 'practice' && (
                 <div className="space-y-6">
-                  <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-4">
+                  <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4">
                     <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <Briefcase className="w-5 h-5 text-indigo-400" /> Specializations & Practice Areas
+                      <Briefcase className="w-5 h-5 text-zinc-400" /> Specializations & Practice Areas
                     </h3>
                     <div className="flex flex-wrap gap-2.5">
                       {(profileModalLawyer.specialties || 'Corporate Law, Civil Litigation, Property Law, Intellectual Property').split(',').map((spec, i) => (
                         <span
                           key={i}
-                          className="px-4 py-2 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-bold flex items-center gap-2"
+                          className="px-4 py-2 rounded-2xl bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs font-bold flex items-center gap-2"
                         >
-                          <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" /> {spec.trim()}
+                          <CheckCircle2 className="w-3.5 h-3.5 text-white" /> {spec.trim()}
                         </span>
                       ))}
                     </div>
@@ -744,25 +744,25 @@ export default function ClientDashboardPage() {
 
                   {/* Consultation Rates Comparison */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-3">
-                      <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                    <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-3">
+                      <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center">
                         <Globe className="w-5 h-5" />
                       </div>
                       <h4 className="text-sm font-bold text-white">Online Video Consultation</h4>
-                      <p className="text-xs text-slate-400">Encrypted Google Meet video session with digital document exchange.</p>
-                      <div className="pt-2 text-xl font-extrabold text-emerald-400">
-                        LKR {profileModalLawyer.onlineFee || 3500} <span className="text-xs text-slate-500 font-normal">/ 60 Min</span>
+                      <p className="text-xs text-zinc-400">Encrypted Google Meet video session with digital document exchange.</p>
+                      <div className="pt-2 text-xl font-extrabold text-white">
+                        LKR {profileModalLawyer.onlineFee || 3500} <span className="text-xs text-zinc-500 font-normal">/ 60 Min</span>
                       </div>
                     </div>
 
-                    <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-3">
-                      <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                    <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-3">
+                      <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center">
                         <Building2 className="w-5 h-5" />
                       </div>
                       <h4 className="text-sm font-bold text-white">In-Person Chamber Visit</h4>
-                      <p className="text-xs text-slate-400">Direct face-to-face consultation at court law chambers.</p>
-                      <div className="pt-2 text-xl font-extrabold text-indigo-400">
-                        LKR {profileModalLawyer.inPersonFee || 6000} <span className="text-xs text-slate-500 font-normal">/ Session</span>
+                      <p className="text-xs text-zinc-400">Direct face-to-face consultation at court law chambers.</p>
+                      <div className="pt-2 text-xl font-extrabold text-white">
+                        LKR {profileModalLawyer.inPersonFee || 6000} <span className="text-xs text-zinc-500 font-normal">/ Session</span>
                       </div>
                     </div>
                   </div>
@@ -771,36 +771,36 @@ export default function ClientDashboardPage() {
 
               {profileActiveTab === 'rates' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-4">
+                  <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4">
                     <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <MapPin className="w-5 h-5 text-indigo-400" /> Law Chambers Location
+                      <MapPin className="w-5 h-5 text-zinc-400" /> Law Chambers Location
                     </h3>
-                    <p className="text-xs text-slate-300">
+                    <p className="text-xs text-zinc-300">
                       {profileModalLawyer.workingAddress || 'Suite 402, High Court Complex, Superior Law Chambers, Hulftsdorp, Colombo 12, Sri Lanka.'}
                     </p>
-                    <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/80 text-xs space-y-2">
-                      <div className="flex justify-between text-slate-400">
+                    <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 text-xs space-y-2">
+                      <div className="flex justify-between text-zinc-400">
                         <span>Chamber Hours:</span>
                         <span className="text-white font-semibold">9:00 AM - 5:00 PM</span>
                       </div>
-                      <div className="flex justify-between text-slate-400">
+                      <div className="flex justify-between text-zinc-400">
                         <span>Court District:</span>
                         <span className="text-white font-semibold">Colombo Commercial Court</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-4">
+                  <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4">
                     <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <Phone className="w-5 h-5 text-emerald-400" /> Direct Chambers Contact
+                      <Phone className="w-5 h-5 text-white" /> Direct Chambers Contact
                     </h3>
                     <div className="space-y-3 text-xs">
-                      <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800/80 flex items-center justify-between">
-                        <span className="text-slate-400">Official Phone:</span>
+                      <div className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-between">
+                        <span className="text-zinc-400">Official Phone:</span>
                         <span className="text-white font-bold font-mono">{profileModalLawyer.phone || '+94 77 123 4567'}</span>
                       </div>
-                      <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800/80 flex items-center justify-between">
-                        <span className="text-slate-400">Chambers Desk:</span>
+                      <div className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-between">
+                        <span className="text-zinc-400">Chambers Desk:</span>
                         <span className="text-white font-bold font-mono">+94 11 289 4192</span>
                       </div>
                     </div>
@@ -809,25 +809,25 @@ export default function ClientDashboardPage() {
               )}
 
               {profileActiveTab === 'reviews' && (
-                <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-6">
+                <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-6">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <Star className="w-5 h-5 text-amber-400 fill-amber-400" /> Verified Client Feedback ({profileModalLawyer.reviewCount || 18})
+                      <Star className="w-5 h-5 text-white fill-white" /> Verified Client Feedback ({profileModalLawyer.reviewCount || 18})
                     </h3>
-                    <span className="text-sm font-extrabold text-amber-400">{profileModalLawyer.rating} / 5.0 Rating</span>
+                    <span className="text-sm font-extrabold text-white">{profileModalLawyer.rating} / 5.0 Rating</span>
                   </div>
 
                   <div className="space-y-4">
                     {sampleReviews.map(rev => (
-                      <div key={rev.id} className="p-5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-2">
+                      <div key={rev.id} className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-white text-xs">{rev.clientName}</span>
-                          <div className="flex items-center gap-1 text-amber-400 text-xs font-bold">
-                            <Star className="w-3.5 h-3.5 fill-amber-400" /> {rev.rating}.0
+                          <div className="flex items-center gap-1 text-white text-xs font-bold">
+                            <Star className="w-3.5 h-3.5 fill-white" /> {rev.rating}.0
                           </div>
                         </div>
-                        <p className="text-xs text-slate-300 italic">"{rev.comment}"</p>
-                        <span className="text-[10px] text-slate-500 block font-mono">{rev.date}</span>
+                        <p className="text-xs text-zinc-300 italic">"{rev.comment}"</p>
+                        <span className="text-[10px] text-zinc-500 block font-mono">{rev.date}</span>
                       </div>
                     ))}
                   </div>
@@ -836,16 +836,16 @@ export default function ClientDashboardPage() {
             </div>
 
             {/* Bottom Floating CTA Banner */}
-            <div className="p-6 rounded-3xl bg-gradient-to-r from-indigo-900/40 via-slate-900 to-slate-950 border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
                 <h4 className="text-sm font-bold text-white">Ready to consult {profileModalLawyer.fullName}?</h4>
-                <p className="text-xs text-slate-400">Select date, available slot, and confirm booking securely.</p>
+                <p className="text-xs text-zinc-400">Select date, available slot, and confirm booking securely.</p>
               </div>
               <button
                 onClick={() => startBooking(profileModalLawyer)}
-                className="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-xl shadow-indigo-600/30 transition-all flex items-center gap-2 shrink-0"
+                className="px-6 py-3 rounded-2xl bg-white text-zinc-950 hover:bg-zinc-200 text-xs font-bold shadow-md transition-all flex items-center gap-2 shrink-0"
               >
-                <Calendar className="w-4 h-4" /> Book Consultation Now
+                <Calendar className="w-4 h-4 text-zinc-950" /> Book Consultation Now
               </button>
             </div>
           </div>
@@ -855,26 +855,26 @@ export default function ClientDashboardPage() {
       {/* ================= MODAL 2: SPACIOUS GUIDED BOOKING WIZARD ================= */}
       {bookingLawyer && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-          <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 border border-slate-700 max-w-2xl w-full relative my-auto shadow-2xl text-xs space-y-6">
+          <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 max-w-2xl w-full relative my-auto shadow-2xl text-xs space-y-6">
             <button
               onClick={() => setBookingLawyer(null)}
-              className="absolute right-6 top-6 p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-all"
+              className="absolute right-6 top-6 p-2 rounded-xl bg-zinc-800 text-zinc-400 hover:text-white transition-all border border-zinc-700"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* Header Advocate Summary */}
-            <div className="flex items-center gap-4 pb-4 border-b border-slate-800">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center overflow-hidden shrink-0">
+            <div className="flex items-center gap-4 pb-4 border-b border-zinc-800">
+              <div className="w-12 h-12 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden shrink-0">
                 {bookingLawyer.profilePictureUrl ? (
                   <img src={bookingLawyer.profilePictureUrl} alt={bookingLawyer.fullName} className="w-full h-full object-cover" />
                 ) : (
-                  <User className="w-6 h-6 text-indigo-400" />
+                  <User className="w-6 h-6 text-zinc-400" />
                 )}
               </div>
               <div>
                 <h3 className="text-sm font-bold text-white">{bookingLawyer.fullName}</h3>
-                <p className="text-[11px] text-indigo-300 font-semibold">{bookingLawyer.specialties || 'Advocate'}</p>
+                <p className="text-[11px] text-zinc-300 font-semibold">{bookingLawyer.specialties || 'Advocate'}</p>
               </div>
             </div>
 
@@ -889,14 +889,14 @@ export default function ClientDashboardPage() {
                 <div key={step.s} className="flex items-center gap-2">
                   <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${
                     bookingStep === step.s
-                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 font-extrabold'
+                      ? 'bg-white text-zinc-950 font-extrabold shadow-sm'
                       : bookingStep > step.s
-                      ? 'bg-emerald-500 text-slate-950 font-bold'
-                      : 'bg-slate-800 text-slate-500'
+                      ? 'bg-zinc-800 text-white font-bold border border-zinc-700'
+                      : 'bg-zinc-950 text-zinc-600 border border-zinc-800'
                   }`}>
                     {bookingStep > step.s ? <Check className="w-4 h-4 stroke-[3]" /> : step.s}
                   </div>
-                  <span className={`text-xs font-semibold hidden sm:inline ${bookingStep === step.s ? 'text-white' : 'text-slate-500'}`}>
+                  <span className={`text-xs font-semibold hidden sm:inline ${bookingStep === step.s ? 'text-white' : 'text-zinc-500'}`}>
                     {step.label}
                   </span>
                 </div>
@@ -908,7 +908,7 @@ export default function ClientDashboardPage() {
               <div className="space-y-4">
                 <div>
                   <h3 className="text-base font-bold text-white">Select Consultation Mode</h3>
-                  <p className="text-slate-400">Choose between virtual video consultation or in-person chamber meeting.</p>
+                  <p className="text-zinc-400">Choose between virtual video consultation or in-person chamber meeting.</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
@@ -917,18 +917,18 @@ export default function ClientDashboardPage() {
                     onClick={() => setConsultationType('ONLINE')}
                     className={`p-5 rounded-2xl border text-left transition-all ${
                       consultationType === 'ONLINE'
-                        ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-lg shadow-indigo-600/10'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
+                        ? 'bg-zinc-800 border-white text-white shadow-sm'
+                        : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-bold text-white text-sm">Online Video Call</span>
-                      <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">RECOMMENDED</span>
+                      <span className="px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300 text-[10px] font-bold border border-zinc-700">RECOMMENDED</span>
                     </div>
-                    <span className="text-lg font-extrabold text-emerald-400 block mb-1">
+                    <span className="text-lg font-extrabold text-white block mb-1">
                       LKR {bookingLawyer.onlineFee || 3500}
                     </span>
-                    <span className="text-[11px] text-slate-400 block">Encrypted Google Meet link delivered via SMS/Email</span>
+                    <span className="text-[11px] text-zinc-400 block">Encrypted Google Meet link delivered via SMS/Email</span>
                   </button>
 
                   <button
@@ -936,21 +936,21 @@ export default function ClientDashboardPage() {
                     onClick={() => setConsultationType('IN_PERSON')}
                     className={`p-5 rounded-2xl border text-left transition-all ${
                       consultationType === 'IN_PERSON'
-                        ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-lg shadow-indigo-600/10'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
+                        ? 'bg-zinc-800 border-white text-white shadow-sm'
+                        : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
                     }`}
                   >
                     <span className="font-bold text-white text-sm block mb-2">In-Person Chamber Visit</span>
-                    <span className="text-lg font-extrabold text-indigo-400 block mb-1">
+                    <span className="text-lg font-extrabold text-white block mb-1">
                       LKR {bookingLawyer.inPersonFee || 6000}
                     </span>
-                    <span className="text-[11px] text-slate-400 block">At {bookingLawyer.workingAddress || 'Colombo Law Chambers'}</span>
+                    <span className="text-[11px] text-zinc-400 block">At {bookingLawyer.workingAddress || 'Colombo Law Chambers'}</span>
                   </button>
                 </div>
 
                 <button
                   onClick={() => setBookingStep(2)}
-                  className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition-all mt-4"
+                  className="w-full py-3.5 rounded-2xl bg-white hover:bg-zinc-200 text-zinc-950 font-extrabold text-xs shadow-sm transition-all mt-4"
                 >
                   Continue to Available Dates & Time Slots
                 </button>
@@ -962,34 +962,34 @@ export default function ClientDashboardPage() {
               <div className="space-y-5">
                 <div>
                   <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <CalendarDays className="w-5 h-5 text-indigo-400" /> Select Date & Available Time Slot
+                    <CalendarDays className="w-5 h-5 text-zinc-400" /> Select Date & Available Time Slot
                   </h3>
-                  <p className="text-slate-400">Live availability engine for {bookingLawyer.fullName}.</p>
+                  <p className="text-zinc-400">Live availability engine for {bookingLawyer.fullName}.</p>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-slate-300 font-semibold block">Select Consultation Date</label>
+                  <label className="text-zinc-300 font-semibold block">Select Consultation Date</label>
                   <input
                     type="date"
                     value={bookingDate}
                     onChange={(e) => setBookingDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-white text-xs outline-none focus:border-indigo-500"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-4 py-3 text-white text-xs outline-none focus:border-zinc-500"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-slate-300 font-semibold block flex items-center justify-between">
+                  <label className="text-zinc-300 font-semibold block flex items-center justify-between">
                     <span>Available Time Slots ({bookingDate})</span>
-                    <span className="text-indigo-400 text-[11px]">60 Min Duration</span>
+                    <span className="text-zinc-400 text-[11px]">60 Min Duration</span>
                   </label>
 
                   {loadingSlots ? (
-                    <div className="p-8 text-center rounded-2xl bg-slate-950 border border-slate-800">
-                      <p className="text-slate-400 font-semibold">Calculating live available slots...</p>
+                    <div className="p-8 text-center rounded-2xl bg-zinc-950 border border-zinc-800">
+                      <p className="text-zinc-400 font-semibold">Calculating live available slots...</p>
                     </div>
                   ) : availableSlots.length === 0 ? (
-                    <div className="p-6 text-center rounded-2xl bg-slate-950 border border-slate-800">
-                      <p className="text-amber-400 font-semibold">No time slots available on this date. Select another date above.</p>
+                    <div className="p-6 text-center rounded-2xl bg-zinc-950 border border-zinc-800">
+                      <p className="text-zinc-400 font-semibold">No time slots available on this date. Select another date above.</p>
                     </div>
                   ) : (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 max-h-48 overflow-y-auto p-1">
@@ -1003,11 +1003,11 @@ export default function ClientDashboardPage() {
                             onClick={() => setSelectedSlot(slotStr)}
                             className={`py-3 px-3 rounded-2xl border text-center font-bold text-xs transition-all flex flex-col items-center justify-center gap-1 ${
                               isSelected
-                                ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-600/30'
-                                : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-indigo-500/40'
+                                ? 'bg-white border-white text-zinc-950 shadow-sm'
+                                : 'bg-zinc-950 border-zinc-800 text-zinc-300 hover:border-zinc-700'
                             }`}
                           >
-                            <Clock className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-indigo-400'}`} />
+                            <Clock className={`w-3.5 h-3.5 ${isSelected ? 'text-zinc-950' : 'text-zinc-400'}`} />
                             <span>{slotStr}</span>
                           </button>
                         );
@@ -1019,14 +1019,14 @@ export default function ClientDashboardPage() {
                 <div className="flex gap-3 pt-2">
                   <button
                     onClick={() => setBookingStep(1)}
-                    className="w-1/3 py-3 rounded-2xl bg-slate-800 text-slate-300 font-bold"
+                    className="w-1/3 py-3 rounded-2xl bg-zinc-800 text-zinc-300 font-bold border border-zinc-700"
                   >
                     Back
                   </button>
                   <button
                     onClick={() => setBookingStep(3)}
                     disabled={!selectedSlot}
-                    className="w-2/3 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold disabled:opacity-50 shadow-lg shadow-indigo-600/20"
+                    className="w-2/3 py-3 rounded-2xl bg-white hover:bg-zinc-200 text-zinc-950 font-extrabold disabled:opacity-50 shadow-sm"
                   >
                     Continue to Case Brief
                   </button>
@@ -1039,30 +1039,30 @@ export default function ClientDashboardPage() {
               <div className="space-y-4">
                 <div>
                   <h3 className="text-base font-bold text-white">Provide Legal Case Brief</h3>
-                  <p className="text-slate-400">State key details so advocate {bookingLawyer.fullName} can review prior to consultation.</p>
+                  <p className="text-zinc-400">State key details so advocate {bookingLawyer.fullName} can review prior to consultation.</p>
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1.5">Case Notes / Legal Details</label>
+                  <label className="text-zinc-300 font-semibold block mb-1.5">Case Notes / Legal Details</label>
                   <textarea
                     rows={5}
                     placeholder="Briefly state your legal issue, dispute history, or advice needed..."
                     value={caseNotes}
                     onChange={(e) => setCaseNotes(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-xs text-white outline-none focus:border-indigo-500 resize-none"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-4 text-xs text-white outline-none focus:border-zinc-500 resize-none"
                   />
                 </div>
 
                 <div className="flex gap-3 pt-2">
                   <button
                     onClick={() => setBookingStep(2)}
-                    className="w-1/3 py-3 rounded-2xl bg-slate-800 text-slate-300 font-bold"
+                    className="w-1/3 py-3 rounded-2xl bg-zinc-800 text-zinc-300 font-bold border border-zinc-700"
                   >
                     Back
                   </button>
                   <button
                     onClick={() => setBookingStep(4)}
-                    className="w-2/3 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow-lg shadow-indigo-600/20"
+                    className="w-2/3 py-3 rounded-2xl bg-white hover:bg-zinc-200 text-zinc-950 font-extrabold shadow-sm"
                   >
                     Proceed to Payment Checkout
                   </button>
@@ -1073,59 +1073,59 @@ export default function ClientDashboardPage() {
             {/* STEP 4: CHECKOUT */}
             {bookingStep === 4 && (
               <form onSubmit={handleFinalPaymentAndBook} className="space-y-4">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
                   <div>
                     <h3 className="text-base font-bold text-white">Secure Checkout</h3>
-                    <p className="text-slate-400">{consultationType === 'ONLINE' ? 'Online Video Session' : 'In-Person Chamber Visit'}</p>
+                    <p className="text-zinc-400">{consultationType === 'ONLINE' ? 'Online Video Session' : 'In-Person Chamber Visit'}</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs text-slate-400 block">Total Payable</span>
-                    <span className="text-xl font-extrabold text-emerald-400">
+                    <span className="text-xs text-zinc-400 block">Total Payable</span>
+                    <span className="text-xl font-extrabold text-white">
                       LKR {consultationType === 'ONLINE' ? bookingLawyer.onlineFee || 3500 : bookingLawyer.inPersonFee || 6000}
                     </span>
                   </div>
                 </div>
 
-                <div className="p-4 sm:p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                <div className="p-4 sm:p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-3">
                   <div>
-                    <label className="text-slate-400 block text-[11px] mb-1 font-semibold">Cardholder Full Name</label>
+                    <label className="text-zinc-400 block text-[11px] mb-1 font-semibold">Cardholder Full Name</label>
                     <input
                       type="text"
                       required
                       value={paymentData.cardHolder}
                       onChange={(e) => setPaymentData({ ...paymentData, cardHolder: e.target.value })}
-                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-indigo-500 text-xs"
+                      className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-zinc-500 text-xs"
                     />
                   </div>
 
                   <div>
-                    <label className="text-slate-400 block text-[11px] mb-1 font-semibold">Card Number</label>
+                    <label className="text-zinc-400 block text-[11px] mb-1 font-semibold">Card Number</label>
                     <div className="relative">
                       <input
                         type="text"
                         required
                         value={paymentData.cardNumber}
                         onChange={(e) => setPaymentData({ ...paymentData, cardNumber: e.target.value })}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-indigo-500 font-mono text-xs"
+                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-zinc-500 font-mono text-xs"
                       />
-                      <CreditCard className="w-4 h-4 text-slate-500 absolute right-3 top-3" />
+                      <CreditCard className="w-4 h-4 text-zinc-500 absolute right-3 top-3" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-slate-400 block text-[11px] mb-1 font-semibold">Expiry Date</label>
+                      <label className="text-zinc-400 block text-[11px] mb-1 font-semibold">Expiry Date</label>
                       <input
                         type="text"
                         required
                         placeholder="MM/YY"
                         value={paymentData.expiry}
                         onChange={(e) => setPaymentData({ ...paymentData, expiry: e.target.value })}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-indigo-500 font-mono text-xs"
+                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-zinc-500 font-mono text-xs"
                       />
                     </div>
                     <div>
-                      <label className="text-slate-400 block text-[11px] mb-1 font-semibold">CVC Code</label>
+                      <label className="text-zinc-400 block text-[11px] mb-1 font-semibold">CVC Code</label>
                       <input
                         type="password"
                         required
@@ -1133,28 +1133,28 @@ export default function ClientDashboardPage() {
                         placeholder="•••"
                         value={paymentData.cvc}
                         onChange={(e) => setPaymentData({ ...paymentData, cvc: e.target.value })}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-indigo-500 font-mono text-xs"
+                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-zinc-500 font-mono text-xs"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-[10px] text-slate-400 justify-center font-medium">
-                  <Lock className="w-3.5 h-3.5 text-emerald-400" /> Encrypted 256-Bit Payment Escrow Protection
+                <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 justify-center font-medium">
+                  <Lock className="w-3.5 h-3.5 text-zinc-300" /> Encrypted 256-Bit Payment Escrow Protection
                 </div>
 
                 <div className="flex gap-3 pt-2">
                   <button
                     type="button"
                     onClick={() => setBookingStep(3)}
-                    className="w-1/3 py-3 rounded-2xl bg-slate-800 text-slate-300 font-bold"
+                    className="w-1/3 py-3 rounded-2xl bg-zinc-800 text-zinc-300 font-bold border border-zinc-700"
                   >
                     Back
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-2/3 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-extrabold text-xs shadow-lg shadow-emerald-600/20 disabled:opacity-50 transition-all"
+                    className="w-2/3 py-3.5 rounded-2xl bg-white hover:bg-zinc-200 text-zinc-950 font-extrabold text-xs shadow-sm disabled:opacity-50 transition-all"
                   >
                     {loading ? 'Processing Payment...' : 'Pay & Confirm Appointment'}
                   </button>
@@ -1171,10 +1171,10 @@ export default function ClientDashboardPage() {
           setSelectedChatPartner(null);
           setIsChatOpen(true);
         }}
-        className="fixed bottom-6 right-6 z-40 p-4 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-2xl shadow-indigo-600/50 hover:scale-105 active:scale-95 transition-all border border-indigo-400/40 flex items-center gap-2 font-bold text-xs"
+        className="fixed bottom-6 right-6 z-40 p-4 rounded-full bg-white text-zinc-950 shadow-2xl hover:bg-zinc-200 active:scale-95 transition-all border border-zinc-300 flex items-center gap-2 font-bold text-xs"
         title="Open LawyerConnect Direct Messenger"
       >
-        <MessageSquare className="w-5 h-5 fill-white/20" />
+        <MessageSquare className="w-5 h-5 fill-zinc-950/20 text-zinc-950" />
         <span className="hidden sm:inline">Advocate Messenger</span>
       </button>
 
