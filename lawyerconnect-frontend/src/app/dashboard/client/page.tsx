@@ -28,7 +28,15 @@ import {
   AlertCircle,
   Info,
   Building,
-  Briefcase
+  Briefcase,
+  Share2,
+  MessageSquare,
+  Building2,
+  Scale,
+  Globe,
+  Mail,
+  ChevronLeft,
+  CalendarDays
 } from 'lucide-react';
 import { apiClient, getStoredAuth } from '@/lib/api';
 
@@ -87,6 +95,7 @@ export default function ClientDashboardPage() {
 
   // Modals
   const [profileModalLawyer, setProfileModalLawyer] = useState<Lawyer | null>(null);
+  const [profileActiveTab, setProfileActiveTab] = useState<'about' | 'practice' | 'rates' | 'reviews'>('about');
   const [bookingLawyer, setBookingLawyer] = useState<Lawyer | null>(null);
 
   // Booking Wizard Steps (1: Type, 2: Date & Slot, 3: Case Brief, 4: Payment)
@@ -486,126 +495,381 @@ export default function ClientDashboardPage() {
         </div>
       </div>
 
-      {/* ================= MODAL 1: FIVERR-STYLE LAWYER PROFILE ================= */}
+      {/* ================= MODAL 1: LINKEDIN-STYLE FULL SCREEN ADVOCATE PROFILE ================= */}
       {profileModalLawyer && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-          <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 max-w-2xl w-full relative my-8 text-xs">
+        <div className="fixed inset-0 z-50 bg-[#070a12] text-slate-100 font-sans overflow-y-auto animate-in fade-in duration-200">
+          {/* Sticky Header Nav Bar */}
+          <div className="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-xl border-b border-slate-800/80 px-6 py-4 flex items-center justify-between">
             <button
               onClick={() => setProfileModalLawyer(null)}
-              className="absolute right-6 top-6 text-slate-400 hover:text-white"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold transition-all border border-slate-800"
             >
-              <X className="w-5 h-5" />
+              <ChevronLeft className="w-4 h-4 text-indigo-400" /> Back to Advocates Directory
             </button>
 
-            {/* Header Banner */}
-            <div className="flex items-start gap-5 mb-6 pb-6 border-b border-slate-800">
-              <div className="w-20 h-20 rounded-2xl bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center overflow-hidden shrink-0">
-                {profileModalLawyer.profilePictureUrl ? (
-                  <img src={profileModalLawyer.profilePictureUrl} alt="Lawyer" className="w-full h-full object-cover" />
-                ) : (
-                  <User className="w-10 h-10 text-indigo-400" />
-                )}
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3" /> VERIFIED ADVOCATE
-                  </span>
-                  <span className="text-[11px] text-slate-400 font-mono">License: {profileModalLawyer.licenceNumber}</span>
+            <div className="hidden sm:flex items-center gap-3">
+              <span className="text-xs font-bold text-white">{profileModalLawyer.fullName}</span>
+              <span className="text-xs text-slate-500">•</span>
+              <span className="text-xs text-indigo-400 font-mono">{profileModalLawyer.licenceNumber}</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => startBooking(profileModalLawyer)}
+                className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2"
+              >
+                <Calendar className="w-4 h-4" /> Book Consultation
+              </button>
+              <button
+                onClick={() => setProfileModalLawyer(null)}
+                className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-all border border-slate-800"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+            {/* LINKEDIN MAIN HERO CARD */}
+            <div className="rounded-3xl bg-slate-900/80 border border-slate-800/90 overflow-hidden shadow-2xl relative">
+              {/* Cover Banner Graphic */}
+              <div className="h-48 sm:h-56 bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-900/60 relative p-6 flex items-start justify-end">
+                <div className="absolute inset-0 opacity-10 pointer-events-none flex items-center justify-center text-8xl font-black uppercase text-indigo-400 tracking-widest">
+                  BASL ADVOCATE
                 </div>
-                <h2 className="text-2xl font-bold text-white">{profileModalLawyer.fullName}</h2>
-                <p className="text-xs text-indigo-400 font-semibold">{profileModalLawyer.specialties || 'Corporate & Trial Attorney'}</p>
-                
-                <div className="flex items-center gap-3 mt-2 text-slate-300">
-                  <span className="flex items-center gap-1 font-bold text-amber-400">
-                    <Star className="w-3.5 h-3.5 fill-amber-400" /> {profileModalLawyer.rating} ({profileModalLawyer.reviewCount} Reviews)
-                  </span>
-                  <span>•</span>
-                  <span>{profileModalLawyer.yearsOfExperience || 5}+ Years Practice</span>
+                <div className="px-3.5 py-1.5 rounded-full bg-slate-950/80 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-1.5 backdrop-blur-md relative z-10">
+                  <ShieldCheck className="w-4 h-4" /> VERIFIED ADVOCATE • SUPREME COURT ROLL
+                </div>
+              </div>
+
+              {/* Profile Main Header Body */}
+              <div className="px-6 sm:px-10 pb-8 relative pt-0">
+                {/* Avatar Overlay */}
+                <div className="-mt-20 mb-5 flex justify-between items-end">
+                  <div className="relative">
+                    <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl bg-slate-950 p-1.5 border-2 border-indigo-500/40 shadow-2xl overflow-hidden">
+                      {profileModalLawyer.profilePictureUrl ? (
+                        <img src={profileModalLawyer.profilePictureUrl} alt={profileModalLawyer.fullName} className="w-full h-full object-cover rounded-2xl" />
+                      ) : (
+                        <div className="w-full h-full rounded-2xl bg-indigo-950/80 flex items-center justify-center text-indigo-400">
+                          <User className="w-16 h-16" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="absolute bottom-2 right-2 p-1.5 rounded-full bg-emerald-500 text-slate-950 border-2 border-slate-900 shadow-lg">
+                      <Check className="w-4 h-4 stroke-[3]" />
+                    </div>
+                  </div>
+
+                  <div className="hidden sm:flex items-center gap-3">
+                    <button
+                      onClick={() => addToast('info', 'Share Advocate', `Copied profile link for ${profileModalLawyer.fullName}`)}
+                      className="p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 transition-all"
+                      title="Share Advocate Profile"
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => startBooking(profileModalLawyer)}
+                      className="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-xl shadow-indigo-600/30 transition-all flex items-center gap-2"
+                    >
+                      <Calendar className="w-4 h-4" /> Schedule Consultation
+                    </button>
+                  </div>
+                </div>
+
+                {/* Name & Headline */}
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                      {profileModalLawyer.fullName}
+                    </h1>
+                    <span className="px-3 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-bold font-mono">
+                      BASL/{profileModalLawyer.licenceNumber}
+                    </span>
+                  </div>
+
+                  <p className="text-sm sm:text-base text-indigo-300 font-semibold">
+                    {profileModalLawyer.specialties || 'Corporate Litigation & Commercial Dispute Resolution'}
+                  </p>
+
+                  <p className="text-xs text-slate-400 flex items-center gap-2 flex-wrap pt-1">
+                    <span className="flex items-center gap-1"><Building2 className="w-3.5 h-3.5 text-indigo-400" /> {profileModalLawyer.workingAddress || 'Commercial High Court Chambers, Colombo 12'}</span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1"><Globe className="w-3.5 h-3.5 text-emerald-400" /> Bar Association of Sri Lanka</span>
+                  </p>
+
+                  {/* Highlights Grid */}
+                  <div className="pt-4 flex flex-wrap items-center gap-6 text-xs border-t border-slate-800/80 mt-4">
+                    <div className="flex items-center gap-2">
+                      <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                      <span className="font-extrabold text-white text-sm">{profileModalLawyer.rating}</span>
+                      <span className="text-slate-400">({profileModalLawyer.reviewCount} Verified Client Reviews)</span>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-slate-300">
+                      <Briefcase className="w-4 h-4 text-indigo-400" />
+                      <span className="font-bold text-white">{profileModalLawyer.yearsOfExperience || 12}+ Years</span>
+                      <span className="text-slate-400">Active Legal Practice</span>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-slate-300">
+                      <Award className="w-4 h-4 text-emerald-400" />
+                      <span className="font-bold text-emerald-400">High Court & Supreme Court</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile Action Buttons */}
+                <div className="mt-6 flex sm:hidden items-center gap-3">
+                  <button
+                    onClick={() => startBooking(profileModalLawyer)}
+                    className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2"
+                  >
+                    <Calendar className="w-4 h-4" /> Book Consultation
+                  </button>
+                  <button
+                    onClick={() => addToast('info', 'Share Advocate', `Copied profile link for ${profileModalLawyer.fullName}`)}
+                    className="p-3 rounded-xl bg-slate-950 text-slate-300 border border-slate-800"
+                  >
+                    <Share2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </div>
 
-            {/* Bio & Details */}
+            {/* LINKEDIN TAB NAVIGATION */}
+            <div className="flex items-center gap-2 border-b border-slate-800/80 pb-2 overflow-x-auto">
+              {[
+                { id: 'about', label: 'About & Bio' },
+                { id: 'practice', label: 'Practice Areas & Fees' },
+                { id: 'rates', label: 'Chambers & Contact' },
+                { id: 'reviews', label: 'Client Feedback' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setProfileActiveTab(tab.id as any)}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                    profileActiveTab === tab.id
+                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
+                      : 'bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800/60'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* TAB CONTENT CARDS */}
             <div className="space-y-6">
-              <div>
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">About Advocate</h4>
-                <p className="text-slate-300 leading-relaxed bg-slate-950/60 p-4 rounded-2xl border border-slate-800/80">
-                  {profileModalLawyer.bio || 'Senior Advocate practicing before the High Court and Supreme Court of Sri Lanka. Specializing in corporate litigation, land dispute resolution, and appellate defense.'}
-                </p>
-              </div>
+              {profileActiveTab === 'about' && (
+                <div className="space-y-6">
+                  <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-4">
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-indigo-400" /> Professional Summary & Legal Background
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                      {profileModalLawyer.bio ||
+                        `${profileModalLawyer.fullName} is a distinguished Senior Advocate admitted to the Bar Association of Sri Lanka with over ${profileModalLawyer.yearsOfExperience || 12} years of legal practice before the Commercial High Court and Supreme Court. Specialized in landmark corporate disputes, complex property deed litigation, and constitutional legal defense.`}
+                    </p>
+                  </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
-                  <span className="text-slate-400 block mb-1">Chambers Location</span>
-                  <p className="font-semibold text-white flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-indigo-400" /> {profileModalLawyer.workingAddress || 'Colombo Law Chambers'}
-                  </p>
-                </div>
-                <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
-                  <span className="text-slate-400 block mb-1">Official Phone</span>
-                  <p className="font-semibold text-white flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-indigo-400" /> {profileModalLawyer.phone || '+94 77 123 4567'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Verified Client Feedback */}
-              <div>
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Verified Client Reviews</h4>
-                <div className="space-y-3">
-                  {sampleReviews.map(rev => (
-                    <div key={rev.id} className="p-3.5 rounded-xl bg-slate-950/40 border border-slate-800/60">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-bold text-white">{rev.clientName}</span>
-                        <div className="flex items-center gap-0.5 text-amber-400 font-bold">
-                          <Star className="w-3 h-3 fill-amber-400" /> {rev.rating}.0
-                        </div>
-                      </div>
-                      <p className="text-slate-300 italic">{rev.comment}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-2">
+                      <Scale className="w-6 h-6 text-indigo-400" />
+                      <h4 className="text-xs font-bold text-white uppercase tracking-wider">Bar Qualification</h4>
+                      <p className="text-xs text-slate-300">BASL Registered Senior Advocate</p>
                     </div>
-                  ))}
-                </div>
-              </div>
 
-              {/* Action Button */}
+                    <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-2">
+                      <ShieldCheck className="w-6 h-6 text-emerald-400" />
+                      <h4 className="text-xs font-bold text-white uppercase tracking-wider">Court Admission</h4>
+                      <p className="text-xs text-slate-300">Supreme Court & Commercial High Court</p>
+                    </div>
+
+                    <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-2">
+                      <Clock className="w-6 h-6 text-amber-400" />
+                      <h4 className="text-xs font-bold text-white uppercase tracking-wider">Consultation Hours</h4>
+                      <p className="text-xs text-slate-300">Mon - Fri: 9:00 AM - 5:00 PM</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {profileActiveTab === 'practice' && (
+                <div className="space-y-6">
+                  <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-4">
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      <Briefcase className="w-5 h-5 text-indigo-400" /> Specializations & Practice Areas
+                    </h3>
+                    <div className="flex flex-wrap gap-2.5">
+                      {(profileModalLawyer.specialties || 'Corporate Law, Civil Litigation, Property Law, Intellectual Property').split(',').map((spec, i) => (
+                        <span
+                          key={i}
+                          className="px-4 py-2 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-bold flex items-center gap-2"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" /> {spec.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Consultation Rates Comparison */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-3">
+                      <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                        <Globe className="w-5 h-5" />
+                      </div>
+                      <h4 className="text-sm font-bold text-white">Online Video Consultation</h4>
+                      <p className="text-xs text-slate-400">Encrypted Google Meet video session with digital document exchange.</p>
+                      <div className="pt-2 text-xl font-extrabold text-emerald-400">
+                        LKR {profileModalLawyer.onlineFee || 3500} <span className="text-xs text-slate-500 font-normal">/ 60 Min</span>
+                      </div>
+                    </div>
+
+                    <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-3">
+                      <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                        <Building2 className="w-5 h-5" />
+                      </div>
+                      <h4 className="text-sm font-bold text-white">In-Person Chamber Visit</h4>
+                      <p className="text-xs text-slate-400">Direct face-to-face consultation at court law chambers.</p>
+                      <div className="pt-2 text-xl font-extrabold text-indigo-400">
+                        LKR {profileModalLawyer.inPersonFee || 6000} <span className="text-xs text-slate-500 font-normal">/ Session</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {profileActiveTab === 'rates' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-4">
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      <MapPin className="w-5 h-5 text-indigo-400" /> Law Chambers Location
+                    </h3>
+                    <p className="text-xs text-slate-300">
+                      {profileModalLawyer.workingAddress || 'Suite 402, High Court Complex, Superior Law Chambers, Hulftsdorp, Colombo 12, Sri Lanka.'}
+                    </p>
+                    <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/80 text-xs space-y-2">
+                      <div className="flex justify-between text-slate-400">
+                        <span>Chamber Hours:</span>
+                        <span className="text-white font-semibold">9:00 AM - 5:00 PM</span>
+                      </div>
+                      <div className="flex justify-between text-slate-400">
+                        <span>Court District:</span>
+                        <span className="text-white font-semibold">Colombo Commercial Court</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-4">
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      <Phone className="w-5 h-5 text-emerald-400" /> Direct Chambers Contact
+                    </h3>
+                    <div className="space-y-3 text-xs">
+                      <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800/80 flex items-center justify-between">
+                        <span className="text-slate-400">Official Phone:</span>
+                        <span className="text-white font-bold font-mono">{profileModalLawyer.phone || '+94 77 123 4567'}</span>
+                      </div>
+                      <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800/80 flex items-center justify-between">
+                        <span className="text-slate-400">Chambers Desk:</span>
+                        <span className="text-white font-bold font-mono">+94 11 289 4192</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {profileActiveTab === 'reviews' && (
+                <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800/90 space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      <Star className="w-5 h-5 text-amber-400 fill-amber-400" /> Verified Client Feedback ({profileModalLawyer.reviewCount || 18})
+                    </h3>
+                    <span className="text-sm font-extrabold text-amber-400">{profileModalLawyer.rating} / 5.0 Rating</span>
+                  </div>
+
+                  <div className="space-y-4">
+                    {sampleReviews.map(rev => (
+                      <div key={rev.id} className="p-5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-white text-xs">{rev.clientName}</span>
+                          <div className="flex items-center gap-1 text-amber-400 text-xs font-bold">
+                            <Star className="w-3.5 h-3.5 fill-amber-400" /> {rev.rating}.0
+                          </div>
+                        </div>
+                        <p className="text-xs text-slate-300 italic">"{rev.comment}"</p>
+                        <span className="text-[10px] text-slate-500 block font-mono">{rev.date}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Bottom Floating CTA Banner */}
+            <div className="p-6 rounded-3xl bg-gradient-to-r from-indigo-900/40 via-slate-900 to-slate-950 border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <h4 className="text-sm font-bold text-white">Ready to consult {profileModalLawyer.fullName}?</h4>
+                <p className="text-xs text-slate-400">Select date, available slot, and confirm booking securely.</p>
+              </div>
               <button
                 onClick={() => startBooking(profileModalLawyer)}
-                className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition-all"
+                className="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-xl shadow-indigo-600/30 transition-all flex items-center gap-2 shrink-0"
               >
-                <Calendar className="w-4 h-4" /> Book Consultation with {profileModalLawyer.fullName}
+                <Calendar className="w-4 h-4" /> Book Consultation Now
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ================= MODAL 2: STEP-BY-STEP GUIDED BOOKING WIZARD ================= */}
+      {/* ================= MODAL 2: SPACIOUS GUIDED BOOKING WIZARD ================= */}
       {bookingLawyer && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 max-w-lg w-full relative text-xs">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 border border-slate-700 max-w-2xl w-full relative my-auto shadow-2xl text-xs space-y-6">
             <button
               onClick={() => setBookingLawyer(null)}
-              className="absolute right-6 top-6 text-slate-400 hover:text-white"
+              className="absolute right-6 top-6 p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-all"
             >
               <X className="w-5 h-5" />
             </button>
 
-            {/* Stepper Indicator */}
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
-              {[1, 2, 3, 4].map((s) => (
-                <div key={s} className="flex items-center gap-2">
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs ${
-                    bookingStep === s
-                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                      : bookingStep > s
-                      ? 'bg-emerald-500 text-slate-950'
+            {/* Header Advocate Summary */}
+            <div className="flex items-center gap-4 pb-4 border-b border-slate-800">
+              <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center overflow-hidden shrink-0">
+                {bookingLawyer.profilePictureUrl ? (
+                  <img src={bookingLawyer.profilePictureUrl} alt={bookingLawyer.fullName} className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-6 h-6 text-indigo-400" />
+                )}
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white">{bookingLawyer.fullName}</h3>
+                <p className="text-[11px] text-indigo-300 font-semibold">{bookingLawyer.specialties || 'Advocate'}</p>
+              </div>
+            </div>
+
+            {/* Stepper Progress */}
+            <div className="flex items-center justify-between pb-2">
+              {[
+                { s: 1, label: 'Mode' },
+                { s: 2, label: 'Date & Time' },
+                { s: 3, label: 'Case Brief' },
+                { s: 4, label: 'Payment' }
+              ].map((step) => (
+                <div key={step.s} className="flex items-center gap-2">
+                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${
+                    bookingStep === step.s
+                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 font-extrabold'
+                      : bookingStep > step.s
+                      ? 'bg-emerald-500 text-slate-950 font-bold'
                       : 'bg-slate-800 text-slate-500'
                   }`}>
-                    {bookingStep > s ? <Check className="w-3.5 h-3.5" /> : s}
+                    {bookingStep > step.s ? <Check className="w-4 h-4 stroke-[3]" /> : step.s}
                   </div>
-                  <span className="text-[10px] text-slate-400 hidden sm:inline">
-                    {s === 1 ? 'Mode' : s === 2 ? 'Slot' : s === 3 ? 'Brief' : 'Pay'}
+                  <span className={`text-xs font-semibold hidden sm:inline ${bookingStep === step.s ? 'text-white' : 'text-slate-500'}`}>
+                    {step.label}
                   </span>
                 </div>
               ))}
@@ -614,86 +878,109 @@ export default function ClientDashboardPage() {
             {/* STEP 1: CONSULTATION MODE */}
             {bookingStep === 1 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-bold text-white">Step 1: Choose Consultation Type</h3>
-                <p className="text-slate-400">Select whether you want a virtual video session or an in-person chamber visit.</p>
+                <div>
+                  <h3 className="text-base font-bold text-white">Select Consultation Mode</h3>
+                  <p className="text-slate-400">Choose between virtual video consultation or in-person chamber meeting.</p>
+                </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <button
                     type="button"
                     onClick={() => setConsultationType('ONLINE')}
-                    className={`p-4 rounded-2xl border text-left transition-all ${
+                    className={`p-5 rounded-2xl border text-left transition-all ${
                       consultationType === 'ONLINE'
-                        ? 'bg-indigo-600/20 border-indigo-500 text-white'
-                        : 'bg-slate-950 border-slate-800 text-slate-400'
+                        ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-lg shadow-indigo-600/10'
+                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
                     }`}
                   >
-                    <span className="font-bold block text-sm mb-1">Online Video</span>
-                    <span className="text-emerald-400 font-bold block">LKR {bookingLawyer.onlineFee || 3500}</span>
-                    <span className="text-[10px] text-slate-400 mt-1 block">Secure Google Meet link</span>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-bold text-white text-sm">Online Video Call</span>
+                      <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">RECOMMENDED</span>
+                    </div>
+                    <span className="text-lg font-extrabold text-emerald-400 block mb-1">
+                      LKR {bookingLawyer.onlineFee || 3500}
+                    </span>
+                    <span className="text-[11px] text-slate-400 block">Encrypted Google Meet link delivered via SMS/Email</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setConsultationType('IN_PERSON')}
-                    className={`p-4 rounded-2xl border text-left transition-all ${
+                    className={`p-5 rounded-2xl border text-left transition-all ${
                       consultationType === 'IN_PERSON'
-                        ? 'bg-indigo-600/20 border-indigo-500 text-white'
-                        : 'bg-slate-950 border-slate-800 text-slate-400'
+                        ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-lg shadow-indigo-600/10'
+                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
                     }`}
                   >
-                    <span className="font-bold block text-sm mb-1">In-Person Visit</span>
-                    <span className="text-indigo-400 font-bold block">LKR {bookingLawyer.inPersonFee || 6000}</span>
-                    <span className="text-[10px] text-slate-400 mt-1 block">At court chambers</span>
+                    <span className="font-bold text-white text-sm block mb-2">In-Person Chamber Visit</span>
+                    <span className="text-lg font-extrabold text-indigo-400 block mb-1">
+                      LKR {bookingLawyer.inPersonFee || 6000}
+                    </span>
+                    <span className="text-[11px] text-slate-400 block">At {bookingLawyer.workingAddress || 'Colombo Law Chambers'}</span>
                   </button>
                 </div>
 
                 <button
                   onClick={() => setBookingStep(2)}
-                  className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition-all mt-4"
+                  className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition-all mt-4"
                 >
-                  Continue to Select Date & Slot
+                  Continue to Available Dates & Time Slots
                 </button>
               </div>
             )}
 
-            {/* STEP 2: BACKEND TIME SLOTS */}
+            {/* STEP 2: AVAILABLE TIME SLOTS GRID */}
             {bookingStep === 2 && (
-              <div className="space-y-4">
-                <h3 className="text-lg font-bold text-white">Step 2: Select Date & Available Time Slot</h3>
-                <p className="text-slate-400">Backend slot algorithm calculates live available times for {bookingLawyer.fullName}.</p>
-
+              <div className="space-y-5">
                 <div>
-                  <label className="text-slate-300 block mb-1">Consultation Date</label>
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <CalendarDays className="w-5 h-5 text-indigo-400" /> Select Date & Available Time Slot
+                  </h3>
+                  <p className="text-slate-400">Live availability engine for {bookingLawyer.fullName}.</p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-slate-300 font-semibold block">Select Consultation Date</label>
                   <input
                     type="date"
                     value={bookingDate}
                     onChange={(e) => setBookingDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-white text-xs outline-none focus:border-indigo-500"
                   />
                 </div>
 
-                <div>
-                  <label className="text-slate-300 block mb-2">Available Time Slots</label>
+                <div className="space-y-2">
+                  <label className="text-slate-300 font-semibold block flex items-center justify-between">
+                    <span>Available Time Slots ({bookingDate})</span>
+                    <span className="text-indigo-400 text-[11px]">60 Min Duration</span>
+                  </label>
+
                   {loadingSlots ? (
-                    <p className="text-slate-500 text-center py-4">Fetching backend availability slots...</p>
+                    <div className="p-8 text-center rounded-2xl bg-slate-950 border border-slate-800">
+                      <p className="text-slate-400 font-semibold">Calculating live available slots...</p>
+                    </div>
                   ) : availableSlots.length === 0 ? (
-                    <p className="text-amber-400 text-center py-4">No slots available on this date. Try another date.</p>
+                    <div className="p-6 text-center rounded-2xl bg-slate-950 border border-slate-800">
+                      <p className="text-amber-400 font-semibold">No time slots available on this date. Select another date above.</p>
+                    </div>
                   ) : (
-                    <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 max-h-48 overflow-y-auto p-1">
                       {availableSlots.map(slot => {
                         const slotStr = `${slot.startTime} - ${slot.endTime}`;
+                        const isSelected = selectedSlot === slotStr;
                         return (
                           <button
                             key={slotStr}
                             type="button"
                             onClick={() => setSelectedSlot(slotStr)}
-                            className={`py-2 px-3 rounded-xl border text-center font-semibold transition-all ${
-                              selectedSlot === slotStr
-                                ? 'bg-indigo-600 border-indigo-500 text-white'
-                                : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700'
+                            className={`py-3 px-3 rounded-2xl border text-center font-bold text-xs transition-all flex flex-col items-center justify-center gap-1 ${
+                              isSelected
+                                ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-600/30'
+                                : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-indigo-500/40'
                             }`}
                           >
-                            {slotStr}
+                            <Clock className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-indigo-400'}`} />
+                            <span>{slotStr}</span>
                           </button>
                         );
                       })}
@@ -701,17 +988,17 @@ export default function ClientDashboardPage() {
                   )}
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-3 pt-2">
                   <button
                     onClick={() => setBookingStep(1)}
-                    className="w-1/3 py-3 rounded-xl bg-slate-800 text-slate-300 font-semibold"
+                    className="w-1/3 py-3 rounded-2xl bg-slate-800 text-slate-300 font-bold"
                   >
                     Back
                   </button>
                   <button
                     onClick={() => setBookingStep(3)}
                     disabled={!selectedSlot}
-                    className="w-2/3 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold disabled:opacity-50"
+                    className="w-2/3 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold disabled:opacity-50 shadow-lg shadow-indigo-600/20"
                   >
                     Continue to Case Brief
                   </button>
@@ -722,87 +1009,95 @@ export default function ClientDashboardPage() {
             {/* STEP 3: CASE BRIEFING */}
             {bookingStep === 3 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-bold text-white">Step 3: Provide Legal Case Brief</h3>
-                <p className="text-slate-400">Provide background details so the advocate can prepare before the meeting.</p>
+                <div>
+                  <h3 className="text-base font-bold text-white">Provide Legal Case Brief</h3>
+                  <p className="text-slate-400">State key details so advocate {bookingLawyer.fullName} can review prior to consultation.</p>
+                </div>
 
                 <div>
-                  <label className="text-slate-300 block mb-1">Case Notes / Legal Query</label>
+                  <label className="text-slate-300 font-semibold block mb-1.5">Case Notes / Legal Details</label>
                   <textarea
-                    rows={4}
-                    placeholder="Briefly state your legal issue, dispute history, or legal advice needed..."
+                    rows={5}
+                    placeholder="Briefly state your legal issue, dispute history, or advice needed..."
                     value={caseNotes}
                     onChange={(e) => setCaseNotes(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-white outline-none focus:border-indigo-500 resize-none"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-xs text-white outline-none focus:border-indigo-500 resize-none"
                   />
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-3 pt-2">
                   <button
                     onClick={() => setBookingStep(2)}
-                    className="w-1/3 py-3 rounded-xl bg-slate-800 text-slate-300 font-semibold"
+                    className="w-1/3 py-3 rounded-2xl bg-slate-800 text-slate-300 font-bold"
                   >
                     Back
                   </button>
                   <button
                     onClick={() => setBookingStep(4)}
-                    className="w-2/3 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold"
+                    className="w-2/3 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow-lg shadow-indigo-600/20"
                   >
-                    Proceed to Payment
+                    Proceed to Payment Checkout
                   </button>
                 </div>
               </div>
             )}
 
-            {/* STEP 4: INTEGRATED PAYMENT GATEWAY */}
+            {/* STEP 4: CHECKOUT */}
             {bookingStep === 4 && (
               <form onSubmit={handleFinalPaymentAndBook} className="space-y-4">
-                <h3 className="text-lg font-bold text-white flex items-center justify-between">
-                  <span>Step 4: Secure Checkout</span>
-                  <span className="text-emerald-400 font-extrabold">
-                    LKR {consultationType === 'ONLINE' ? bookingLawyer.onlineFee || 3500 : bookingLawyer.inPersonFee || 6000}
-                  </span>
-                </h3>
-
-                <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-800">
                   <div>
-                    <label className="text-slate-400 block text-[11px] mb-1">Cardholder Name</label>
+                    <h3 className="text-base font-bold text-white">Secure Checkout</h3>
+                    <p className="text-slate-400">{consultationType === 'ONLINE' ? 'Online Video Session' : 'In-Person Chamber Visit'}</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xs text-slate-400 block">Total Payable</span>
+                    <span className="text-xl font-extrabold text-emerald-400">
+                      LKR {consultationType === 'ONLINE' ? bookingLawyer.onlineFee || 3500 : bookingLawyer.inPersonFee || 6000}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-4 sm:p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                  <div>
+                    <label className="text-slate-400 block text-[11px] mb-1 font-semibold">Cardholder Full Name</label>
                     <input
                       type="text"
                       required
                       value={paymentData.cardHolder}
                       onChange={(e) => setPaymentData({ ...paymentData, cardHolder: e.target.value })}
-                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-indigo-500 text-xs"
                     />
                   </div>
 
                   <div>
-                    <label className="text-slate-400 block text-[11px] mb-1">Card Number</label>
+                    <label className="text-slate-400 block text-[11px] mb-1 font-semibold">Card Number</label>
                     <div className="relative">
                       <input
                         type="text"
                         required
                         value={paymentData.cardNumber}
                         onChange={(e) => setPaymentData({ ...paymentData, cardNumber: e.target.value })}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500 font-mono"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-indigo-500 font-mono text-xs"
                       />
-                      <CreditCard className="w-4 h-4 text-slate-500 absolute right-3 top-2.5" />
+                      <CreditCard className="w-4 h-4 text-slate-500 absolute right-3 top-3" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-slate-400 block text-[11px] mb-1">Expiry Date</label>
+                      <label className="text-slate-400 block text-[11px] mb-1 font-semibold">Expiry Date</label>
                       <input
                         type="text"
                         required
                         placeholder="MM/YY"
                         value={paymentData.expiry}
                         onChange={(e) => setPaymentData({ ...paymentData, expiry: e.target.value })}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500 font-mono"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-indigo-500 font-mono text-xs"
                       />
                     </div>
                     <div>
-                      <label className="text-slate-400 block text-[11px] mb-1">CVC Code</label>
+                      <label className="text-slate-400 block text-[11px] mb-1 font-semibold">CVC Code</label>
                       <input
                         type="password"
                         required
@@ -810,28 +1105,28 @@ export default function ClientDashboardPage() {
                         placeholder="•••"
                         value={paymentData.cvc}
                         onChange={(e) => setPaymentData({ ...paymentData, cvc: e.target.value })}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500 font-mono"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-indigo-500 font-mono text-xs"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-[10px] text-slate-400 justify-center">
-                  <Lock className="w-3 h-3 text-emerald-400" /> Encrypted 256-bit SSL Payment Escrow
+                <div className="flex items-center gap-1.5 text-[10px] text-slate-400 justify-center font-medium">
+                  <Lock className="w-3.5 h-3.5 text-emerald-400" /> Encrypted 256-Bit Payment Escrow Protection
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-3 pt-2">
                   <button
                     type="button"
                     onClick={() => setBookingStep(3)}
-                    className="w-1/3 py-3 rounded-xl bg-slate-800 text-slate-300 font-semibold"
+                    className="w-1/3 py-3 rounded-2xl bg-slate-800 text-slate-300 font-bold"
                   >
                     Back
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-2/3 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-extrabold shadow-lg shadow-emerald-600/20 disabled:opacity-50 transition-all"
+                    className="w-2/3 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-extrabold text-xs shadow-lg shadow-emerald-600/20 disabled:opacity-50 transition-all"
                   >
                     {loading ? 'Processing Payment...' : 'Pay & Confirm Appointment'}
                   </button>

@@ -55,9 +55,11 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto border-t border-slate-800/80 pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500">
-        <p>© {new Date().getFullYear()} LawyerConnect Platform. All rights reserved.</p>
-        <p>Built with Next.js, React & Spring Boot Microservices.</p>
+      <div className="max-w-7xl mx-auto border-t border-slate-800/80 pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <p>© {new Date().getFullYear()} LawyerConnect Legal Tech Platform. All rights reserved.</p>
+        <p className="text-slate-400 font-medium flex items-center gap-1.5">
+          <ShieldCheck className="w-4 h-4 text-emerald-400 inline" /> Official Sri Lankan Legal Governance & Advocate Portal
+        </p>
       </div>
     </footer>
   );
