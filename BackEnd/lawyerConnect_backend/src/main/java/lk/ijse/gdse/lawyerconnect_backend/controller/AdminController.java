@@ -56,4 +56,18 @@ public class AdminController {
         adminService.deleteSpecialization(id);
         return ResponseEntity.ok(new ApiResponse(200, "Specialization deleted", null));
     }
+
+    @PostMapping("/create-admin")
+    public ResponseEntity<ApiResponse> createAdmin(@RequestBody lk.ijse.gdse.lawyerconnect_backend.dto.RegisterDTO registerDTO) {
+        return ResponseEntity.ok(new ApiResponse(201, "New System Administrator created successfully", adminService.createAdminUser(registerDTO)));
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ApiResponse> changePassword(@RequestBody Map<String, String> payload, java.security.Principal principal) {
+        String oldPassword = payload.get("currentPassword");
+        String newPassword = payload.get("newPassword");
+        String username = principal.getName();
+        adminService.changeAdminPassword(username, oldPassword, newPassword);
+        return ResponseEntity.ok(new ApiResponse(200, "Password updated successfully", null));
+    }
 }

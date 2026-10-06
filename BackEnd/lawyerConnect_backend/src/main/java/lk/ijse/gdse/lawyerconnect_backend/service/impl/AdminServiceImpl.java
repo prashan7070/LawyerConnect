@@ -26,6 +26,7 @@ public class AdminServiceImpl implements AdminService {
     private final LawyerProfileRepository lawyerProfileRepository;
     private final AppointmentRepository appointmentRepository;
     private final SpecializationRepository specializationRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @Override
     public Map<String, Object> getAdminDashboardStats() {
@@ -97,5 +98,35 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public void deleteSpecialization(Long id) {
         specializationRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public User createAdminUser(lk.ijse.gdse.lawyerconnect_backend.dto.RegisterDTO registerDTO) {
+        if (userRepository.findByUsername(registerDTO.getUsername()).isPresent()) {
+            throw new RuntimeException("Username '" + registerDTO.getUsername() + "' is already taken.");
+        }
+        User admin = User.builder()
+                .name(registerDTO.getName())
+                .username(registerDTO.getUsername())
+                .email(registerDTO.getEmail())
+                .password(passwordEncoder.encode(registerDTO.getPassword()))
+                .role(Role.ADMIN)
+                .status(UserStatus.ACTIVE)
+                .createdAt(java.time.LocalDateTime.now())
+                .build();
+        return userRepository.save(admin);
+    }
+
+    @Override
+    @Transactional
+    public void changeAdminPassword(String username, String oldPassword, String newPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect.");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }

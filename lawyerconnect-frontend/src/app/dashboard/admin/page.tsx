@@ -77,7 +77,7 @@ export default function AdminDashboardPage() {
   const [lawyers, setLawyers] = useState<LawyerItem[]>([]);
   const [specs, setSpecs] = useState<SpecializationItem[]>([]);
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'verifications' | 'users' | 'lawyers' | 'specs'>('verifications');
+  const [activeTab, setActiveTab] = useState<'overview' | 'verifications' | 'users' | 'lawyers' | 'specs' | 'security'>('verifications');
   const [searchUser, setSearchUser] = useState('');
   const [newSpecName, setNewSpecName] = useState('');
   const [loading, setLoading] = useState(true);
@@ -152,6 +152,77 @@ export default function AdminDashboardPage() {
       loadDashboardData();
     } catch (err) {
       alert('Failed to delete specialization.');
+    }
+  };
+
+  // Admin Security State
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordMsg, setPasswordMsg] = useState({ type: '', text: '' });
+  const [passwordLoading, setPasswordLoading] = useState(false);
+
+  // New Admin Provisioning State
+  const [adminForm, setAdminForm] = useState({
+    name: '',
+    username: '',
+    email: '',
+    password: ''
+  });
+  const [adminMsg, setAdminMsg] = useState({ type: '', text: '' });
+  const [adminLoading, setAdminLoading] = useState(false);
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordMsg({ type: '', text: '' });
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordMsg({ type: 'error', text: 'New password and confirm password do not match.' });
+      return;
+    }
+    if (passwordForm.newPassword.length < 6) {
+      setPasswordMsg({ type: 'error', text: 'New password must be at least 6 characters long.' });
+      return;
+    }
+    setPasswordLoading(true);
+    try {
+      await apiClient.post('/api/v1/admin/change-password', {
+        currentPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword
+      });
+      setPasswordMsg({ type: 'success', text: 'Your admin password has been updated successfully!' });
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (err: any) {
+      setPasswordMsg({ type: 'error', text: err.response?.data?.message || 'Failed to change password. Verify your current password.' });
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
+
+  const handleCreateAdmin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAdminMsg({ type: '', text: '' });
+    if (!adminForm.name || !adminForm.username || !adminForm.email || !adminForm.password) {
+      setAdminMsg({ type: 'error', text: 'All fields are required to provision an Admin account.' });
+      return;
+    }
+    setAdminLoading(true);
+    try {
+      await apiClient.post('/api/v1/admin/create-admin', {
+        name: adminForm.name,
+        username: adminForm.username,
+        email: adminForm.email,
+        password: adminForm.password,
+        role: 'ADMIN'
+      });
+      setAdminMsg({ type: 'success', text: `Admin account '${adminForm.username}' provisioned successfully!` });
+      setAdminForm({ name: '', username: '', email: '', password: '' });
+      loadDashboardData();
+    } catch (err: any) {
+      setAdminMsg({ type: 'error', text: err.response?.data?.message || 'Failed to provision Admin account.' });
+    } finally {
+      setAdminLoading(false);
     }
   };
 
@@ -230,6 +301,14 @@ export default function AdminDashboardPage() {
             }`}
           >
             <Layers className="w-4 h-4" /> Specializations
+          </button>
+          <button
+            onClick={() => setActiveTab('security')}
+            className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === 'security' ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <Shield className="w-4 h-4 text-amber-400" /> Admin Security & Access
           </button>
         </div>
 
@@ -579,6 +658,156 @@ export default function AdminDashboardPage() {
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: ADMIN SECURITY & PROVISIONING */}
+        {activeTab === 'security' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* CARD 1: CHANGE MY ADMIN PASSWORD */}
+            <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-6 shadow-2xl">
+              <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+                <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-white">Change My Admin Password</h2>
+                  <p className="text-xs text-slate-400">Update your account credentials securely.</p>
+                </div>
+              </div>
+
+              {passwordMsg.text && (
+                <div className={`p-4 rounded-2xl text-xs font-semibold flex items-center gap-2 ${
+                  passwordMsg.type === 'success' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'
+                }`}>
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{passwordMsg.text}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleChangePassword} className="space-y-4 text-xs">
+                <div>
+                  <label className="text-slate-400 block mb-1.5 font-semibold">Current Admin Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={passwordForm.currentPassword}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white outline-none focus:border-amber-500"
+                    placeholder="Enter current password"
+                  />
+                </div>
+                <div>
+                  <label className="text-slate-400 block mb-1.5 font-semibold">New Admin Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={passwordForm.newPassword}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white outline-none focus:border-amber-500"
+                    placeholder="Enter new password (min. 6 characters)"
+                  />
+                </div>
+                <div>
+                  <label className="text-slate-400 block mb-1.5 font-semibold">Confirm New Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={passwordForm.confirmPassword}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white outline-none focus:border-amber-500"
+                    placeholder="Re-type new password"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={passwordLoading}
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-amber-600/20 disabled:opacity-50 transition-all"
+                >
+                  {passwordLoading ? 'Updating Password...' : 'Update Password'}
+                </button>
+              </form>
+            </div>
+
+            {/* CARD 2: PROVISION NEW SYSTEM ADMINISTRATOR */}
+            <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-6 shadow-2xl">
+              <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+                <div className="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
+                  <Plus className="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-white">Provision New System Administrator</h2>
+                  <p className="text-xs text-slate-400">Create additional ADMIN accounts with system access.</p>
+                </div>
+              </div>
+
+              {adminMsg.text && (
+                <div className={`p-4 rounded-2xl text-xs font-semibold flex items-center gap-2 ${
+                  adminMsg.type === 'success' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'
+                }`}>
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{adminMsg.text}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleCreateAdmin} className="space-y-4 text-xs">
+                <div>
+                  <label className="text-slate-400 block mb-1.5 font-semibold">Administrator Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={adminForm.name}
+                    onChange={(e) => setAdminForm({ ...adminForm, name: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white outline-none focus:border-indigo-500"
+                    placeholder="e.g. Kasun Kalhara"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-slate-400 block mb-1.5 font-semibold">Username</label>
+                    <input
+                      type="text"
+                      required
+                      value={adminForm.username}
+                      onChange={(e) => setAdminForm({ ...adminForm, username: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white outline-none focus:border-indigo-500"
+                      placeholder="e.g. kasun_admin"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-slate-400 block mb-1.5 font-semibold">Email Address</label>
+                    <input
+                      type="email"
+                      required
+                      value={adminForm.email}
+                      onChange={(e) => setAdminForm({ ...adminForm, email: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white outline-none focus:border-indigo-500"
+                      placeholder="kasun@lawyerconnect.lk"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-slate-400 block mb-1.5 font-semibold">Initial Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={adminForm.password}
+                    onChange={(e) => setAdminForm({ ...adminForm, password: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white outline-none focus:border-indigo-500"
+                    placeholder="Assign initial password"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={adminLoading}
+                  className="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs shadow-lg shadow-indigo-600/20 disabled:opacity-50 transition-all"
+                >
+                  {adminLoading ? 'Provisioning Admin...' : 'Create System Admin Account'}
+                </button>
+              </form>
             </div>
           </div>
         )}

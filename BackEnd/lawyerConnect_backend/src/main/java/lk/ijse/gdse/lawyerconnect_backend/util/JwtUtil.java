@@ -16,10 +16,10 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    @Value("${jwt.expiration}")
+    @Value("${jwt.expiration:864000000}")
     private long expiration;
 
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret:mySecretKey123324mySecretKey123324mySecretKey123324mySecretKey123324mySecretKey123324mySecretKey123324}")
     private String secretKey;
 
     private static final long REFRESH_EXPIRATION = 7 * 24 * 60 * 60 * 1000L; // 7 days

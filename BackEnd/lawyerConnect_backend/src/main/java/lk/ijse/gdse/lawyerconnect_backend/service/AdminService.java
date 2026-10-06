@@ -16,4 +16,6 @@ public interface AdminService {
     LawyerProfile updateLawyerVerification(Long lawyerId, String status);
     Specialization addSpecialization(String name);
     void deleteSpecialization(Long id);
+    User createAdminUser(lk.ijse.gdse.lawyerconnect_backend.dto.RegisterDTO registerDTO);
+    void changeAdminPassword(String username, String oldPassword, String newPassword);
 }
