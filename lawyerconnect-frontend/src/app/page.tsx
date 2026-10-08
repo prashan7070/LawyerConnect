@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Interactive3DBackground from '@/components/Interactive3DBackground';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { 
@@ -12,7 +13,13 @@ import {
   Search, 
   ArrowRight, 
   CheckCircle2, 
-  Clock
+  Clock,
+  Sparkles,
+  Award,
+  Video,
+  Building2,
+  Lock,
+  ChevronRight
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 
@@ -58,38 +65,42 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-indigo-600 selection:text-white">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="relative pt-36 pb-24 px-6 overflow-hidden">
-        <div className="max-w-7xl mx-auto text-center relative z-10">
+      {/* Hero Section with Interactive 3D Canvas Mesh Background */}
+      <section className="relative pt-36 pb-24 px-6 border-b border-slate-200/80 overflow-hidden hero-gradient min-h-[85vh] flex items-center">
+        
+        {/* Dynamic Interactive 3D Canvas Background */}
+        <Interactive3DBackground />
+
+        <div className="max-w-7xl mx-auto text-center relative z-10 w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-semibold uppercase tracking-wider mb-8"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50/90 border border-indigo-200/80 text-indigo-700 text-xs font-bold uppercase tracking-wider mb-6 shadow-xs backdrop-blur-xs"
           >
-            <Shield className="w-3.5 h-3.5 text-zinc-400" />
-            Next-Generation Legal Consultation Platform
+            <Shield className="w-4 h-4 text-amber-500 shrink-0" />
+            Verified Legal Services Marketplace • Sri Lanka
           </motion.div>
 
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold font-sans tracking-tight max-w-4xl mx-auto leading-tight mb-6 text-white"
+            className="text-4xl sm:text-6xl md:text-7xl font-extrabold font-display tracking-tight max-w-5xl mx-auto leading-tight mb-6 text-slate-900"
           >
-            Connect with <span className="text-zinc-400 font-light">Verified Advocates</span> & Legal Counsel
+            Connect with <span className="bg-gradient-to-r from-indigo-600 via-indigo-800 to-slate-900 bg-clip-text text-transparent">Verified Advocates</span> & Legal Counsel
           </motion.h1>
 
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-12 leading-relaxed"
+            className="text-base sm:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed font-medium"
           >
-            Seamlessly search, schedule consultations, and manage legal cases with top-tier legal professionals in one secure platform.
+            Seamlessly search, schedule chamber & online consultations, and manage legal matters with Sri Lanka's leading legal professionals.
           </motion.p>
 
           {/* Search Box */}
@@ -97,19 +108,19 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="max-w-2xl mx-auto bg-zinc-900 p-2.5 rounded-2xl flex items-center gap-3 shadow-2xl mb-16 border border-zinc-800"
+            className="max-w-2xl mx-auto glass-card p-2 rounded-2xl flex items-center gap-3 shadow-xl mb-12 border border-slate-200/90"
           >
-            <Search className="w-5 h-5 text-zinc-500 ml-3" />
+            <Search className="w-5 h-5 text-indigo-600 ml-3 shrink-0" />
             <input 
               type="text" 
               placeholder="Search by advocate name or practice area (e.g. Criminal, Corporate)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-none outline-none text-zinc-200 placeholder-zinc-500 flex-grow text-sm py-2"
+              className="bg-transparent border-none outline-none text-slate-900 placeholder-slate-400 flex-grow text-xs sm:text-sm py-2.5 font-medium"
             />
             <Link 
               href={`/login?search=${encodeURIComponent(searchQuery)}`} 
-              className="bg-white text-zinc-950 hover:bg-zinc-200 px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 whitespace-nowrap transition-all shadow-sm"
+              className="bg-gradient-to-r from-indigo-600 to-slate-900 hover:from-indigo-700 hover:to-slate-800 text-white px-6 py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 whitespace-nowrap transition-all shadow-md shadow-indigo-600/20 hover:scale-[1.02]"
             >
               Search Advocates
               <ArrowRight className="w-4 h-4" />
@@ -121,50 +132,51 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto"
           >
-            <div className="bg-zinc-900/90 border border-zinc-800 p-6 rounded-2xl text-center">
-              <span className="text-3xl font-extrabold text-white block mb-1">500+</span>
-              <span className="text-xs text-zinc-400 uppercase tracking-wider font-medium">Verified Advocates</span>
+            <div className="glass-card glass-card-hover border border-slate-200/80 p-5 rounded-2xl text-center shadow-sm">
+              <span className="text-3xl font-extrabold font-display bg-gradient-to-r from-indigo-600 to-slate-900 bg-clip-text text-transparent block mb-1">500+</span>
+              <span className="text-[11px] text-slate-500 uppercase tracking-wider font-bold">Verified Advocates</span>
             </div>
-            <div className="bg-zinc-900/90 border border-zinc-800 p-6 rounded-2xl text-center">
-              <span className="text-3xl font-extrabold text-white block mb-1">1,200+</span>
-              <span className="text-xs text-zinc-400 uppercase tracking-wider font-medium">Consultations</span>
+            <div className="glass-card glass-card-hover border border-slate-200/80 p-5 rounded-2xl text-center shadow-sm">
+              <span className="text-3xl font-extrabold font-display bg-gradient-to-r from-indigo-600 to-slate-900 bg-clip-text text-transparent block mb-1">1,200+</span>
+              <span className="text-[11px] text-slate-500 uppercase tracking-wider font-bold">Consultations</span>
             </div>
-            <div className="bg-zinc-900/90 border border-zinc-800 p-6 rounded-2xl text-center">
-              <span className="text-3xl font-extrabold text-white block mb-1">99.4%</span>
-              <span className="text-xs text-zinc-400 uppercase tracking-wider font-medium">Client Satisfaction</span>
+            <div className="glass-card glass-card-hover border border-slate-200/80 p-5 rounded-2xl text-center shadow-sm">
+              <span className="text-3xl font-extrabold font-display bg-gradient-to-r from-indigo-600 to-slate-900 bg-clip-text text-transparent block mb-1">99.4%</span>
+              <span className="text-[11px] text-slate-500 uppercase tracking-wider font-bold">Client Satisfaction</span>
             </div>
-            <div className="bg-zinc-900/90 border border-zinc-800 p-6 rounded-2xl text-center">
-              <span className="text-3xl font-extrabold text-white block mb-1">24/7</span>
-              <span className="text-xs text-zinc-400 uppercase tracking-wider font-medium">Instant Booking</span>
+            <div className="glass-card glass-card-hover border border-slate-200/80 p-5 rounded-2xl text-center shadow-sm">
+              <span className="text-3xl font-extrabold font-display bg-gradient-to-r from-indigo-600 to-slate-900 bg-clip-text text-transparent block mb-1">24/7</span>
+              <span className="text-[11px] text-slate-500 uppercase tracking-wider font-bold">Instant Booking</span>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Specializations Section */}
-      <section id="practice-areas" className="py-20 px-6 border-t border-zinc-800 bg-zinc-900/50">
+      <section id="practice-areas" className="py-20 px-6 bg-slate-50/70 border-b border-slate-200/80">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-white">Legal Practice Specializations</h2>
-            <p className="text-zinc-400 text-sm max-w-xl mx-auto">
-              Find specialized legal assistance tailored precisely to your dispute or counsel needs.
+          <div className="text-center mb-12 space-y-2">
+            <span className="text-indigo-600 text-xs font-bold uppercase tracking-wider block">Legal Domains</span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold font-display tracking-tight text-slate-900">Practice Specializations</h2>
+            <p className="text-slate-600 text-xs sm:text-sm max-w-xl mx-auto font-medium">
+              Find specialized legal assistance tailored precisely to your legal dispute or advisory needs.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
             {specializations.map((spec, index) => (
               <div 
                 key={index} 
-                className="bg-zinc-900 hover:bg-zinc-800/80 p-6 rounded-2xl border border-zinc-800 transition-all flex flex-col justify-between"
+                className="glass-card glass-card-hover p-6 rounded-2xl border border-slate-200/80 flex flex-col justify-between group"
               >
-                <div className="w-12 h-12 rounded-xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-all">
                   <Gavel className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold text-white mb-1">{spec}</h3>
-                  <p className="text-xs text-zinc-400">Expert Advocates Available</p>
+                  <h3 className="text-sm font-bold text-slate-900 font-display mb-1">{spec}</h3>
+                  <p className="text-xs text-slate-500 font-medium">BASL Advocates</p>
                 </div>
               </div>
             ))}
@@ -173,53 +185,60 @@ export default function HomePage() {
       </section>
 
       {/* Featured Advocates Section */}
-      <section id="explore" className="py-20 px-6">
+      <section id="explore" className="py-20 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
             <div>
-              <span className="text-zinc-400 text-xs font-semibold uppercase tracking-wider block mb-2">Verified Counsel</span>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">Featured Legal Advocates</h2>
+              <span className="text-indigo-600 text-xs font-bold uppercase tracking-wider block mb-1">Verified Counsel</span>
+              <h2 className="text-2xl sm:text-4xl font-extrabold font-display tracking-tight text-slate-900">Featured Legal Advocates</h2>
             </div>
-            <Link href="/login" className="text-white hover:text-zinc-300 font-medium text-sm flex items-center gap-1 mt-4 md:mt-0">
+            <Link href="/login" className="text-indigo-600 hover:text-indigo-700 font-bold text-xs sm:text-sm flex items-center gap-1 mt-4 md:mt-0">
               View All Advocates <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {lawyers.slice(0, 3).map((lawyer) => (
-              <div key={lawyer.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl flex flex-col justify-between hover:border-zinc-700 transition-all">
+              <div key={lawyer.id} className="glass-card glass-card-hover border border-slate-200/90 p-6 rounded-3xl flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="px-2.5 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-300 text-[11px] font-semibold flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3 text-white" /> Verified Bar Member
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-bold flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Verified Advocate
                     </span>
-                    <span className="text-xs text-zinc-500 font-mono">{lawyer.licenceNumber}</span>
+                    <span className="text-xs font-semibold text-slate-400 font-mono">{lawyer.licenceNumber}</span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-white mb-1">{lawyer.fullName}</h3>
-                  <p className="text-xs text-zinc-400 font-medium mb-4">{lawyer.specialties || 'General Practice'}</p>
-
-                  <div className="space-y-2 text-xs text-zinc-400 mb-6">
-                    <div className="flex items-center justify-between py-1 border-b border-zinc-800">
-                      <span>Experience:</span>
-                      <span className="text-zinc-200 font-semibold">{lawyer.yearsOfExperience} Years</span>
+                  <div className="flex items-center gap-3.5 mb-4">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-slate-900 text-white flex items-center justify-center font-display font-extrabold text-base shadow-md shrink-0">
+                      {lawyer.fullName ? lawyer.fullName.split(' ').map(n=>n[0]).join('').slice(0,2) : 'LC'}
                     </div>
-                    <div className="flex items-center justify-between py-1 border-b border-zinc-800">
-                      <span>Online Consultation:</span>
-                      <span className="text-white font-semibold">Rs. {lawyer.onlineFee || 3500}</span>
+                    <div>
+                      <h3 className="text-base font-extrabold font-display text-slate-900">{lawyer.fullName}</h3>
+                      <p className="text-xs text-slate-500 font-medium">{lawyer.specialties || 'General Practice'}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 text-xs text-slate-600 mb-6 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/60 font-medium">
+                    <div className="flex items-center justify-between py-1 border-b border-slate-200/60">
+                      <span className="text-slate-500">Experience:</span>
+                      <span className="text-slate-900 font-bold">{lawyer.yearsOfExperience} Years</span>
+                    </div>
+                    <div className="flex items-center justify-between py-1 border-b border-slate-200/60">
+                      <span className="text-slate-500">Online Consultation:</span>
+                      <span className="text-indigo-600 font-extrabold">LKR {lawyer.onlineFee || 3500}</span>
                     </div>
                     <div className="flex items-center justify-between py-1">
-                      <span>In-Person Meeting:</span>
-                      <span className="text-white font-semibold">Rs. {lawyer.inPersonFee || 6000}</span>
+                      <span className="text-slate-500">Chamber Meeting:</span>
+                      <span className="text-indigo-600 font-extrabold">LKR {lawyer.inPersonFee || 6000}</span>
                     </div>
                   </div>
                 </div>
 
                 <Link 
                   href="/login"
-                  className="w-full py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-xs text-center transition-all flex items-center justify-center gap-2 shadow-sm"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-slate-900 hover:from-indigo-700 hover:to-slate-800 text-white font-bold text-xs text-center transition-all flex items-center justify-center gap-2 shadow-md shadow-indigo-600/15 hover:scale-[1.01]"
                 >
-                  <Clock className="w-3.5 h-3.5" /> Book Consultation
+                  <Clock className="w-3.5 h-3.5" /> Book Consultation <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
             ))}

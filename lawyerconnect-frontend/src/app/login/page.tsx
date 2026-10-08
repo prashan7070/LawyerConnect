@@ -69,39 +69,39 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col justify-between font-sans">
+    <div className="min-h-screen bg-[#F8F9FB] text-[#1F2937] flex flex-col justify-between font-sans">
       <Navbar />
 
       <div className="pt-32 pb-20 px-6 max-w-md mx-auto w-full flex-grow flex items-center">
-        <div className="w-full bg-zinc-900/90 p-8 rounded-3xl border border-zinc-800 shadow-2xl relative backdrop-blur-md">
+        <div className="w-full bg-white p-8 rounded-lg border border-gray-200 shadow-sm relative">
           
           {/* Brand Badge */}
           <div className="text-center mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white mx-auto mb-3">
-              <Scale className="w-6 h-6" />
+            <div className="w-12 h-12 rounded-lg bg-[#EFF4F9] border border-[#1E3A5F]/20 flex items-center justify-center text-[#1E3A5F] mx-auto mb-3">
+              <Scale className="w-6 h-6 text-[#1E3A5F]" />
             </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight">
+            <h2 className="text-2xl font-bold font-serif text-[#1E3A5F] tracking-tight">
               {isLoginTab ? 'Welcome Back' : 'Create Account'}
             </h2>
-            <p className="text-xs text-zinc-400 mt-1">
-              {isLoginTab ? 'Sign in to access your legal dashboard' : 'Join LawyerConnect legal network'}
+            <p className="text-xs text-gray-500 mt-1">
+              {isLoginTab ? 'Sign in to access your legal dashboard' : 'Join LawyerConnect Sri Lanka legal network'}
             </p>
           </div>
 
           {/* Toggle Tabs */}
-          <div className="grid grid-cols-2 p-1 rounded-xl bg-zinc-950 border border-zinc-800 mb-6">
+          <div className="grid grid-cols-2 p-1 rounded-lg bg-gray-100 border border-gray-200 mb-6">
             <button
               onClick={() => { setIsLoginTab(true); setErrorMsg(''); }}
-              className={`py-2 rounded-lg text-xs font-bold transition-all ${
-                isLoginTab ? 'bg-white text-zinc-950 shadow-sm' : 'text-zinc-400 hover:text-zinc-200'
+              className={`py-2 rounded-md text-xs font-semibold transition-all ${
+                isLoginTab ? 'bg-[#1E3A5F] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               Sign In
             </button>
             <button
               onClick={() => { setIsLoginTab(false); setErrorMsg(''); }}
-              className={`py-2 rounded-lg text-xs font-bold transition-all ${
-                !isLoginTab ? 'bg-white text-zinc-950 shadow-sm' : 'text-zinc-400 hover:text-zinc-200'
+              className={`py-2 rounded-md text-xs font-semibold transition-all ${
+                !isLoginTab ? 'bg-[#1E3A5F] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               Register
@@ -109,8 +109,8 @@ export default function LoginPage() {
           </div>
 
           {errorMsg && (
-            <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2 mb-6">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2 mb-6">
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
               <span>{errorMsg}</span>
             </div>
           )}
@@ -119,31 +119,31 @@ export default function LoginPage() {
           {isLoginTab ? (
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Username</label>
+                <label className="text-xs font-semibold text-gray-700 block mb-1.5">Username</label>
                 <div className="relative">
-                  <User className="w-4 h-4 text-zinc-500 absolute left-3.5 top-3.5" />
+                  <User className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
                   <input
                     type="text"
                     required
                     placeholder="e.g. johndoe"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
+                    className="w-full bg-white border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-xs text-gray-900 placeholder-gray-400 outline-none focus:border-[#1E3A5F] transition-colors"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Password</label>
+                <label className="text-xs font-semibold text-gray-700 block mb-1.5">Password</label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-zinc-500 absolute left-3.5 top-3.5" />
+                  <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
                   <input
                     type="password"
                     required
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
+                    className="w-full bg-white border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-xs text-gray-900 placeholder-gray-400 outline-none focus:border-[#1E3A5F] transition-colors"
                   />
                 </div>
               </div>
@@ -151,7 +151,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-white text-zinc-950 hover:bg-zinc-200 py-3 rounded-xl font-extrabold text-xs transition-all shadow-md mt-2 disabled:opacity-50"
+                className="w-full bg-[#1E3A5F] text-white hover:bg-[#152C49] py-3 rounded-lg font-semibold text-xs transition-all shadow-sm mt-2 disabled:opacity-50"
               >
                 {loading ? 'Authenticating...' : 'Sign In'}
               </button>
@@ -160,15 +160,15 @@ export default function LoginPage() {
             /* REGISTER FORM */
             <form onSubmit={handleRegisterSubmit} className="space-y-4">
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Register As</label>
+                <label className="text-xs font-semibold text-gray-700 block mb-1.5">Register As</label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setSelectedRole('CLIENT')}
-                    className={`py-2 px-3 rounded-xl border text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                    className={`py-2 px-3 rounded-lg border text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
                       selectedRole === 'CLIENT'
-                        ? 'bg-white text-zinc-950 border-white'
-                        : 'border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white'
+                        ? 'bg-[#1E3A5F] text-white border-[#1E3A5F]'
+                        : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     <User className="w-3.5 h-3.5" /> Client
@@ -176,10 +176,10 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setSelectedRole('LAWYER')}
-                    className={`py-2 px-3 rounded-xl border text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                    className={`py-2 px-3 rounded-lg border text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
                       selectedRole === 'LAWYER'
-                        ? 'bg-white text-zinc-950 border-white'
-                        : 'border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white'
+                        ? 'bg-[#1E3A5F] text-white border-[#1E3A5F]'
+                        : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     <Briefcase className="w-3.5 h-3.5" /> Lawyer
@@ -188,57 +188,57 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Full Name</label>
+                <label className="text-xs font-semibold text-gray-700 block mb-1.5">Full Name</label>
                 <input
                   type="text"
                   required
                   placeholder="John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-xs text-gray-900 placeholder-gray-400 outline-none focus:border-[#1E3A5F] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Email Address</label>
+                <label className="text-xs font-semibold text-gray-700 block mb-1.5">Email Address</label>
                 <input
                   type="email"
                   required
                   placeholder="john@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-xs text-gray-900 placeholder-gray-400 outline-none focus:border-[#1E3A5F] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Username</label>
+                <label className="text-xs font-semibold text-gray-700 block mb-1.5">Username</label>
                 <input
                   type="text"
                   required
                   placeholder="johndoe123"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-xs text-gray-900 placeholder-gray-400 outline-none focus:border-[#1E3A5F] transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-zinc-300 block mb-1.5">Password</label>
+                <label className="text-xs font-semibold text-gray-700 block mb-1.5">Password</label>
                 <input
                   type="password"
                   required
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-xs text-gray-900 placeholder-gray-400 outline-none focus:border-[#1E3A5F] transition-colors"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-white text-zinc-950 hover:bg-zinc-200 py-3 rounded-xl font-extrabold text-xs transition-all shadow-md mt-2 disabled:opacity-50"
+                className="w-full bg-[#1E3A5F] text-white hover:bg-[#152C49] py-3 rounded-lg font-semibold text-xs transition-all shadow-sm mt-2 disabled:opacity-50"
               >
                 {loading ? 'Creating Account...' : `Register as ${selectedRole}`}
               </button>

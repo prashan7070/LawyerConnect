@@ -13,7 +13,9 @@ import {
   Video, 
   ShieldCheck, 
   Sparkles,
-  Paperclip
+  Paperclip,
+  Lock,
+  ChevronRight
 } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 
@@ -67,19 +69,16 @@ export default function MessengerChat({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom of messages
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Load partners on mount / open
   useEffect(() => {
     if (isOpen) {
       loadChatPartners();
     }
   }, [isOpen]);
 
-  // Set initial partner if provided
   useEffect(() => {
     if (initialPartner) {
       const partnerObj: ChatPartner = {
@@ -92,7 +91,6 @@ export default function MessengerChat({
 
       setActivePartner(partnerObj);
       
-      // Ensure partner is in list
       setPartners(prev => {
         if (!prev.some(p => p.id === initialPartner.id)) {
           return [partnerObj, ...prev];
@@ -104,7 +102,6 @@ export default function MessengerChat({
     }
   }, [initialPartner]);
 
-  // Polling for live messages when conversation is active
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isOpen && activePartner) {
@@ -165,7 +162,7 @@ export default function MessengerChat({
       if (res.data?.data) {
         setMessages(prev => [...prev, res.data.data]);
         setTimeout(scrollToBottom, 100);
-        loadChatPartners(); // update last message snippet
+        loadChatPartners();
       }
     } catch (err) {
       console.error('Failed to send message', err);
@@ -192,27 +189,32 @@ export default function MessengerChat({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-hidden animate-in fade-in duration-200">
-      <div className="bg-zinc-950 border border-zinc-800 rounded-3xl w-full max-w-5xl h-[85vh] flex flex-col shadow-2xl overflow-hidden relative font-sans text-zinc-100">
+    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-hidden animate-in fade-in duration-200">
+      <div className="bg-white border border-slate-200/90 rounded-3xl w-full max-w-5xl h-[86vh] flex flex-col shadow-2xl overflow-hidden relative font-sans text-slate-900">
         
         {/* MESSENGER TOP BAR */}
-        <div className="bg-zinc-900 border-b border-zinc-800 px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between shrink-0 text-white">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
               <MessageSquare className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                LawyerConnect Direct Messenger
-                <span className="px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-300 text-[10px] font-bold">LIVE CHAT</span>
+              <h3 className="text-sm font-bold font-display text-white flex items-center gap-2">
+                LawyerConnect Direct Channel
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-semibold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  ENCRYPTED
+                </span>
               </h3>
-              <p className="text-[11px] text-zinc-400">Encrypted Advocate-Client Direct Consult Channel</p>
+              <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                <Lock className="w-3 h-3 text-indigo-400 inline" /> Direct & Confidential Advocate Consultation
+              </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800 transition-all"
+            className="w-9 h-9 rounded-full bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 flex items-center justify-center border border-slate-700 transition-all"
           >
             <X className="w-5 h-5" />
           </button>
@@ -222,29 +224,29 @@ export default function MessengerChat({
         <div className="flex-1 flex overflow-hidden">
           
           {/* LEFT SIDEBAR: CONTACTS LIST */}
-          <div className="w-80 border-r border-zinc-800 bg-zinc-950 flex flex-col shrink-0 hidden sm:flex">
+          <div className="w-80 border-r border-slate-200 bg-slate-50/70 flex flex-col shrink-0 hidden sm:flex">
             {/* Search Bar */}
-            <div className="p-4 border-b border-zinc-800">
+            <div className="p-4 border-b border-slate-200/80">
               <div className="relative">
-                <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-3" />
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                 <input
                   type="text"
-                  placeholder="Search conversations..."
+                  placeholder="Search contacts..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
+                  className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all"
                 />
               </div>
             </div>
 
             {/* Contacts Scrollable */}
-            <div className="flex-1 overflow-y-auto p-2 space-y-1">
+            <div className="flex-1 overflow-y-auto p-2.5 space-y-1">
               {loadingPartners ? (
-                <p className="text-zinc-500 text-xs text-center py-6">Loading conversations...</p>
+                <div className="p-8 text-center text-xs text-slate-400">Loading conversations...</div>
               ) : filteredPartners.length === 0 ? (
-                <div className="p-6 text-center text-xs text-zinc-400 space-y-2">
-                  <p>No chat history yet.</p>
-                  <p className="text-[10px] text-zinc-500">Click "Message Advocate" on any lawyer profile to start messaging!</p>
+                <div className="p-8 text-center text-xs text-slate-400 space-y-2">
+                  <p className="font-semibold text-slate-600">No chat history yet</p>
+                  <p className="text-[11px]">Click "Direct Message" on any lawyer card to start chatting!</p>
                 </div>
               ) : (
                 filteredPartners.map(partner => {
@@ -258,31 +260,31 @@ export default function MessengerChat({
                       }}
                       className={`w-full p-3 rounded-2xl text-left transition-all flex items-start gap-3 ${
                         isActive 
-                          ? 'bg-white text-zinc-950 font-bold shadow-sm' 
-                          : 'hover:bg-zinc-900 text-zinc-300 border border-transparent'
+                          ? 'bg-white text-indigo-950 font-semibold border border-indigo-200 shadow-sm' 
+                          : 'hover:bg-slate-200/60 text-slate-700 border border-transparent'
                       }`}
                     >
                       <div className="relative shrink-0">
-                        <div className={`w-10 h-10 rounded-2xl border flex items-center justify-center overflow-hidden ${
-                          isActive ? 'bg-zinc-100 border-zinc-300' : 'bg-zinc-900 border-zinc-800'
+                        <div className={`w-10 h-10 rounded-xl border flex items-center justify-center overflow-hidden ${
+                          isActive ? 'bg-indigo-50 border-indigo-300' : 'bg-slate-200 border-slate-300'
                         }`}>
                           {partner.avatarUrl ? (
                             <img src={partner.avatarUrl} alt={partner.name} className="w-full h-full object-cover" />
                           ) : (
-                            <User className={`w-5 h-5 ${isActive ? 'text-zinc-950' : 'text-zinc-400'}`} />
+                            <User className={`w-5 h-5 ${isActive ? 'text-indigo-600' : 'text-slate-500'}`} />
                           )}
                         </div>
-                        <span className="w-3 h-3 rounded-full bg-emerald-500 border-2 border-zinc-950 absolute -bottom-0.5 -right-0.5" />
+                        <span className="w-3 h-3 rounded-full bg-emerald-500 border-2 border-white absolute -bottom-0.5 -right-0.5 shadow-sm" />
                       </div>
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-0.5">
-                          <span className={`text-xs font-bold truncate ${isActive ? 'text-zinc-950' : 'text-white'}`}>{partner.name}</span>
-                          <span className={`text-[10px] shrink-0 font-mono ${isActive ? 'text-zinc-600' : 'text-zinc-500'}`}>
+                          <span className={`text-xs font-bold truncate ${isActive ? 'text-indigo-950' : 'text-slate-900'}`}>{partner.name}</span>
+                          <span className={`text-[10px] shrink-0 ${isActive ? 'text-indigo-600 font-medium' : 'text-slate-400'}`}>
                             {formatTime(partner.lastMessageTime)}
                           </span>
                         </div>
-                        <p className={`text-[11px] truncate ${isActive ? 'text-zinc-700' : 'text-zinc-400'}`}>
+                        <p className={`text-[11px] truncate ${isActive ? 'text-indigo-700/90' : 'text-slate-500'}`}>
                           {partner.lastMessage || 'Click to view conversation'}
                         </p>
                       </div>
@@ -294,32 +296,33 @@ export default function MessengerChat({
           </div>
 
           {/* MAIN CHAT AREA */}
-          <div className="flex-1 flex flex-col bg-zinc-900/50">
+          <div className="flex-1 flex flex-col bg-white">
             {activePartner ? (
               <>
                 {/* Active Partner Header */}
-                <div className="p-4 bg-zinc-900 border-b border-zinc-800 flex items-center justify-between shrink-0">
+                <div className="p-4 bg-white border-b border-slate-200/80 flex items-center justify-between shrink-0 shadow-xs">
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden">
+                      <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center overflow-hidden">
                         {activePartner.avatarUrl ? (
                           <img src={activePartner.avatarUrl} alt={activePartner.name} className="w-full h-full object-cover" />
                         ) : (
-                          <User className="w-5 h-5 text-white" />
+                          <User className="w-5 h-5 text-indigo-600" />
                         )}
                       </div>
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-zinc-950 absolute bottom-0 right-0" />
+                      <span className="w-3 h-3 rounded-full bg-emerald-500 border-2 border-white absolute -bottom-0.5 -right-0.5" />
                     </div>
 
                     <div>
-                      <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                      <h4 className="text-sm font-bold font-display text-slate-900 flex items-center gap-1.5">
                         {activePartner.name}
                         {activePartner.role === 'LAWYER' && (
-                          <ShieldCheck className="w-3.5 h-3.5 text-zinc-400" />
+                          <ShieldCheck className="w-4 h-4 text-amber-500" />
                         )}
                       </h4>
-                      <p className="text-[10px] text-zinc-400 font-mono">
-                        {activePartner.role === 'LAWYER' ? 'BASL High Court Advocate • Active Online' : 'Verified Client'}
+                      <p className="text-xs text-slate-500 font-medium flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+                        {activePartner.role === 'LAWYER' ? 'BASL Registered Advocate • Online' : 'Verified Client'}
                       </p>
                     </div>
                   </div>
@@ -327,34 +330,34 @@ export default function MessengerChat({
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => alert(`Direct Call feature initiated for ${activePartner.name}`)}
-                      className="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 transition-all"
+                      className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200/70 text-slate-700 transition-all"
                       title="Initiate Audio Call"
                     >
-                      <Phone className="w-4 h-4 text-white" />
+                      <Phone className="w-4 h-4 text-indigo-600" />
                     </button>
                     <button
                       onClick={() => alert(`Video Consultation link generated for ${activePartner.name}`)}
-                      className="p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 transition-all"
+                      className="p-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition-all border border-indigo-200"
                       title="Start Video Session"
                     >
-                      <Video className="w-4 h-4 text-white" />
+                      <Video className="w-4 h-4 text-indigo-600" />
                     </button>
                   </div>
                 </div>
 
                 {/* Messages Stream */}
-                <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+                <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-slate-50/50">
                   {loadingMessages ? (
                     <div className="h-full flex items-center justify-center">
-                      <p className="text-xs text-zinc-500">Loading conversation history...</p>
+                      <p className="text-xs text-slate-400">Loading conversation history...</p>
                     </div>
                   ) : messages.length === 0 ? (
-                    <div className="h-full flex flex-col items-center justify-center text-center p-6 text-zinc-400 space-y-3">
-                      <div className="w-12 h-12 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white">
-                        <Sparkles className="w-6 h-6" />
+                    <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-500 space-y-3">
+                      <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
+                        <Sparkles className="w-7 h-7" />
                       </div>
-                      <h5 className="text-sm font-bold text-white">Start Conversation with {activePartner.name}</h5>
-                      <p className="text-xs text-zinc-400 max-w-sm">
+                      <h5 className="text-base font-bold font-display text-slate-900">Start Conversation with {activePartner.name}</h5>
+                      <p className="text-xs text-slate-500 max-w-sm">
                         Send legal queries, consultation requests, or document references directly.
                       </p>
                     </div>
@@ -366,18 +369,18 @@ export default function MessengerChat({
                           key={msg.id}
                           className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
                         >
-                          <div className={`max-w-[80%] sm:max-w-[70%] p-3.5 rounded-2xl text-xs font-sans leading-relaxed ${
+                          <div className={`max-w-[80%] sm:max-w-[70%] p-4 rounded-2xl text-xs leading-relaxed ${
                             isMe 
-                              ? 'bg-white text-zinc-950 font-medium rounded-tr-none shadow-md' 
-                              : 'bg-zinc-800 text-zinc-100 rounded-tl-none border border-zinc-700 shadow-md'
+                              ? 'bg-gradient-to-r from-indigo-600 to-slate-900 text-white font-normal shadow-md shadow-indigo-500/10 rounded-tr-none' 
+                              : 'bg-white text-slate-800 border border-slate-200/90 shadow-xs rounded-tl-none'
                           }`}>
-                            <p>{msg.message}</p>
+                            <p className="text-xs">{msg.message}</p>
                           </div>
                           
-                          <div className="flex items-center gap-1.5 mt-1 text-[10px] text-zinc-500 px-1 font-mono">
+                          <div className="flex items-center gap-1.5 mt-1.5 text-[10px] text-slate-400 px-1 font-medium">
                             <span>{formatTime(msg.sentAt)}</span>
                             {isMe && (
-                              <CheckCheck className={`w-3 h-3 ${msg.isRead ? 'text-white' : 'text-zinc-500'}`} />
+                              <CheckCheck className={`w-3.5 h-3.5 ${msg.isRead ? 'text-indigo-600' : 'text-slate-400'}`} />
                             )}
                           </div>
                         </div>
@@ -388,9 +391,9 @@ export default function MessengerChat({
                 </div>
 
                 {/* Bottom Input Field */}
-                <form onSubmit={handleSendMessage} className="p-4 bg-zinc-900 border-t border-zinc-800 shrink-0 space-y-3">
-                  <div className="flex items-center gap-2 overflow-x-auto pb-1 text-[10px]">
-                    <span className="text-zinc-500 font-bold shrink-0">Quick Queries:</span>
+                <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-slate-200/80 shrink-0 space-y-3">
+                  <div className="flex items-center gap-2 overflow-x-auto pb-1 text-[11px]">
+                    <span className="text-slate-400 font-semibold shrink-0">Quick Options:</span>
                     {[
                       'Available for consultation today?',
                       'Please review my case brief',
@@ -401,18 +404,18 @@ export default function MessengerChat({
                         key={i}
                         type="button"
                         onClick={() => setInputText(tag)}
-                        className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 shrink-0 transition-all"
+                        className="px-3 py-1 rounded-full bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-700 border border-slate-200 shrink-0 transition-all font-medium"
                       >
                         {tag}
                       </button>
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2.5">
                     <button
                       type="button"
                       onClick={() => alert('Document attachment feature: Select PDF/Image')}
-                      className="p-3 rounded-2xl bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-700"
+                      className="p-3 rounded-xl bg-slate-100 text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 border border-slate-200 transition-all"
                     >
                       <Paperclip className="w-4 h-4" />
                     </button>
@@ -422,13 +425,13 @@ export default function MessengerChat({
                       placeholder={`Message ${activePartner.name}...`}
                       value={inputText}
                       onChange={(e) => setInputText(e.target.value)}
-                      className="flex-1 bg-zinc-950 border border-zinc-800 rounded-2xl px-4 py-3 text-xs text-white placeholder-zinc-500 outline-none focus:border-white transition-colors"
+                      className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 placeholder-slate-400 outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 transition-all"
                     />
 
                     <button
                       type="submit"
                       disabled={!inputText.trim() || sending}
-                      className="px-5 py-3 rounded-2xl bg-white text-zinc-950 hover:bg-zinc-200 disabled:opacity-50 font-extrabold text-xs shadow-md transition-all flex items-center gap-1.5 shrink-0"
+                      className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50 font-bold text-xs shadow-md shadow-indigo-600/20 transition-all flex items-center gap-2 shrink-0"
                     >
                       <Send className="w-4 h-4" /> Send
                     </button>
@@ -436,7 +439,7 @@ export default function MessengerChat({
                 </form>
               </>
             ) : (
-              <div className="h-full flex items-center justify-center p-6 text-center text-zinc-400">
+              <div className="h-full flex items-center justify-center p-6 text-center text-slate-400">
                 <p>Select a contact from the left panel to start chatting.</p>
               </div>
             )}

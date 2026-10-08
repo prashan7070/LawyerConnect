@@ -1,0 +1,59 @@
+name: LawyerConnect Backend CI/CD Pipeline (Azure)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    name: Build, Unit Test & Package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run Backend Unit Tests
+        run: |
+          cd BackEnd/lawyerConnect_backend
+          chmod +x mvnw
+          ./mvnw test
+
+      - name: Build Application JAR Package
+        run: |
+          cd BackEnd/lawyerConnect_backend
+          ./mvnw package -DskipTests
+
+      - name: Upload Artifact for Azure Deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: BackEnd/lawyerConnect_backend/target/*.jar
+
+  deploy-to-azure:
+    name: Deploy to Azure App Service
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'lawyerconnect-backend-api'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: '*.jar'

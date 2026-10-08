@@ -1,50 +1,45 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import Navbar from '@/components/Navbar';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  Search, 
-  Calendar, 
-  Clock, 
-  CheckCircle2, 
-  UserCheck, 
-  Gavel, 
-  DollarSign, 
-  MapPin, 
-  Phone,
-  FileText,
-  X,
-  Star,
-  Award,
+import {
+  Search,
+  Calendar,
+  Clock,
+  MapPin,
   ShieldCheck,
-  CreditCard,
-  Lock,
-  Sparkles,
-  ChevronRight,
+  Star,
   User,
+  Filter,
+  Video,
+  Building2,
+  ChevronRight,
+  MessageSquare,
+  Award,
+  CheckCircle2,
+  FileText,
+  CreditCard,
+  X,
+  Phone,
+  Mail,
+  Briefcase,
+  SlidersHorizontal,
+  Sparkles,
   ArrowRight,
   Check,
-  AlertCircle,
-  Info,
-  Building,
-  Briefcase,
-  Share2,
-  MessageSquare,
-  Building2,
-  Scale,
-  Globe,
-  Mail,
-  ChevronLeft,
-  CalendarDays
+  Bell,
+  LogOut,
+  ExternalLink,
+  Lock
 } from 'lucide-react';
-import { apiClient, getStoredAuth } from '@/lib/api';
+import { apiClient, getStoredAuth, clearAuthData } from '@/lib/api';
 import MessengerChat from '@/components/MessengerChat';
 
 interface Lawyer {
   id: number;
   userId?: number;
   fullName: string;
+  email: string;
   specialties: string;
   yearsOfExperience: number;
   onlineFee: number;
@@ -94,6 +89,7 @@ export default function ClientDashboardPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
+  const [activeTab, setActiveTab] = useState<'directory' | 'appointments'>('directory');
 
   // Modals
   const [profileModalLawyer, setProfileModalLawyer] = useState<Lawyer | null>(null);
@@ -114,7 +110,7 @@ export default function ClientDashboardPage() {
     setIsChatOpen(true);
   };
 
-  // Booking Wizard Steps (1: Type, 2: Date & Slot, 3: Case Brief, 4: Payment)
+  // Booking Wizard Steps (1: Mode, 2: Date & Slot, 3: Case Brief, 4: Payment)
   const [bookingStep, setBookingStep] = useState<number>(1);
   const [consultationType, setConsultationType] = useState<'ONLINE' | 'IN_PERSON'>('ONLINE');
   const [bookingDate, setBookingDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -133,6 +129,7 @@ export default function ClientDashboardPage() {
 
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [clientName, setClientName] = useState('Client');
 
   // Categories list
   const categories = [
@@ -145,13 +142,13 @@ export default function ClientDashboardPage() {
     'Property & Land'
   ];
 
-  // Dummy Reviews for Fiverr-style Profile
+  // Sample Reviews
   const sampleReviews: Review[] = [
     {
       id: 1,
       clientName: 'Dinesh Samarasinghe',
       rating: 5,
-      comment: 'Extremely thorough legal strategy. Won our corporate dispute in record time!',
+      comment: 'Extremely thorough legal strategy. Won our corporate arbitration dispute in record time!',
       date: '2 days ago'
     },
     {
@@ -171,6 +168,7 @@ export default function ClientDashboardPage() {
     }
 
     if (auth.name) {
+      setClientName(auth.name);
       setPaymentData(prev => ({ ...prev, cardHolder: auth.name || '' }));
     }
 
@@ -193,7 +191,6 @@ export default function ClientDashboardPage() {
       ]);
 
       if (lawyersRes.data?.data) {
-        // Mock rating metrics if missing
         const enriched = lawyersRes.data.data.map((l: Lawyer) => ({
           ...l,
           rating: l.rating || 4.9,
@@ -210,7 +207,6 @@ export default function ClientDashboardPage() {
     }
   };
 
-  // Fetch Time slots from backend algorithm when date changes
   useEffect(() => {
     if (bookingLawyer && bookingDate) {
       fetchBackendTimeSlots(bookingLawyer.id, bookingDate);
@@ -230,7 +226,6 @@ export default function ClientDashboardPage() {
         }
       }
     } catch (err) {
-      // Fallback default mock slots if backend returns empty
       const defaultSlots: TimeSlot[] = [
         { startTime: '09:00', endTime: '10:00', available: true },
         { startTime: '10:30', endTime: '11:30', available: true },
@@ -281,7 +276,11 @@ export default function ClientDashboardPage() {
     }
   };
 
-  // Filter & Sort Top Rated Lawyers First
+  const handleLogout = () => {
+    clearAuthData();
+    router.push('/login');
+  };
+
   const filteredLawyers = lawyers
     .filter(l => {
       const matchSearch =
@@ -297,216 +296,418 @@ export default function ClientDashboardPage() {
     .sort((a, b) => (b.rating || 0) - (a.rating || 0));
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans relative pb-20">
-      <Navbar />
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans relative pb-24 selection:bg-indigo-600 selection:text-white">
 
-      {/* CUSTOM TOAST NOTIFICATIONS */}
-      <div className="fixed top-24 right-6 z-50 space-y-3 max-w-sm w-full pointer-events-none">
+      {/* TOAST NOTIFICATIONS */}
+      <div className="fixed top-20 right-6 z-50 space-y-3 max-w-sm pointer-events-none">
         {toasts.map(t => (
           <div
             key={t.id}
-            className={`pointer-events-auto p-4 rounded-2xl shadow-2xl backdrop-blur-xl border flex items-start gap-3 transition-all animate-in slide-in-from-right-8 ${
+            className={`p-4 rounded-2xl shadow-xl border pointer-events-auto transition-all animate-in slide-in-from-right-5 duration-200 flex items-start gap-3 ${
               t.type === 'success'
-                ? 'bg-zinc-900/90 border-emerald-500/40 text-emerald-300'
+                ? 'bg-emerald-900 text-white border-emerald-700'
                 : t.type === 'error'
-                ? 'bg-zinc-900/90 border-red-500/40 text-red-300'
-                : 'bg-zinc-900/90 border-zinc-700 text-zinc-300'
+                ? 'bg-rose-900 text-white border-rose-700'
+                : 'bg-indigo-900 text-white border-indigo-700'
             }`}
           >
-            {t.type === 'success' && <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />}
-            {t.type === 'error' && <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />}
-            {t.type === 'info' && <Info className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />}
+            <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-emerald-400" />
             <div>
-              <h5 className="text-xs font-bold text-white">{t.title}</h5>
+              <h5 className="text-xs font-bold font-display">{t.title}</h5>
               <p className="text-[11px] opacity-90 mt-0.5">{t.message}</p>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="pt-28 px-4 sm:px-6 max-w-7xl mx-auto">
-        {/* HERO BANNER */}
-        <div className="p-8 rounded-3xl bg-zinc-900 border border-zinc-800 mb-10 relative overflow-hidden">
-          <div className="max-w-2xl relative z-10">
-            <span className="px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-semibold inline-flex items-center gap-1.5 mb-4">
-              <ShieldCheck className="w-3.5 h-3.5 text-white" /> VERIFIED SRI LANKAN BAR ADVOCATES
-            </span>
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
-              Find Legal Counsel & Book Consultation
-            </h1>
-            <p className="text-xs sm:text-sm text-zinc-400">
-              Browse top-rated advocates by legal specialization, review verified client feedback, and schedule video or chamber consultations.
-            </p>
-          </div>
-        </div>
-
-        {/* SEARCH & CATEGORY FILTERING */}
-        <div className="space-y-4 mb-10">
-          <div className="p-2 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center">
-            <Search className="w-5 h-5 text-zinc-400 ml-3" />
-            <input
-              type="text"
-              placeholder="Search by lawyer name, keyword, or court chambers..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent px-3 py-2.5 text-sm text-white placeholder-zinc-500 outline-none"
-            />
-          </div>
-
-          {/* Categories Horizontal Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold shrink-0 transition-all ${
-                  selectedCategory === cat
-                    ? 'bg-white text-zinc-950 font-bold shadow-sm'
-                    : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* SECTION 1: TOP RATED ADVOCATE DIRECTORY */}
-        <div className="mb-14">
-          <div className="flex items-center justify-between mb-6">
+      {/* STICKY TOP NAVBAR */}
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          
+          {/* Brand Logo */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-slate-900 flex items-center justify-center text-white shadow-md shadow-indigo-600/20">
+              <ShieldCheck className="w-6 h-6 text-amber-400" />
+            </div>
             <div>
-              <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-white" /> Top Rated Legal Advocates
-              </h2>
-              <p className="text-xs text-zinc-400 mt-0.5">Ranked by client rating & verified bar experience</p>
+              <span className="font-display font-extrabold text-slate-900 text-lg tracking-tight flex items-center gap-1.5">
+                LawyerConnect
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200/80">
+                  CLIENT PORTAL
+                </span>
+              </span>
             </div>
-            <span className="text-xs text-zinc-400 font-mono">Showing {filteredLawyers.length} Advocates</span>
           </div>
 
-          {filteredLawyers.length === 0 ? (
-            <div className="p-12 text-center rounded-2xl bg-zinc-900 border border-zinc-800">
-              <UserCheck className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
-              <p className="text-sm font-semibold text-zinc-400">No advocates matching filter criteria.</p>
+          {/* Navigation Links */}
+          <nav className="hidden md:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
+            <button
+              onClick={() => setActiveTab('directory')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                activeTab === 'directory'
+                  ? 'bg-white text-indigo-600 shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Search className="w-3.5 h-3.5" /> Explore Advocates
+            </button>
+
+            <button
+              onClick={() => setActiveTab('appointments')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                activeTab === 'appointments'
+                  ? 'bg-white text-indigo-600 shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Calendar className="w-3.5 h-3.5" /> My Appointments
+              {appointments.length > 0 && (
+                <span className="w-4 h-4 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center">
+                  {appointments.length}
+                </span>
+              )}
+            </button>
+          </nav>
+
+          {/* Right Actions & User Profile */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsChatOpen(true)}
+              className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200/70 text-slate-700 relative transition-all"
+              title="Open Messenger"
+            >
+              <MessageSquare className="w-4 h-4 text-indigo-600" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 absolute top-2 right-2 animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 absolute top-2 right-2" />
+            </button>
+
+            <div className="h-6 w-px bg-slate-200 hidden sm:block" />
+
+            <div className="flex items-center gap-3">
+              <div className="text-right hidden sm:block">
+                <p className="text-xs font-bold text-slate-900 leading-none">{clientName}</p>
+                <p className="text-[10px] text-slate-500 mt-1 font-medium">Verified Client</p>
+              </div>
+
+              <button
+                onClick={handleLogout}
+                className="p-2.5 rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 transition-all border border-slate-200/80"
+                title="Sign Out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredLawyers.map((lawyer) => (
-                <div
-                  key={lawyer.id}
-                  className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all flex flex-col justify-between group"
-                >
-                  <div>
-                    {/* Top Badges */}
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="px-2.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-200 text-[10px] font-bold flex items-center gap-1">
-                        <Star className="w-3 h-3 text-white fill-white" /> TOP RATED • {lawyer.rating} ({lawyer.reviewCount})
-                      </span>
-                      <span className="text-[11px] text-zinc-400 font-mono">License: {lawyer.licenceNumber}</span>
-                    </div>
-
-                    {/* Profile Header */}
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className="w-14 h-14 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden shrink-0">
-                        {lawyer.profilePictureUrl ? (
-                          <img src={lawyer.profilePictureUrl} alt={lawyer.fullName} className="w-full h-full object-cover" />
-                        ) : (
-                          <User className="w-7 h-7 text-zinc-400" />
-                        )}
-                      </div>
-                      <div>
-                        {/* CLICKABLE NAME TO OPEN FIVERR-STYLE PROFILE */}
-                        <button
-                          onClick={() => setProfileModalLawyer(lawyer)}
-                          className="text-base font-bold text-white hover:text-zinc-300 text-left transition-all flex items-center gap-1"
-                        >
-                          {lawyer.fullName} <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-all" />
-                        </button>
-                        <p className="text-xs text-zinc-300 font-semibold mt-0.5">{lawyer.specialties || 'General Practice'}</p>
-                        <p className="text-[11px] text-zinc-400 flex items-center gap-1 mt-1">
-                          <Briefcase className="w-3 h-3" /> {lawyer.yearsOfExperience || 5}+ Years Bar Practice
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Fees Grid */}
-                    <div className="grid grid-cols-2 gap-2 p-3 rounded-xl bg-zinc-950 border border-zinc-800 mb-6 text-xs">
-                      <div>
-                        <span className="text-zinc-400 block text-[10px]">Online Video:</span>
-                        <span className="text-zinc-200 font-bold">LKR {lawyer.onlineFee || 3500}</span>
-                      </div>
-                      <div>
-                        <span className="text-zinc-400 block text-[10px]">In-Person Visit:</span>
-                        <span className="text-white font-bold">LKR {lawyer.inPersonFee || 6000}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="grid grid-cols-3 gap-1.5">
-                    <button
-                      onClick={() => setProfileModalLawyer(lawyer)}
-                      className="py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-semibold transition-all border border-zinc-700"
-                    >
-                      View Profile
-                    </button>
-                    <button
-                      onClick={() => openChatWithLawyer(lawyer)}
-                      className="py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-semibold transition-all border border-zinc-700 flex items-center justify-center gap-1"
-                    >
-                      <MessageSquare className="w-3.5 h-3.5 text-zinc-300" /> Direct Message
-                    </button>
-                    <button
-                      onClick={() => startBooking(lawyer)}
-                      className="py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 text-[11px] font-extrabold transition-all shadow-sm flex items-center justify-center gap-1"
-                    >
-                      <Calendar className="w-3.5 h-3.5 text-zinc-950" /> Book Now
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          </div>
         </div>
+      </header>
 
-        {/* SECTION 2: MY BOOKED CONSULTATIONS HISTORY */}
-        <div>
-          <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <Clock className="w-5 h-5 text-zinc-400" /> My Consultations & Booking History
-          </h2>
+      {/* HERO BANNER SECTION */}
+      {activeTab === 'directory' && (
+        <section className="hero-gradient pt-10 pb-12 border-b border-slate-200/60">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto space-y-4">
+              
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 text-xs font-bold shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                100% Verified Sri Lankan Advocates & Counsel
+              </div>
 
-          <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800">
+              <h1 className="font-display font-extrabold text-3xl sm:text-5xl text-slate-900 tracking-tight leading-tight">
+                Consult Premier Legal Advocates <br className="hidden sm:inline" />
+                <span className="bg-gradient-to-r from-indigo-600 to-slate-900 bg-clip-text text-transparent">
+                  With Full Confidence
+                </span>
+              </h1>
+
+              <p className="text-slate-600 text-sm sm:text-base font-medium max-w-2xl mx-auto leading-relaxed">
+                Connect directly with Supreme Court Advocates, Counsel, and specialists across Sri Lanka. Book video consultations or chamber visits securely.
+              </p>
+
+              {/* Dynamic Search Box */}
+              <div className="mt-8 max-w-2xl mx-auto">
+                <div className="glass-card p-2 rounded-2xl shadow-xl flex items-center gap-2 border border-slate-200">
+                  <div className="flex-1 flex items-center gap-3 px-3">
+                    <Search className="w-5 h-5 text-indigo-600 shrink-0" />
+                    <input
+                      type="text"
+                      placeholder="Search advocate name, specialization (e.g. Criminal, Corporate, Civil)..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-transparent py-2.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 outline-none font-medium"
+                    />
+                  </div>
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="p-2 text-slate-400 hover:text-slate-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                  <button className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 shrink-0 transition-all flex items-center gap-1.5">
+                    Search <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Category Pills Slider */}
+              <div className="pt-6 flex items-center justify-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                {categories.map(cat => {
+                  const isActive = selectedCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
+                        isActive
+                          ? 'bg-slate-900 text-white shadow-md scale-105'
+                          : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/90'
+                      }`}
+                    >
+                      {cat === 'ALL' ? 'All Specializations' : cat}
+                    </button>
+                  );
+                })}
+              </div>
+
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* MAIN CONTENT WRAPPER */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+
+        {/* TAB 1: ADVOCATES DIRECTORY GRID */}
+        {activeTab === 'directory' && (
+          <div className="space-y-6">
+            
+            {/* Header Toolbar */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="font-display font-extrabold text-xl text-slate-900 flex items-center gap-2">
+                  Featured Advocates
+                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200/80 text-slate-700">
+                    {filteredLawyers.length} Available
+                  </span>
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">Top-rated advocates verified by BASL credentials</p>
+              </div>
+            </div>
+
+            {/* Advocate Cards Grid */}
+            {filteredLawyers.length === 0 ? (
+              <div className="p-12 text-center glass-card rounded-3xl space-y-4">
+                <Briefcase className="w-12 h-12 text-slate-300 mx-auto" />
+                <h3 className="font-display font-bold text-slate-800 text-lg">No Advocates Found</h3>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  No registered advocates match your current search query or category filter.
+                </p>
+                <button
+                  onClick={() => { setSearchQuery(''); setSelectedCategory('ALL'); }}
+                  className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold"
+                >
+                  Reset Filters
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredLawyers.map(lawyer => (
+                  <div
+                    key={lawyer.id}
+                    className="glass-card glass-card-hover rounded-3xl p-6 border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group"
+                  >
+                    
+                    {/* Card Top Details */}
+                    <div>
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="relative">
+                          <div className="w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center overflow-hidden shadow-xs">
+                            {lawyer.profilePictureUrl ? (
+                              <img src={lawyer.profilePictureUrl} alt={lawyer.fullName} className="w-full h-full object-cover" />
+                            ) : (
+                              <User className="w-8 h-8 text-indigo-600" />
+                            )}
+                          </div>
+                          <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white absolute -bottom-1 -right-1 shadow-xs" />
+                        </div>
+
+                        {/* Rating Badge */}
+                        <div className="flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200/80 px-2.5 py-1 rounded-xl text-xs font-bold">
+                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                          <span>{lawyer.rating?.toFixed(1)}</span>
+                          <span className="text-[10px] text-amber-600/80">({lawyer.reviewCount})</span>
+                        </div>
+                      </div>
+
+                      {/* Name & License */}
+                      <div className="mt-4">
+                        <h3 
+                          onClick={() => { setProfileModalLawyer(lawyer); setProfileActiveTab('about'); }}
+                          className="font-display font-extrabold text-slate-900 text-lg hover:text-indigo-600 cursor-pointer transition-colors flex items-center gap-1.5"
+                        >
+                          {lawyer.fullName}
+                          <CheckCircle2 className="w-4 h-4 text-indigo-600 shrink-0" />
+                        </h3>
+
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100">
+                            {lawyer.licenceNumber || 'BASL Verified'}
+                          </span>
+                          <span className="text-xs font-medium text-slate-500 flex items-center gap-1">
+                            <Award className="w-3.5 h-3.5 text-slate-400" /> {lawyer.yearsOfExperience} Yrs Exp
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Bio Snippet */}
+                      <p className="text-xs text-slate-600 mt-3 line-clamp-2 leading-relaxed">
+                        {lawyer.bio || 'Senior Advocate representing clients before the High Courts and Supreme Court of Sri Lanka.'}
+                      </p>
+
+                      {/* Specialization Tags */}
+                      <div className="flex flex-wrap gap-1.5 mt-3">
+                        {(lawyer.specialties || 'Civil Litigation, Commercial Law').split(',').map((spec, idx) => (
+                          <span
+                            key={idx}
+                            className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-semibold border border-slate-200/60"
+                          >
+                            {spec.trim()}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Card Footer: Fees & Actions */}
+                    <div className="mt-6 pt-4 border-t border-slate-200/80 space-y-4">
+                      
+                      {/* Fees summary */}
+                      <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2.5 rounded-2xl border border-slate-200/60">
+                        <div>
+                          <p className="text-[10px] font-medium text-slate-500 flex items-center gap-1">
+                            <Video className="w-3 h-3 text-indigo-600" /> Online Consult
+                          </p>
+                          <p className="font-extrabold text-slate-900 text-xs mt-0.5">
+                            LKR {lawyer.onlineFee?.toLocaleString() || '7,500'}
+                          </p>
+                        </div>
+                        <div className="border-l border-slate-200 pl-2.5">
+                          <p className="text-[10px] font-medium text-slate-500 flex items-center gap-1">
+                            <Building2 className="w-3 h-3 text-indigo-600" /> Chamber Visit
+                          </p>
+                          <p className="font-extrabold text-slate-900 text-xs mt-0.5">
+                            LKR {lawyer.inPersonFee?.toLocaleString() || '12,000'}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Action Row */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => openChatWithLawyer(lawyer)}
+                          className="p-3 rounded-xl bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 border border-slate-200/90 transition-all"
+                          title="Direct Message Advocate"
+                        >
+                          <MessageSquare className="w-4 h-4" />
+                        </button>
+
+                        <button
+                          onClick={() => startBooking(lawyer)}
+                          className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-slate-900 hover:from-indigo-700 hover:to-slate-800 text-white font-bold text-xs shadow-md shadow-indigo-600/15 flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+                        >
+                          Book Consultation <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                    </div>
+
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 2: MY APPOINTMENTS TABLE */}
+        {activeTab === 'appointments' && (
+          <div className="glass-card rounded-3xl p-6 border border-slate-200/90 space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="font-display font-extrabold text-xl text-slate-900">My Consultation Bookings</h2>
+                <p className="text-xs text-slate-500 mt-0.5">Track upcoming and completed advocate consultations</p>
+              </div>
+              <button
+                onClick={loadDashboardData}
+                className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200/70 text-slate-700 text-xs font-bold transition-all"
+              >
+                Refresh Status
+              </button>
+            </div>
+
             {appointments.length === 0 ? (
-              <p className="text-xs text-zinc-500 text-center py-8">No active or previous legal consultations recorded.</p>
+              <div className="p-12 text-center space-y-3">
+                <Calendar className="w-12 h-12 text-slate-300 mx-auto" />
+                <h4 className="font-display font-bold text-slate-800">No Appointments Scheduled</h4>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  You haven't booked any legal consultations yet. Browse advocates to schedule your first session.
+                </p>
+                <button
+                  onClick={() => setActiveTab('directory')}
+                  className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs"
+                >
+                  Browse Advocates
+                </button>
+              </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-zinc-300">
-                  <thead className="bg-zinc-950 text-zinc-400 uppercase tracking-wider font-semibold border-b border-zinc-800">
+                <table className="w-full text-left text-xs text-slate-700">
+                  <thead className="bg-slate-100/80 text-slate-900 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
                     <tr>
-                      <th className="p-3">Ref ID</th>
-                      <th className="p-3">Consultation Type</th>
-                      <th className="p-3">Scheduled Date/Time</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3">Brief / Notes</th>
+                      <th className="p-4">Advocate</th>
+                      <th className="p-4">Type</th>
+                      <th className="p-4">Scheduled Date</th>
+                      <th className="p-4">Status</th>
+                      <th className="p-4 text-right">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zinc-800">
-                    {appointments.map((app) => (
-                      <tr key={app.id} className="hover:bg-zinc-800/40">
-                        <td className="p-3 font-mono text-zinc-200 font-semibold">#{app.id}</td>
-                        <td className="p-3 font-semibold text-white">{app.consultationType}</td>
-                        <td className="p-3 text-zinc-300">{app.scheduledAt ? new Date(app.scheduledAt).toLocaleString() : 'N/A'}</td>
-                        <td className="p-3">
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-semibold ${
-                            app.status === 'CONFIRMED'
-                              ? 'bg-zinc-800 text-white border border-zinc-700'
-                              : app.status === 'CANCELLED'
-                              ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-                              : 'bg-zinc-800 text-zinc-300 border border-zinc-700'
+                  <tbody className="divide-y divide-slate-200/80">
+                    {appointments.map(apt => (
+                      <tr key={apt.id} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="p-4 font-bold text-slate-900 flex items-center gap-2">
+                          <User className="w-4 h-4 text-indigo-600" />
+                          {apt.lawyerName || 'Advocate Consultation'}
+                        </td>
+                        <td className="p-4">
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${
+                            apt.consultationType === 'ONLINE'
+                              ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                              : 'bg-emerald-50 text-emerald-700 border-emerald-200'
                           }`}>
-                            {app.status}
+                            {apt.consultationType}
                           </span>
                         </td>
-                        <td className="p-3 text-zinc-400 max-w-xs truncate">{app.notes || 'N/A'}</td>
+                        <td className="p-4 font-medium text-slate-600">
+                          {new Date(apt.scheduledAt).toLocaleString()}
+                        </td>
+                        <td className="p-4">
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                            apt.status === 'CONFIRMED'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : apt.status === 'PENDING'
+                              ? 'bg-amber-100 text-amber-800'
+                              : 'bg-slate-100 text-slate-700'
+                          }`}>
+                            {apt.status}
+                          </span>
+                        </td>
+                        <td className="p-4 text-right">
+                          <button
+                            onClick={() => setIsChatOpen(true)}
+                            className="px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 font-bold hover:bg-indigo-100 text-xs"
+                          >
+                            Chat
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -514,676 +715,453 @@ export default function ClientDashboardPage() {
               </div>
             )}
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* ================= MODAL 1: LINKEDIN-STYLE FULL SCREEN ADVOCATE PROFILE ================= */}
+      </main>
+
+      {/* ADVOCATE PROFILE MODAL */}
       {profileModalLawyer && (
-        <div className="fixed inset-0 z-50 bg-zinc-950 text-zinc-100 font-sans overflow-y-auto animate-in fade-in duration-200">
-          {/* Sticky Header Nav Bar */}
-          <div className="sticky top-0 z-30 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
-            <button
-              onClick={() => setProfileModalLawyer(null)}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-semibold transition-all border border-zinc-800"
-            >
-              <ChevronLeft className="w-4 h-4 text-zinc-400" /> Back to Advocates Directory
-            </button>
-
-            <div className="hidden sm:flex items-center gap-3">
-              <span className="text-xs font-bold text-white">{profileModalLawyer.fullName}</span>
-              <span className="text-xs text-zinc-500">•</span>
-              <span className="text-xs text-zinc-400 font-mono">{profileModalLawyer.licenceNumber}</span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => startBooking(profileModalLawyer)}
-                className="px-5 py-2.5 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 text-xs font-extrabold shadow-sm transition-all flex items-center gap-2"
-              >
-                <Calendar className="w-4 h-4 text-zinc-950" /> Book Consultation
-              </button>
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
+          <div className="bg-white border border-slate-200/90 rounded-3xl w-full max-w-3xl shadow-2xl overflow-hidden relative font-sans text-slate-900 my-8">
+            
+            {/* Cover Graphic Header */}
+            <div className="h-32 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 relative p-6 flex items-end justify-between">
               <button
                 onClick={() => setProfileModalLawyer(null)}
-                className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white transition-all border border-zinc-800"
+                className="w-8 h-8 rounded-full bg-slate-800/80 text-white hover:bg-slate-700 flex items-center justify-center absolute top-4 right-4 backdrop-blur-xs"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
-          </div>
 
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-            {/* LINKEDIN MAIN HERO CARD */}
-            <div className="rounded-3xl bg-zinc-900 border border-zinc-800 overflow-hidden shadow-2xl relative">
-              {/* Cover Banner Graphic */}
-              <div className="h-48 sm:h-56 bg-zinc-900 border-b border-zinc-800 relative p-6 flex items-start justify-end">
-                <div className="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-center text-8xl font-black uppercase text-white tracking-widest">
-                  BASL ADVOCATE
-                </div>
-                <div className="px-3.5 py-1.5 rounded-full bg-zinc-950 border border-zinc-700 text-zinc-200 text-xs font-bold flex items-center gap-1.5 backdrop-blur-md relative z-10">
-                  <ShieldCheck className="w-4 h-4 text-white" /> VERIFIED ADVOCATE • SUPREME COURT ROLL
-                </div>
-              </div>
-
-              {/* Profile Main Header Body */}
-              <div className="px-6 sm:px-10 pb-8 relative pt-0">
-                {/* Avatar Overlay */}
-                <div className="-mt-20 mb-5 flex justify-between items-end">
-                  <div className="relative">
-                    <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl bg-zinc-950 p-1.5 border-2 border-zinc-700 shadow-2xl overflow-hidden">
-                      {profileModalLawyer.profilePictureUrl ? (
-                        <img src={profileModalLawyer.profilePictureUrl} alt={profileModalLawyer.fullName} className="w-full h-full object-cover rounded-2xl" />
-                      ) : (
-                        <div className="w-full h-full rounded-2xl bg-zinc-900 flex items-center justify-center text-zinc-400">
-                          <User className="w-16 h-16" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="absolute bottom-2 right-2 p-1.5 rounded-full bg-white text-zinc-950 border-2 border-zinc-900 shadow-lg">
-                      <Check className="w-4 h-4 stroke-[3]" />
-                    </div>
+            {/* Profile Avatar & Title Section */}
+            <div className="px-6 pb-6 relative">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-12 mb-4">
+                <div className="relative">
+                  <div className="w-24 h-24 rounded-2xl bg-white border-4 border-white shadow-md overflow-hidden">
+                    {profileModalLawyer.profilePictureUrl ? (
+                      <img src={profileModalLawyer.profilePictureUrl} alt={profileModalLawyer.fullName} className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-12 h-12 text-indigo-600 m-auto mt-4" />
+                    )}
                   </div>
-
-                  <div className="hidden sm:flex items-center gap-3">
-                    <button
-                      onClick={() => addToast('info', 'Share Advocate', `Copied profile link for ${profileModalLawyer.fullName}`)}
-                      className="p-3 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition-all"
-                      title="Share Advocate Profile"
-                    >
-                      <Share2 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => openChatWithLawyer(profileModalLawyer)}
-                      className="px-5 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold transition-all flex items-center gap-2 border border-zinc-700"
-                    >
-                      <MessageSquare className="w-4 h-4 text-zinc-300" /> Direct Message
-                    </button>
-                    <button
-                      onClick={() => startBooking(profileModalLawyer)}
-                      className="px-6 py-3 rounded-2xl bg-white text-zinc-950 hover:bg-zinc-200 text-xs font-extrabold shadow-md transition-all flex items-center gap-2"
-                    >
-                      <Calendar className="w-4 h-4 text-zinc-950" /> Schedule Consultation
-                    </button>
-                  </div>
+                  <span className="w-4 h-4 rounded-full bg-emerald-500 border-2 border-white absolute bottom-1 right-1" />
                 </div>
 
-                {/* Name & Headline */}
-                <div className="space-y-2">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                      {profileModalLawyer.fullName}
-                    </h1>
-                    <span className="px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-bold font-mono">
-                      BASL/{profileModalLawyer.licenceNumber}
-                    </span>
-                  </div>
-
-                  <p className="text-sm sm:text-base text-zinc-300 font-semibold">
-                    {profileModalLawyer.specialties || 'Corporate Litigation & Commercial Dispute Resolution'}
-                  </p>
-
-                  <p className="text-xs text-zinc-400 flex items-center gap-2 flex-wrap pt-1">
-                    <span className="flex items-center gap-1"><Building2 className="w-3.5 h-3.5 text-zinc-400" /> {profileModalLawyer.workingAddress || 'Commercial High Court Chambers, Colombo 12'}</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-1"><Globe className="w-3.5 h-3.5 text-zinc-400" /> Bar Association of Sri Lanka</span>
-                  </p>
-
-                  {/* Highlights Grid */}
-                  <div className="pt-4 flex flex-wrap items-center gap-6 text-xs border-t border-zinc-800 mt-4">
-                    <div className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-white fill-white" />
-                      <span className="font-extrabold text-white text-sm">{profileModalLawyer.rating}</span>
-                      <span className="text-zinc-400">({profileModalLawyer.reviewCount} Verified Client Reviews)</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-zinc-300">
-                      <Briefcase className="w-4 h-4 text-zinc-400" />
-                      <span className="font-bold text-white">{profileModalLawyer.yearsOfExperience || 12}+ Years</span>
-                      <span className="text-zinc-400">Active Legal Practice</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-zinc-300">
-                      <Award className="w-4 h-4 text-white" />
-                      <span className="font-bold text-white">High Court & Supreme Court</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Mobile Action Buttons */}
-                <div className="mt-6 flex sm:hidden items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => { setProfileModalLawyer(null); openChatWithLawyer(profileModalLawyer); }}
+                    className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200/70 text-slate-800 font-bold text-xs flex items-center gap-1.5 transition-all"
+                  >
+                    <MessageSquare className="w-4 h-4 text-indigo-600" /> Message
+                  </button>
                   <button
                     onClick={() => startBooking(profileModalLawyer)}
-                    className="flex-1 py-3 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 text-xs font-bold shadow-md flex items-center justify-center gap-2"
+                    className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 flex items-center gap-1.5 transition-all"
                   >
-                    <Calendar className="w-4 h-4" /> Book Consultation
-                  </button>
-                  <button
-                    onClick={() => addToast('info', 'Share Advocate', `Copied profile link for ${profileModalLawyer.fullName}`)}
-                    className="p-3 rounded-xl bg-zinc-950 text-zinc-300 border border-zinc-800"
-                  >
-                    <Share2 className="w-4 h-4" />
+                    Book Consultation <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
-            </div>
 
-            {/* LINKEDIN TAB NAVIGATION */}
-            <div className="flex items-center gap-2 border-b border-zinc-800 pb-2 overflow-x-auto">
-              {[
-                { id: 'about', label: 'About & Bio' },
-                { id: 'practice', label: 'Practice Areas & Fees' },
-                { id: 'rates', label: 'Chambers & Contact' },
-                { id: 'reviews', label: 'Client Feedback' }
-              ].map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setProfileActiveTab(tab.id as any)}
-                  className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-                    profileActiveTab === tab.id
-                      ? 'bg-white text-zinc-950 font-bold shadow-sm'
-                      : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+              <div>
+                <h3 className="font-display font-extrabold text-2xl text-slate-900 flex items-center gap-2">
+                  {profileModalLawyer.fullName}
+                  <ShieldCheck className="w-5 h-5 text-indigo-600" />
+                </h3>
+                <p className="text-xs text-slate-500 font-medium mt-1">
+                  License: <span className="font-bold text-slate-800">{profileModalLawyer.licenceNumber}</span> • {profileModalLawyer.yearsOfExperience} Years Legal Experience
+                </p>
+              </div>
 
-            {/* TAB CONTENT CARDS */}
-            <div className="space-y-6">
-              {profileActiveTab === 'about' && (
-                <div className="space-y-6">
-                  <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4">
-                    <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-zinc-400" /> Professional Summary & Legal Background
-                    </h3>
-                    <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
-                      {profileModalLawyer.bio ||
-                        `${profileModalLawyer.fullName} is a distinguished Senior Advocate admitted to the Bar Association of Sri Lanka with over ${profileModalLawyer.yearsOfExperience || 12} years of legal practice before the Commercial High Court and Supreme Court. Specialized in landmark corporate disputes, complex property deed litigation, and constitutional legal defense.`}
-                    </p>
-                  </div>
+              {/* Tabs Navigation */}
+              <div className="flex items-center gap-4 border-b border-slate-200/80 mt-6 text-xs font-bold">
+                {[
+                  { id: 'about', label: 'About & Bio' },
+                  { id: 'practice', label: 'Practice & Fees' },
+                  { id: 'rates', label: 'Chambers & Contact' },
+                  { id: 'reviews', label: `Reviews (${sampleReviews.length})` }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setProfileActiveTab(tab.id as any)}
+                    className={`pb-3 border-b-2 transition-all ${
+                      profileActiveTab === tab.id
+                        ? 'border-indigo-600 text-indigo-600 font-extrabold'
+                        : 'border-transparent text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-2">
-                      <Scale className="w-6 h-6 text-zinc-400" />
-                      <h4 className="text-xs font-bold text-white uppercase tracking-wider">Bar Qualification</h4>
-                      <p className="text-xs text-zinc-300">BASL Registered Senior Advocate</p>
-                    </div>
-
-                    <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-2">
-                      <ShieldCheck className="w-6 h-6 text-white" />
-                      <h4 className="text-xs font-bold text-white uppercase tracking-wider">Court Admission</h4>
-                      <p className="text-xs text-zinc-300">Supreme Court & Commercial High Court</p>
-                    </div>
-
-                    <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-2">
-                      <Clock className="w-6 h-6 text-zinc-400" />
-                      <h4 className="text-xs font-bold text-white uppercase tracking-wider">Consultation Hours</h4>
-                      <p className="text-xs text-zinc-300">Mon - Fri: 9:00 AM - 5:00 PM</p>
+              {/* Tab Contents */}
+              <div className="pt-6 space-y-4">
+                {profileActiveTab === 'about' && (
+                  <div className="space-y-4 text-xs text-slate-700 leading-relaxed">
+                    <p>{profileModalLawyer.bio || 'Senior Advocate practicing in Sri Lankan civil, commercial, and appellate courts with proven track record.'}</p>
+                    <div className="grid grid-cols-2 gap-3 pt-2">
+                      <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/70">
+                        <p className="text-[10px] font-bold text-slate-400">CREDENTIAL STATUS</p>
+                        <p className="font-extrabold text-emerald-600 mt-1 flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> BASL Verified Advocate
+                        </p>
+                      </div>
+                      <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/70">
+                        <p className="text-[10px] font-bold text-slate-400">SUCCESS RATING</p>
+                        <p className="font-extrabold text-slate-900 mt-1 flex items-center gap-1">
+                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" /> 4.9 / 5.0 Rating
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {profileActiveTab === 'practice' && (
-                <div className="space-y-6">
-                  <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4">
-                    <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <Briefcase className="w-5 h-5 text-zinc-400" /> Specializations & Practice Areas
-                    </h3>
-                    <div className="flex flex-wrap gap-2.5">
-                      {(profileModalLawyer.specialties || 'Corporate Law, Civil Litigation, Property Law, Intellectual Property').split(',').map((spec, i) => (
-                        <span
-                          key={i}
-                          className="px-4 py-2 rounded-2xl bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs font-bold flex items-center gap-2"
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5 text-white" /> {spec.trim()}
+                {profileActiveTab === 'practice' && (
+                  <div className="space-y-4">
+                    <h4 className="font-display font-bold text-xs text-slate-900">Specializations</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {(profileModalLawyer.specialties || 'Civil Litigation, Corporate Law').split(',').map((s, i) => (
+                        <span key={i} className="px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold border border-indigo-100">
+                          {s.trim()}
                         </span>
                       ))}
                     </div>
-                  </div>
 
-                  {/* Consultation Rates Comparison */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-3">
-                      <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center">
-                        <Globe className="w-5 h-5" />
+                    <h4 className="font-display font-bold text-xs text-slate-900 pt-2">Consultation Pricing</h4>
+                    <div className="grid grid-cols-2 gap-4 text-xs">
+                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                        <p className="font-bold text-slate-700 flex items-center gap-1.5">
+                          <Video className="w-4 h-4 text-indigo-600" /> Online Video Session
+                        </p>
+                        <p className="font-extrabold text-base text-slate-900 mt-2">
+                          LKR {profileModalLawyer.onlineFee?.toLocaleString() || '7,500'}
+                        </p>
                       </div>
-                      <h4 className="text-sm font-bold text-white">Online Video Consultation</h4>
-                      <p className="text-xs text-zinc-400">Encrypted Google Meet video session with digital document exchange.</p>
-                      <div className="pt-2 text-xl font-extrabold text-white">
-                        LKR {profileModalLawyer.onlineFee || 3500} <span className="text-xs text-zinc-500 font-normal">/ 60 Min</span>
-                      </div>
-                    </div>
-
-                    <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-3">
-                      <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-zinc-700 text-white flex items-center justify-center">
-                        <Building2 className="w-5 h-5" />
-                      </div>
-                      <h4 className="text-sm font-bold text-white">In-Person Chamber Visit</h4>
-                      <p className="text-xs text-zinc-400">Direct face-to-face consultation at court law chambers.</p>
-                      <div className="pt-2 text-xl font-extrabold text-white">
-                        LKR {profileModalLawyer.inPersonFee || 6000} <span className="text-xs text-zinc-500 font-normal">/ Session</span>
+                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                        <p className="font-bold text-slate-700 flex items-center gap-1.5">
+                          <Building2 className="w-4 h-4 text-indigo-600" /> Chamber Consultation
+                        </p>
+                        <p className="font-extrabold text-base text-slate-900 mt-2">
+                          LKR {profileModalLawyer.inPersonFee?.toLocaleString() || '12,000'}
+                        </p>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {profileActiveTab === 'rates' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4">
-                    <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <MapPin className="w-5 h-5 text-zinc-400" /> Law Chambers Location
-                    </h3>
-                    <p className="text-xs text-zinc-300">
-                      {profileModalLawyer.workingAddress || 'Suite 402, High Court Complex, Superior Law Chambers, Hulftsdorp, Colombo 12, Sri Lanka.'}
-                    </p>
-                    <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 text-xs space-y-2">
-                      <div className="flex justify-between text-zinc-400">
-                        <span>Chamber Hours:</span>
-                        <span className="text-white font-semibold">9:00 AM - 5:00 PM</span>
+                {profileActiveTab === 'rates' && (
+                  <div className="space-y-3 text-xs text-slate-700">
+                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-start gap-3">
+                      <MapPin className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-bold text-slate-900">Chambers Address</p>
+                        <p className="mt-0.5 text-slate-600">{profileModalLawyer.workingAddress || 'Hulftsdorp Street, Colombo 12'}</p>
                       </div>
-                      <div className="flex justify-between text-zinc-400">
-                        <span>Court District:</span>
-                        <span className="text-white font-semibold">Colombo Commercial Court</span>
+                    </div>
+                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-start gap-3">
+                      <Phone className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-bold text-slate-900">Official Contact Number</p>
+                        <p className="mt-0.5 text-slate-600">{profileModalLawyer.phone || '+94 11 234 5678'}</p>
                       </div>
                     </div>
                   </div>
+                )}
 
-                  <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4">
-                    <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <Phone className="w-5 h-5 text-white" /> Direct Chambers Contact
-                    </h3>
-                    <div className="space-y-3 text-xs">
-                      <div className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-between">
-                        <span className="text-zinc-400">Official Phone:</span>
-                        <span className="text-white font-bold font-mono">{profileModalLawyer.phone || '+94 77 123 4567'}</span>
-                      </div>
-                      <div className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-between">
-                        <span className="text-zinc-400">Chambers Desk:</span>
-                        <span className="text-white font-bold font-mono">+94 11 289 4192</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {profileActiveTab === 'reviews' && (
-                <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-base font-bold text-white flex items-center gap-2">
-                      <Star className="w-5 h-5 text-white fill-white" /> Verified Client Feedback ({profileModalLawyer.reviewCount || 18})
-                    </h3>
-                    <span className="text-sm font-extrabold text-white">{profileModalLawyer.rating} / 5.0 Rating</span>
-                  </div>
-
-                  <div className="space-y-4">
-                    {sampleReviews.map(rev => (
-                      <div key={rev.id} className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-white text-xs">{rev.clientName}</span>
-                          <div className="flex items-center gap-1 text-white text-xs font-bold">
-                            <Star className="w-3.5 h-3.5 fill-white" /> {rev.rating}.0
-                          </div>
+                {profileActiveTab === 'reviews' && (
+                  <div className="space-y-3">
+                    {sampleReviews.map(r => (
+                      <div key={r.id} className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 text-xs">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-bold text-slate-900">{r.clientName}</span>
+                          <span className="text-[10px] text-slate-400">{r.date}</span>
                         </div>
-                        <p className="text-xs text-zinc-300 italic">"{rev.comment}"</p>
-                        <span className="text-[10px] text-zinc-500 block font-mono">{rev.date}</span>
+                        <div className="flex items-center gap-1 text-amber-500 mb-1">
+                          {[...Array(r.rating)].map((_, i) => (
+                            <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
+                          ))}
+                        </div>
+                        <p className="text-slate-600 leading-relaxed">{r.comment}</p>
                       </div>
                     ))}
                   </div>
-                </div>
-              )}
-            </div>
-
-            {/* Bottom Floating CTA Banner */}
-            <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <h4 className="text-sm font-bold text-white">Ready to consult {profileModalLawyer.fullName}?</h4>
-                <p className="text-xs text-zinc-400">Select date, available slot, and confirm booking securely.</p>
+                )}
               </div>
-              <button
-                onClick={() => startBooking(profileModalLawyer)}
-                className="px-6 py-3 rounded-2xl bg-white text-zinc-950 hover:bg-zinc-200 text-xs font-bold shadow-md transition-all flex items-center gap-2 shrink-0"
-              >
-                <Calendar className="w-4 h-4 text-zinc-950" /> Book Consultation Now
-              </button>
+
             </div>
           </div>
         </div>
       )}
 
-      {/* ================= MODAL 2: SPACIOUS GUIDED BOOKING WIZARD ================= */}
+      {/* GUIDED BOOKING WIZARD MODAL */}
       {bookingLawyer && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-          <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 max-w-2xl w-full relative my-auto shadow-2xl text-xs space-y-6">
-            <button
-              onClick={() => setBookingLawyer(null)}
-              className="absolute right-6 top-6 p-2 rounded-xl bg-zinc-800 text-zinc-400 hover:text-white transition-all border border-zinc-700"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {/* Header Advocate Summary */}
-            <div className="flex items-center gap-4 pb-4 border-b border-zinc-800">
-              <div className="w-12 h-12 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden shrink-0">
-                {bookingLawyer.profilePictureUrl ? (
-                  <img src={bookingLawyer.profilePictureUrl} alt={bookingLawyer.fullName} className="w-full h-full object-cover" />
-                ) : (
-                  <User className="w-6 h-6 text-zinc-400" />
-                )}
-              </div>
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
+          <div className="bg-white border border-slate-200/90 rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden relative font-sans text-slate-900 my-8">
+            
+            {/* Modal Header */}
+            <div className="p-6 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
               <div>
-                <h3 className="text-sm font-bold text-white">{bookingLawyer.fullName}</h3>
-                <p className="text-[11px] text-zinc-300 font-semibold">{bookingLawyer.specialties || 'Advocate'}</p>
+                <h3 className="font-display font-extrabold text-base text-white flex items-center gap-2">
+                  Schedule Consultation with {bookingLawyer.fullName}
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">Step {bookingStep} of 4 — Escrow Secured Booking</p>
               </div>
+              <button
+                onClick={() => setBookingLawyer(null)}
+                className="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
-            {/* Stepper Progress */}
-            <div className="flex items-center justify-between pb-2">
-              {[
-                { s: 1, label: 'Mode' },
-                { s: 2, label: 'Date & Time' },
-                { s: 3, label: 'Case Brief' },
-                { s: 4, label: 'Payment' }
-              ].map((step) => (
-                <div key={step.s} className="flex items-center gap-2">
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${
-                    bookingStep === step.s
-                      ? 'bg-white text-zinc-950 font-extrabold shadow-sm'
-                      : bookingStep > step.s
-                      ? 'bg-zinc-800 text-white font-bold border border-zinc-700'
-                      : 'bg-zinc-950 text-zinc-600 border border-zinc-800'
-                  }`}>
-                    {bookingStep > step.s ? <Check className="w-4 h-4 stroke-[3]" /> : step.s}
-                  </div>
-                  <span className={`text-xs font-semibold hidden sm:inline ${bookingStep === step.s ? 'text-white' : 'text-zinc-500'}`}>
-                    {step.label}
-                  </span>
-                </div>
-              ))}
+            {/* Stepper Progress Bar */}
+            <div className="bg-slate-100 h-1.5 w-full">
+              <div
+                className="bg-indigo-600 h-full transition-all duration-300"
+                style={{ width: `${(bookingStep / 4) * 100}%` }}
+              />
             </div>
 
-            {/* STEP 1: CONSULTATION MODE */}
-            {bookingStep === 1 && (
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-base font-bold text-white">Select Consultation Mode</h3>
-                  <p className="text-zinc-400">Choose between virtual video consultation or in-person chamber meeting.</p>
-                </div>
+            {/* Step Body */}
+            <div className="p-6 space-y-6">
+              
+              {/* STEP 1: CONSULTATION MODE */}
+              {bookingStep === 1 && (
+                <div className="space-y-4">
+                  <h4 className="font-display font-bold text-sm text-slate-900">Select Consultation Mode</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setConsultationType('ONLINE')}
+                      className={`p-5 rounded-2xl border text-left transition-all ${
+                        consultationType === 'ONLINE'
+                          ? 'border-indigo-600 bg-indigo-50/60 ring-2 ring-indigo-500/20 shadow-sm'
+                          : 'border-slate-200 hover:border-slate-300 bg-white'
+                      }`}
+                    >
+                      <Video className="w-6 h-6 text-indigo-600 mb-2" />
+                      <p className="font-bold text-xs text-slate-900">Online Video Call</p>
+                      <p className="text-[11px] text-slate-500 mt-1">Encrypted HD Video Session</p>
+                      <p className="font-extrabold text-xs text-indigo-600 mt-3">
+                        LKR {bookingLawyer.onlineFee?.toLocaleString() || '7,500'}
+                      </p>
+                    </button>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setConsultationType('ONLINE')}
-                    className={`p-5 rounded-2xl border text-left transition-all ${
-                      consultationType === 'ONLINE'
-                        ? 'bg-zinc-800 border-white text-white shadow-sm'
-                        : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-bold text-white text-sm">Online Video Call</span>
-                      <span className="px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300 text-[10px] font-bold border border-zinc-700">RECOMMENDED</span>
-                    </div>
-                    <span className="text-lg font-extrabold text-white block mb-1">
-                      LKR {bookingLawyer.onlineFee || 3500}
-                    </span>
-                    <span className="text-[11px] text-zinc-400 block">Encrypted Google Meet link delivered via SMS/Email</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setConsultationType('IN_PERSON')}
-                    className={`p-5 rounded-2xl border text-left transition-all ${
-                      consultationType === 'IN_PERSON'
-                        ? 'bg-zinc-800 border-white text-white shadow-sm'
-                        : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
-                    }`}
-                  >
-                    <span className="font-bold text-white text-sm block mb-2">In-Person Chamber Visit</span>
-                    <span className="text-lg font-extrabold text-white block mb-1">
-                      LKR {bookingLawyer.inPersonFee || 6000}
-                    </span>
-                    <span className="text-[11px] text-zinc-400 block">At {bookingLawyer.workingAddress || 'Colombo Law Chambers'}</span>
-                  </button>
-                </div>
-
-                <button
-                  onClick={() => setBookingStep(2)}
-                  className="w-full py-3.5 rounded-2xl bg-white hover:bg-zinc-200 text-zinc-950 font-extrabold text-xs shadow-sm transition-all mt-4"
-                >
-                  Continue to Available Dates & Time Slots
-                </button>
-              </div>
-            )}
-
-            {/* STEP 2: AVAILABLE TIME SLOTS GRID */}
-            {bookingStep === 2 && (
-              <div className="space-y-5">
-                <div>
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <CalendarDays className="w-5 h-5 text-zinc-400" /> Select Date & Available Time Slot
-                  </h3>
-                  <p className="text-zinc-400">Live availability engine for {bookingLawyer.fullName}.</p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-zinc-300 font-semibold block">Select Consultation Date</label>
-                  <input
-                    type="date"
-                    value={bookingDate}
-                    onChange={(e) => setBookingDate(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-4 py-3 text-white text-xs outline-none focus:border-zinc-500"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-zinc-300 font-semibold block flex items-center justify-between">
-                    <span>Available Time Slots ({bookingDate})</span>
-                    <span className="text-zinc-400 text-[11px]">60 Min Duration</span>
-                  </label>
-
-                  {loadingSlots ? (
-                    <div className="p-8 text-center rounded-2xl bg-zinc-950 border border-zinc-800">
-                      <p className="text-zinc-400 font-semibold">Calculating live available slots...</p>
-                    </div>
-                  ) : availableSlots.length === 0 ? (
-                    <div className="p-6 text-center rounded-2xl bg-zinc-950 border border-zinc-800">
-                      <p className="text-zinc-400 font-semibold">No time slots available on this date. Select another date above.</p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 max-h-48 overflow-y-auto p-1">
-                      {availableSlots.map(slot => {
-                        const slotStr = `${slot.startTime} - ${slot.endTime}`;
-                        const isSelected = selectedSlot === slotStr;
-                        return (
-                          <button
-                            key={slotStr}
-                            type="button"
-                            onClick={() => setSelectedSlot(slotStr)}
-                            className={`py-3 px-3 rounded-2xl border text-center font-bold text-xs transition-all flex flex-col items-center justify-center gap-1 ${
-                              isSelected
-                                ? 'bg-white border-white text-zinc-950 shadow-sm'
-                                : 'bg-zinc-950 border-zinc-800 text-zinc-300 hover:border-zinc-700'
-                            }`}
-                          >
-                            <Clock className={`w-3.5 h-3.5 ${isSelected ? 'text-zinc-950' : 'text-zinc-400'}`} />
-                            <span>{slotStr}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex gap-3 pt-2">
-                  <button
-                    onClick={() => setBookingStep(1)}
-                    className="w-1/3 py-3 rounded-2xl bg-zinc-800 text-zinc-300 font-bold border border-zinc-700"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={() => setBookingStep(3)}
-                    disabled={!selectedSlot}
-                    className="w-2/3 py-3 rounded-2xl bg-white hover:bg-zinc-200 text-zinc-950 font-extrabold disabled:opacity-50 shadow-sm"
-                  >
-                    Continue to Case Brief
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 3: CASE BRIEFING */}
-            {bookingStep === 3 && (
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-base font-bold text-white">Provide Legal Case Brief</h3>
-                  <p className="text-zinc-400">State key details so advocate {bookingLawyer.fullName} can review prior to consultation.</p>
-                </div>
-
-                <div>
-                  <label className="text-zinc-300 font-semibold block mb-1.5">Case Notes / Legal Details</label>
-                  <textarea
-                    rows={5}
-                    placeholder="Briefly state your legal issue, dispute history, or advice needed..."
-                    value={caseNotes}
-                    onChange={(e) => setCaseNotes(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-4 text-xs text-white outline-none focus:border-zinc-500 resize-none"
-                  />
-                </div>
-
-                <div className="flex gap-3 pt-2">
-                  <button
-                    onClick={() => setBookingStep(2)}
-                    className="w-1/3 py-3 rounded-2xl bg-zinc-800 text-zinc-300 font-bold border border-zinc-700"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={() => setBookingStep(4)}
-                    className="w-2/3 py-3 rounded-2xl bg-white hover:bg-zinc-200 text-zinc-950 font-extrabold shadow-sm"
-                  >
-                    Proceed to Payment Checkout
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 4: CHECKOUT */}
-            {bookingStep === 4 && (
-              <form onSubmit={handleFinalPaymentAndBook} className="space-y-4">
-                <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
-                  <div>
-                    <h3 className="text-base font-bold text-white">Secure Checkout</h3>
-                    <p className="text-zinc-400">{consultationType === 'ONLINE' ? 'Online Video Session' : 'In-Person Chamber Visit'}</p>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs text-zinc-400 block">Total Payable</span>
-                    <span className="text-xl font-extrabold text-white">
-                      LKR {consultationType === 'ONLINE' ? bookingLawyer.onlineFee || 3500 : bookingLawyer.inPersonFee || 6000}
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setConsultationType('IN_PERSON')}
+                      className={`p-5 rounded-2xl border text-left transition-all ${
+                        consultationType === 'IN_PERSON'
+                          ? 'border-indigo-600 bg-indigo-50/60 ring-2 ring-indigo-500/20 shadow-sm'
+                          : 'border-slate-200 hover:border-slate-300 bg-white'
+                      }`}
+                    >
+                      <Building2 className="w-6 h-6 text-indigo-600 mb-2" />
+                      <p className="font-bold text-xs text-slate-900">Chamber Visit</p>
+                      <p className="text-[11px] text-slate-500 mt-1">In-Person Legal Consultation</p>
+                      <p className="font-extrabold text-xs text-indigo-600 mt-3">
+                        LKR {bookingLawyer.inPersonFee?.toLocaleString() || '12,000'}
+                      </p>
+                    </button>
                   </div>
                 </div>
+              )}
 
-                <div className="p-4 sm:p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-3">
+              {/* STEP 2: DATE & TIME SLOT */}
+              {bookingStep === 2 && (
+                <div className="space-y-4">
+                  <h4 className="font-display font-bold text-sm text-slate-900">Choose Consultation Date & Time Slot</h4>
+                  
                   <div>
-                    <label className="text-zinc-400 block text-[11px] mb-1 font-semibold">Cardholder Full Name</label>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Select Date</label>
                     <input
-                      type="text"
-                      required
-                      value={paymentData.cardHolder}
-                      onChange={(e) => setPaymentData({ ...paymentData, cardHolder: e.target.value })}
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-zinc-500 text-xs"
+                      type="date"
+                      value={bookingDate}
+                      min={new Date().toISOString().split('T')[0]}
+                      onChange={(e) => setBookingDate(e.target.value)}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 font-medium outline-none focus:border-indigo-600"
                     />
                   </div>
 
                   <div>
-                    <label className="text-zinc-400 block text-[11px] mb-1 font-semibold">Card Number</label>
-                    <div className="relative">
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Available Time Slots</label>
+                    {loadingSlots ? (
+                      <p className="text-xs text-slate-400 py-4">Checking slot availability...</p>
+                    ) : availableSlots.length === 0 ? (
+                      <p className="text-xs text-slate-500 py-4">No available slots for this date.</p>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2 max-h-44 overflow-y-auto">
+                        {availableSlots.map((slot, i) => {
+                          const slotStr = `${slot.startTime} - ${slot.endTime}`;
+                          const isSelected = selectedSlot === slotStr;
+                          return (
+                            <button
+                              key={i}
+                              type="button"
+                              onClick={() => setSelectedSlot(slotStr)}
+                              className={`p-3 rounded-xl border text-xs font-bold transition-all ${
+                                isSelected
+                                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                                  : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                              }`}
+                            >
+                              {slotStr}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 3: BRIEF CASE NOTES */}
+              {bookingStep === 3 && (
+                <div className="space-y-4">
+                  <h4 className="font-display font-bold text-sm text-slate-900">Brief Case Summary</h4>
+                  <p className="text-xs text-slate-500">Provide key details or questions to help the advocate prepare for your session.</p>
+                  
+                  <textarea
+                    rows={4}
+                    placeholder="Describe your legal issue, property dispute, corporate agreement, or court matter..."
+                    value={caseNotes}
+                    onChange={(e) => setCaseNotes(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs text-slate-900 outline-none focus:border-indigo-600"
+                  />
+                </div>
+              )}
+
+              {/* STEP 4: CHECKOUT & PAYMENT */}
+              {bookingStep === 4 && (
+                <form onSubmit={handleFinalPaymentAndBook} className="space-y-4">
+                  <h4 className="font-display font-bold text-sm text-slate-900">Escrow Secured Checkout</h4>
+                  
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Advocate:</span>
+                      <span className="font-bold text-slate-900">{bookingLawyer.fullName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Mode:</span>
+                      <span className="font-bold text-slate-900">{consultationType}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Scheduled Date:</span>
+                      <span className="font-bold text-slate-900">{bookingDate} ({selectedSlot})</span>
+                    </div>
+                    <div className="pt-2 border-t border-slate-200 flex justify-between font-extrabold text-sm text-slate-900">
+                      <span>Total Consultation Fee:</span>
+                      <span className="text-indigo-600">
+                        LKR {(consultationType === 'ONLINE' ? bookingLawyer.onlineFee : bookingLawyer.inPersonFee)?.toLocaleString() || '7,500'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 pt-2">
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Cardholder Name</label>
                       <input
                         type="text"
+                        value={paymentData.cardHolder}
+                        onChange={(e) => setPaymentData({ ...paymentData, cardHolder: e.target.value })}
                         required
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-indigo-600"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 mb-1">Card Number</label>
+                      <input
+                        type="text"
                         value={paymentData.cardNumber}
                         onChange={(e) => setPaymentData({ ...paymentData, cardNumber: e.target.value })}
-                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-zinc-500 font-mono text-xs"
+                        required
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-indigo-600 font-mono"
                       />
-                      <CreditCard className="w-4 h-4 text-zinc-500 absolute right-3 top-3" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 mb-1">Expiry</label>
+                        <input
+                          type="text"
+                          value={paymentData.expiry}
+                          onChange={(e) => setPaymentData({ ...paymentData, expiry: e.target.value })}
+                          required
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-indigo-600"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 mb-1">CVC</label>
+                        <input
+                          type="text"
+                          value={paymentData.cvc}
+                          onChange={(e) => setPaymentData({ ...paymentData, cvc: e.target.value })}
+                          required
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 outline-none focus:border-indigo-600"
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-zinc-400 block text-[11px] mb-1 font-semibold">Expiry Date</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="MM/YY"
-                        value={paymentData.expiry}
-                        onChange={(e) => setPaymentData({ ...paymentData, expiry: e.target.value })}
-                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-zinc-500 font-mono text-xs"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-zinc-400 block text-[11px] mb-1 font-semibold">CVC Code</label>
-                      <input
-                        type="password"
-                        required
-                        maxLength={4}
-                        placeholder="•••"
-                        value={paymentData.cvc}
-                        onChange={(e) => setPaymentData({ ...paymentData, cvc: e.target.value })}
-                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white outline-none focus:border-zinc-500 font-mono text-xs"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 justify-center font-medium">
-                  <Lock className="w-3.5 h-3.5 text-zinc-300" /> Encrypted 256-Bit Payment Escrow Protection
-                </div>
-
-                <div className="flex gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setBookingStep(3)}
-                    className="w-1/3 py-3 rounded-2xl bg-zinc-800 text-zinc-300 font-bold border border-zinc-700"
-                  >
-                    Back
-                  </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-2/3 py-3.5 rounded-2xl bg-white hover:bg-zinc-200 text-zinc-950 font-extrabold text-xs shadow-sm disabled:opacity-50 transition-all"
+                    className="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center gap-2 mt-4"
                   >
-                    {loading ? 'Processing Payment...' : 'Pay & Confirm Appointment'}
+                    <Lock className="w-4 h-4" />
+                    {loading ? 'Processing Payment...' : 'Confirm Consultation & Pay'}
                   </button>
-                </div>
-              </form>
+                </form>
+              )}
+
+            </div>
+
+            {/* Modal Controls Bar */}
+            {bookingStep < 4 && (
+              <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+                <button
+                  type="button"
+                  disabled={bookingStep === 1}
+                  onClick={() => setBookingStep(prev => prev - 1)}
+                  className="px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 disabled:opacity-40"
+                >
+                  Back
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setBookingStep(prev => prev + 1)}
+                  className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs flex items-center gap-1.5"
+                >
+                  Next Step <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             )}
+
           </div>
         </div>
       )}
 
       {/* FLOATING MESSENGER TRIGGER BUTTON */}
-      <button
-        onClick={() => {
-          setSelectedChatPartner(null);
-          setIsChatOpen(true);
-        }}
-        className="fixed bottom-6 right-6 z-40 p-4 rounded-full bg-white text-zinc-950 shadow-2xl hover:bg-zinc-200 active:scale-95 transition-all border border-zinc-300 flex items-center gap-2 font-bold text-xs"
-        title="Open LawyerConnect Direct Messenger"
-      >
-        <MessageSquare className="w-5 h-5 fill-zinc-950/20 text-zinc-950" />
-        <span className="hidden sm:inline">Advocate Messenger</span>
-      </button>
+      <div className="fixed bottom-6 right-6 z-40">
+        <button
+          onClick={() => setIsChatOpen(true)}
+          className="px-5 py-3.5 rounded-full bg-slate-900 text-white font-bold text-xs shadow-xl shadow-slate-900/30 flex items-center gap-2.5 hover:scale-105 transition-all border border-slate-800"
+        >
+          <MessageSquare className="w-4 h-4 text-indigo-400" />
+          <span>Direct Messenger</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+        </button>
+      </div>
 
-      {/* MESSENGER CHAT MODAL */}
+      {/* MESSENGER MODAL COMPONENT */}
       <MessengerChat
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
         initialPartner={selectedChatPartner}
       />
+
     </div>
   );
 }
