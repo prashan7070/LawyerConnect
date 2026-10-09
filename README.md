@@ -1,142 +1,147 @@
-## LawyerConnect 🤝 - Bridging the Legal Gap
+# LawyerConnect 🤝 — Enterprise Legal Tech Marketplace Platform
 
-Are you a lawyer seeking to expand your reach and connect with clients effortlessly? Or a client in need of legal assistance, searching for the perfect advocate? LawyerConnect is your intuitive platform, designed to streamline legal interactions and foster meaningful connections within the legal landscape. Our project leverages modern web technologies (HTML, CSS, JavaScript) and a robust Java Spring Boot backend with JWT authentication to create a seamless and secure experience for both legal professionals and those seeking their expertise.
+[![Azure Deployment](https://img.shields.io/badge/Azure-Deployed-0089D6?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://black-beach-0346be400.6.azurestaticapps.net)
+[![Next.js 14](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Java 17](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+[![Spring Boot 3](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Redis](https://img.shields.io/badge/Redis-Cache-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/prashan7070/LawyerConnect/actions)
 
----
-
-## 📸 Project Showcase
-
-Here are some glimpses of LawyerConnect in action, highlighting our key features and user interface.
-
-### 1. Landing Page
-Our elegant landing page provides a warm introduction to the platform, inviting users to explore and connect.
-
-
-<img width="1348" height="609" alt="1" src="https://github.com/user-attachments/assets/43231d28-999c-4f27-88ce-946255413af0" />
-<img width="1348" height="605" alt="3" src="https://github.com/user-attachments/assets/9542a505-5e55-42ae-b19c-4ebfc4e28b97" />
-<img width="1350" height="608" alt="2" src="https://github.com/user-attachments/assets/b11d051f-10b4-4594-9014-82f482f48c77" />
-
-
-### 2. Login & Sign Up
-Secure and intuitive forms for users to register or log in to their LawyerConnect accounts.
- 
-<img width="1079" height="603" alt="5" src="https://github.com/user-attachments/assets/97849f4f-88b3-4c09-8679-cd9b78503bb7" />
-<img width="1109" height="605" alt="4" src="https://github.com/user-attachments/assets/8d548f4f-8645-4b30-bbd4-a533d656ab46" />
-
-### 3. Client Dashboard
-The client dashboard offers a personalized view of their consultations, messages, and a display of existing lawyers they can connect with.
-<img width="1347" height="608" alt="6" src="https://github.com/user-attachments/assets/033fc47e-078e-4c14-8592-f0edc3f0144b" />
-
-
-### 4. Lawyer Dashboard
-Lawyers can manage their appointments, view client inquiries, update their profiles, and track their professional engagements from a centralized dashboard.
-<img width="1337" height="605" alt="18" src="https://github.com/user-attachments/assets/bd2037d3-9d63-4a31-ad69-3f8f72b68c95" />
-
-
-### 5. Client Profile
-A dedicated section for clients to view and update their personal information and preferences.
- 
-<img width="910" height="597" alt="16" src="https://github.com/user-attachments/assets/2960b16b-e2ca-4e45-8e6a-07e35e4557b6" />
-
-
-### 6. Lawyer Profile
-Each lawyer has a detailed profile showcasing their expertise, experience, and client testimonials, helping clients make informed decisions.
- 
-<img width="876" height="604" alt="15" src="https://github.com/user-attachments/assets/997ad9ea-09c8-4f7e-a481-536fb5f0dec3" />
-<img width="781" height="583" alt="14" src="https://github.com/user-attachments/assets/b581258d-8174-41cc-add1-e1d88ee4ab16" />
-<img width="1021" height="608" alt="13" src="https://github.com/user-attachments/assets/42667f9d-a417-4d0c-83e6-42678cd495b2" />
-
-### 7. Booking Flow Page
-Clients can easily book appointments with their chosen lawyers through a user-friendly scheduling interface.
- 
-<img width="1233" height="589" alt="19" src="https://github.com/user-attachments/assets/cc6b3ae1-f05e-4710-bee2-a64e1bee4f68" />
-<img width="680" height="602" alt="30" src="https://github.com/user-attachments/assets/a42fd613-e909-4b97-ad75-e1fcb7393703" />
-<img width="617" height="596" alt="31" src="https://github.com/user-attachments/assets/45a304af-8adf-49c7-9b57-3224ed7f0afd" />
-<img width="683" height="604" alt="32" src="https://github.com/user-attachments/assets/59bd98ce-7444-47fe-a9ac-af69bddf6896" />
-
-
-### 8. My Bookings
-A comprehensive overview for users to track and manage all their scheduled and past appointments.
- 
-<img width="1253" height="579" alt="17" src="https://github.com/user-attachments/assets/6e7d5a88-2649-4b5e-b5d8-6ab7b1fcb907" />
+> A high-performance, enterprise-grade cloud platform connecting verified legal counsel with clients across Sri Lanka. Built on a decoupled monorepo architecture featuring **Next.js 14**, **Spring Boot 3**, **Redis Caching**, and automated **CI/CD on Microsoft Azure**.
 
 ---
 
-## Project Description
+## 🌐 Live Production Links
 
-**LawyerConnect** is an innovative platform designed to bridge the gap between legal professionals and individuals seeking legal assistance. Our goal is to provide an intuitive, efficient, and secure environment where lawyers can showcase their expertise and clients can easily find and connect with the right legal counsel. Built with pure HTML, CSS, and JavaScript for the frontend and a robust Java Spring Boot backend with JWT authentication, LawyerConnect offers a seamless experience for managing legal consultations, appointments, and communication.
+* **Frontend Web Application**: [https://black-beach-0346be400.6.azurestaticapps.net](https://black-beach-0346be400.6.azurestaticapps.net)
+* **Backend REST API**: [https://lawyerconnect-backend-api.azurewebsites.net](https://lawyerconnect-backend-api.azurewebsites.net)
+* **GitHub Repository**: [https://github.com/prashan7070/LawyerConnect](https://github.com/prashan7070/LawyerConnect)
 
 ---
 
-## Setup Instructions
+## 🏗️ System Architecture
 
-Follow these steps to get LawyerConnect up and running on your local machine.
+```mermaid
+graph TD
+    Client["🌐 Client Browser (Next.js 14 Web App)"]
+    SWA["⚡ Azure Static Web Apps (CDN Edge)"]
+    AppService["⚙️ Azure App Service (Spring Boot 3 REST API)"]
+    Redis["⚡ Azure Cache for Redis (In-Memory Cache)"]
+    MySQL["🗄️ Azure Database for MySQL (Flexible Server)"]
+    Actions["🔄 GitHub Actions (Automated CI/CD Pipeline)"]
+
+    Client -->|HTTPS Requests| SWA
+    SWA -->|API Calls| AppService
+    AppService -->|Fast Query Cache| Redis
+    AppService -->|Persistent Data| MySQL
+    Actions -->|Auto Deploy Frontend| SWA
+    Actions -->|Auto Deploy Backend| AppService
+```
+
+---
+
+## ✨ Key Features & Engineering Highlights
+
+* **Decoupled Monorepo Architecture**: Clean separation between the modern Next.js 14 React frontend and Java 17 Spring Boot 3 RESTful micro-services backend.
+* **Multi-Role Dashboard System**: Dedicated, secure dashboard portals for **Clients**, **Lawyers**, and **System Administrators**.
+* **High-Speed Redis Caching**: Integrated `@Cacheable` abstraction backed by **Redis** to eliminate redundant database reads for high-traffic advocate directory queries and profile lookups.
+* **IP-Based Rate Limiting**: Custom thread-safe `RateLimitingFilter` enforcing request limits per IP address to safeguard sensitive endpoints against brute-force attacks and DDoS.
+* **Stateless Security & RBAC**: Enforced stateless **JWT dual-token authentication**, **BCrypt password hashing**, and granular **Role-Based Access Control (RBAC)** via **Spring Security**.
+* **Automated CI/CD Pipelines**: Zero-downtime continuous deployment workflows via **GitHub Actions** that automatically run JUnit 5/Mockito unit tests, compile production artifacts, and release to Azure on every `git push`.
+
+---
+
+## ☁️ Cloud Infrastructure (Microsoft Azure)
+
+| Service | Technology Tier | Function |
+| :--- | :--- | :--- |
+| **Frontend Web Hosting** | Azure Static Web Apps (`Free`) | Global CDN hosting for Next.js frontend |
+| **Backend Server** | Azure App Service (`Basic B1 - Linux, Java 17`) | Hosting Spring Boot 3 REST API service |
+| **Database Tier** | Azure Database for MySQL Flexible Server (`Standard_B1ms`) | Production relational database engine |
+| **Caching Layer** | Azure Cache for Redis (`Balanced B0`) | Sub-millisecond in-memory caching |
+| **CI/CD Automation** | GitHub Actions Workflows | Automated build, test & cloud deployment |
+
+---
+
+## 💻 Tech Stack & Tools
+
+* **Frontend**: Next.js 14, React 19, TypeScript, TailwindCSS 4, Framer Motion, Lucide Icons
+* **Backend**: Java 17, Spring Boot 3, Spring Security 6, Spring Data JPA, Spring Cache, ModelMapper
+* **Database & Caching**: MySQL 8.0, Azure Managed Redis
+* **Security & Testing**: JWT (JSON Web Tokens), BCrypt, JUnit 5, Mockito
+* **DevOps & Cloud**: Microsoft Azure, Docker, Docker Compose, GitHub Actions CI/CD
+
+---
+
+## 🚀 Local Development Setup
 
 ### Prerequisites
 
-*   **Java Development Kit (JDK) 17 or higher**
-*   **Maven** (for Spring Boot backend)
-*   **A database** (e.g., PostgreSQL, MySQL – H2 is used for development by default)
-*   **A web browser** (for the frontend)
+* **Java JDK 17** or higher
+* **Node.js 20** or higher
+* **Docker & Docker Desktop** (Optional, for containerized local execution)
+* **MySQL 8.0** and **Redis Server**
 
-### Backend Setup (Java Spring Boot)
+### Option 1: Running with Docker Compose (Recommended)
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone https://github.com/your-username/LawyerConnect.git
-    cd LawyerConnect/backend
-    ```
+```bash
+# 1. Clone the repository
+git clone https://github.com/prashan7070/LawyerConnect.git
+cd LawyerConnect
 
-2.  **Configure Database:**
-    *   Open `src/main/resources/application.properties` (or `application.yml`).
-    *   Update the database connection details if you're not using the default H2 database.
-        ```properties
-        spring.datasource.url=jdbc:h2:mem:lawyerconnectdb
-        spring.datasource.driverClassName=org.h2.Driver
-        spring.datasource.username=sa
-        spring.datasource.password=password
-        spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
-        spring.jpa.hibernate.ddl-auto=update
-        ```
-        For PostgreSQL example:
-        ```properties
-        spring.datasource.url=jdbc:postgresql://localhost:5432/lawyerconnect
-        spring.datasource.username=your_db_username
-        spring.datasource.password=your_db_password
-        spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-        spring.jpa.hibernate.ddl-auto=update
-        ```
+# 2. Launch MySQL, Redis, Backend, and Frontend containers
+docker-compose up -d --build
+```
 
-3.  **Build the Project:**
-    ```bash
-    mvn clean install
-    ```
-
-4.  **Run the Backend Application:**
-    ```bash
-    mvn spring-boot:run
-    ```
-    The backend will typically run on `http://localhost:8080`.
-
-### Frontend Setup (HTML, CSS, JS)
-
-1.  **Navigate to the Frontend Directory:**
-    ```bash
-    cd ../frontend # If you are in the backend directory
-    ```
-
-2.  **Open in Browser:**
-    *   Simply open the `index.html` file (or your main HTML file) in your preferred web browser.
-    *   Ensure that your JavaScript code correctly points to the backend API endpoints (e.g., `http://localhost:8080`).
+Access the local services at:
+* **Frontend**: `http://localhost:3000`
+* **Backend API**: `http://localhost:8080`
+* **MySQL Database**: `localhost:3306`
+* **Redis Cache**: `localhost:6379`
 
 ---
 
-## ▶️ Link to the Demo Video
+### Option 2: Running Services Manually
 
-Watch a quick demonstration of LawyerConnect in action:
+#### Backend (Spring Boot)
 
-[**Watch the LawyerConnect Project Demo on YouTube**](https://youtu.be/5rp0h-odY3Y)
+```bash
+cd BackEnd/lawyerConnect_backend
+
+# Build & Run Unit Tests
+./mvnw clean test
+
+# Run Spring Boot Application
+./mvnw spring-boot:run
+```
+
+#### Frontend (Next.js)
+
+```bash
+cd lawyerconnect-frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
 
 ---
 
-Thank you for exploring LawyerConnect! We hope you find it to be a valuable tool for connecting the legal world.
+## 🛡️ Security & Quality Standards
+
+* **Standardized Exception Handling**: Implemented centralized `@RestControllerAdvice` returning structured error DTOs without leaking internal stack traces.
+* **CORS Protection**: Enforced strict Cross-Origin Resource Sharing policy allowing requests strictly from configured client domain origins.
+* **Unit Testing Coverage**: Automated unit tests built with JUnit 5 and Mockito to validate service logic and security filters prior to production deployment.
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+*Architected & Developed with ❤️ for Sri Lanka's Legal Tech Ecosystem.*
